@@ -13,11 +13,11 @@ export const Home = () => {
           background:
             theme.colorScheme === 'dark'
               ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+              : theme.colors.gray[2],
         },
       }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
+      navbarOffsetBreakpoint="md"
+      asideOffsetBreakpoint="md"
       navbar={<Navbar opened={opened} />}
       footer={<Footer />}
       header={<Header onClick={() => setOpened((o) => !o)} opened={opened} />}

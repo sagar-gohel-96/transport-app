@@ -26,12 +26,12 @@ export const ThemeAction = () => {
         })}
       >
         {colorScheme === 'dark' ? (
-          <ThemeIcon variant="outline" size="xl" color="yellow">
-            <IconSun size={18} />
+          <ThemeIcon variant="outline" size="xl" color="gray">
+            <IconSun size={22} />
           </ThemeIcon>
         ) : (
           <ThemeIcon variant="outline" size="xl" color="dark">
-            <IconMoonStars size={18} />
+            <IconMoonStars size={22} />
           </ThemeIcon>
         )}
       </ActionIcon>

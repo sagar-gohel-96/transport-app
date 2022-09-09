@@ -17,11 +17,12 @@ interface NavbarProps {
 
 export const enum Routes {
   Dashboard = '/',
-  PartyMaster = 'party-master',
-  CompanyMaster = 'company-master',
-  AreaMaster = 'area-master',
+  PartyDetails = 'party-details',
+  CompanyDetails = 'company-details',
+  AreaDetails = 'area-details',
   Transaction = 'transaction',
   Reports = 'reports',
+  Profile = 'profile',
 }
 
 const navbarItemList = [
@@ -33,21 +34,21 @@ const navbarItemList = [
   },
   {
     iconColor: 'blue',
-    text: 'Party Master',
+    text: 'Party Details',
     icon: <Users />,
-    urlLink: Routes.PartyMaster,
+    urlLink: Routes.PartyDetails,
   },
   {
     iconColor: 'blue',
-    text: 'Company Master',
+    text: 'Company Details',
     icon: <ApiApp />,
-    urlLink: Routes.CompanyMaster,
+    urlLink: Routes.CompanyDetails,
   },
   {
     iconColor: 'blue',
-    text: 'Area Master',
+    text: 'Area Details',
     icon: <AB2 />,
-    urlLink: Routes.AreaMaster,
+    urlLink: Routes.AreaDetails,
   },
   {
     iconColor: 'blue',
@@ -73,6 +74,9 @@ export const Navbar = ({ opened }: NavbarProps) => {
       hiddenBreakpoint="sm"
       hidden={!opened}
       width={{ sm: 200, lg: 300 }}
+      sx={(theme) => ({
+        // background: theme.colorScheme === 'dark' ? theme.colors.gray[9] : '',
+      })}
     >
       <MantineNavbar.Section grow mt="md">
         {navbarItemList.map((item, i) => (
@@ -92,7 +96,7 @@ export const Navbar = ({ opened }: NavbarProps) => {
       </MantineNavbar.Section>
 
       <MantineNavbar.Section mt="md">
-        <ProfileTab />
+        <ProfileTab navigationPath={Routes.Profile} />
       </MantineNavbar.Section>
     </MantineNavbar>
   );

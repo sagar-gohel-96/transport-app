@@ -27,6 +27,22 @@ function App() {
         withNormalizeCSS
         theme={{
           colorScheme,
+          primaryShade: 6,
+          primaryColor: 'primaryBlue',
+          colors: {
+            primaryBlue: [
+              '#E7F5FF',
+              '#D9EDFE',
+              '#B3D8FD',
+              '#8DBFFB',
+              '#70A8F8',
+              '#4285F4',
+              '#3066D1',
+              '#214BAF',
+              '#15348D',
+              '#0C2375',
+            ],
+          },
         }}
       >
         <BrowserRouter>

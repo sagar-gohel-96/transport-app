@@ -176,7 +176,7 @@ export const AddParty = ({ handleCloseModal, setIsLoading }: AddPartyProps) => {
         <Button
           type="submit"
           variant="outline"
-          color="green"
+          color="primaryBlue"
           sx={(theme) => ({ marginTop: '18px', display: 'flex', flex: '1' })}
         >
           Submit

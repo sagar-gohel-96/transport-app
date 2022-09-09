@@ -26,10 +26,11 @@ export const NavbarItem = ({
           index === itemIndex
             ? theme.colorScheme === 'dark'
               ? theme.colors.dark[4]
-              : theme.colors.gray[4]
+              : theme.colors.primaryBlue[1]
             : '',
         paddingBlock: theme.spacing.xs,
-        borderRadius: theme.radius.md,
+        borderTopRightRadius: theme.radius.xl,
+        borderBottomRightRadius: theme.radius.xl,
         cursor: 'pointer',
         marginBottom: '4px',
         '&:hover': {
@@ -47,33 +48,37 @@ export const NavbarItem = ({
       <Button
         variant="subtle"
         sx={(theme) => ({
-          background:
-            index === itemIndex
-              ? theme.colorScheme === 'dark'
-                ? theme.colors.dark[4]
-                : theme.colors.gray[4]
-              : '',
-          color: theme.colorScheme === 'dark' ? 'white' : 'black',
-          fontSize: theme.fontSizes.sm,
-          fontWeight: 500,
+          background: 'inherit',
+          // color: theme.colorScheme === 'dark' ? 'white' : 'black',
+          fontSize: theme.fontSizes.xs,
+          fontWeight: 'bold',
           '&:hover': {
-            backgroundColor:
-              index === itemIndex
-                ? theme.colorScheme === 'dark'
-                  ? theme.colors.dark[4]
-                  : theme.colors.gray[4]
-                : theme.colorScheme === 'dark'
-                ? theme.colors.dark[5]
-                : theme.colors.gray[2],
+            backgroundColor: 'inherit',
           },
         })}
       >
         <Box>
           <Group>
-            <ThemeIcon variant="light" size="lg" color={iconColor}>
+            <ThemeIcon
+              variant="light"
+              size="lg"
+              color="primaryBlue"
+              sx={{
+                '@media (max-width: 1200px) and (min-width: 760px)': {
+                  display: 'none',
+                },
+              }}
+            >
               {icon}
             </ThemeIcon>
-            <Text>{text}</Text>
+            <Text
+              sx={(theme) => ({
+                color: theme.colors.primary,
+              })}
+              transform="uppercase"
+            >
+              {text}
+            </Text>
           </Group>
         </Box>
       </Button>

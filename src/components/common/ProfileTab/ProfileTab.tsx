@@ -1,21 +1,31 @@
 import { Box, Image, Text } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'tabler-icons-react';
 
-export const ProfileTab = () => {
+interface ProfileTabProps {
+  navigationPath: string;
+}
+
+export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
+  const navigate = useNavigate();
   return (
     <Box
+      onClick={() => {
+        navigate(navigationPath);
+      }}
       sx={(theme) => ({
         backgroundColor:
           theme.colorScheme === 'dark'
-            ? theme.colors.dark[5]
+            ? theme.colors.dark[4]
             : theme.colors.gray[2],
-        borderRadius: theme.radius.md,
+        borderTopRightRadius: theme.radius.xl,
+        borderBottomRightRadius: theme.radius.xl,
         padding: theme.spacing.xs,
         cursor: 'pointer',
         '&:hover': {
           backgroundColor:
             theme.colorScheme === 'dark'
-              ? theme.colors.dark[5]
+              ? theme.colors.dark[4]
               : theme.colors.gray[2],
         },
       })}
@@ -26,6 +36,7 @@ export const ProfileTab = () => {
           alignItems: 'center',
           gap: '12px',
           justifyContent: 'space-between',
+          textDecoration: 'none',
         }}
       >
         <div
@@ -36,6 +47,11 @@ export const ProfileTab = () => {
           }}
         >
           <Image
+            sx={{
+              '@media (max-width: 1200px) and (min-width: 760px)': {
+                display: 'none',
+              },
+            }}
             width={48}
             height={48}
             radius="xl"
@@ -48,15 +64,16 @@ export const ProfileTab = () => {
             <Text
               sx={(theme) => ({
                 fontSize: theme.fontSizes.sm,
-                '@media (max-width: 1200px) and (min-width: 760px)': {
-                  display: 'none',
-                },
+                // '@media (max-width: 1200px) and (min-width: 760px)': {
+                //   display: 'none',
+                // },
               })}
             >
               text@gmail.com
             </Text>
           </div>
         </div>
+
         <ArrowRight />
       </div>
     </Box>
