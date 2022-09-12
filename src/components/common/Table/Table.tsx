@@ -10,21 +10,26 @@ import {
 
 import {
   Box,
+  Button,
   Divider,
   Group,
   Pagination,
   Paper,
+  ScrollArea,
   Select,
   Stack,
   Table as MantineTable,
   Text,
   TextInput,
+  ThemeIcon,
 } from '@mantine/core';
 import {
   useDebouncedState,
   usePagination as useMantinePagination,
 } from '@mantine/hooks';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
+import { Fragment, memo, ReactNode } from 'react';
+import { MoodEmpty } from 'tabler-icons-react';
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -42,6 +47,15 @@ interface TableProps<T> {
   title?: string;
 }
 
+export interface TableToolbarProps {
+  title: string;
+  showSearch?: boolean;
+  leftContent?: ReactNode;
+  rightContent?: ReactNode;
+  value: string;
+  setValue: (value: string) => void;
+}
+
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -57,6 +71,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
 export function Table<T>({ data, columns, pagination, title }: TableProps<T>) {
   const [value, setValue] = useDebouncedState('', 200);
+
   const table = useReactTable({
     data,
     columns,
@@ -75,37 +90,27 @@ export function Table<T>({ data, columns, pagination, title }: TableProps<T>) {
     debugTable: true,
   });
 
-  console.log('debounced', value);
+  const tabletoolbarRightContent = (
+    <Group>
+      <Button>Add Party</Button>
+      <Button variant="outline">Open Charts</Button>
+    </Group>
+  );
+
+  const isEmptyState = table.getRowModel().rows.length === 0;
 
   return (
     <Paper radius="sm">
-      {!!title && (
-        <>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-            px="sm"
-          >
-            <Text weight={500} py="md">
-              {title}
-            </Text>
-            <Box>
-              <TextInput
-                defaultValue={value}
-                placeholder="Search..."
-                style={{ flex: 1 }}
-                onChange={(event) => setValue(event.currentTarget.value)}
-              />
-            </Box>
-          </Box>
-          <Divider />
-        </>
-      )}
+      <TableToolbar
+        title="Party Details"
+        value={value}
+        setValue={setValue}
+        // leftContent={toolbarLeftContent}
+        rightContent={tabletoolbarRightContent}
+      />
       <div className="p-2">
         <div className="h-2" />
+        {/* <ScrollArea style={{ width: 300 }}> */}
         <MantineTable
           horizontalSpacing="sm"
           verticalSpacing="sm"
@@ -123,11 +128,6 @@ export function Table<T>({ data, columns, pagination, title }: TableProps<T>) {
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          {/* {header.column.getCanFilter() ? (
-                            <div>
-                              <Filter column={header.column} table={table} />
-                            </div>
-                          ) : null} */}
                         </div>
                       )}
                     </th>
@@ -136,27 +136,50 @@ export function Table<T>({ data, columns, pagination, title }: TableProps<T>) {
               </tr>
             ))}
           </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => {
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          {!isEmptyState && (
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          )}
         </MantineTable>
+        {/* </ScrollArea> */}
+        {isEmptyState && (
+          <Stack justify="center" align="center" py={48}>
+            <ThemeIcon variant="light" color="primaryBlue" size={150}>
+              <MoodEmpty size={130} />
+            </ThemeIcon>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text size="xl" weight={700}>
+                Data Not Found
+              </Text>
+              <Text size="sm">Data Not Found</Text>
+            </Box>
+          </Stack>
+        )}
 
-        {pagination && (
+        {pagination && !isEmptyState && (
           <Stack>
             <Divider />
             <TableFooter table={table} />
@@ -167,6 +190,54 @@ export function Table<T>({ data, columns, pagination, title }: TableProps<T>) {
   );
 }
 
+export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
+  const {
+    title,
+    showSearch = true,
+    leftContent,
+    rightContent,
+    value,
+    setValue,
+  } = props;
+  return (
+    <Box>
+      {!!title && (
+        <Fragment>
+          <Box
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+            px="sm"
+          >
+            <Group>
+              <Text weight={500} py="md">
+                {title}
+              </Text>
+              {leftContent}
+            </Group>
+            <Group>
+              {rightContent}
+              {showSearch && (
+                <Box>
+                  <TextInput
+                    defaultValue={value}
+                    placeholder="Search..."
+                    style={{ flex: 1 }}
+                    onChange={(event) => setValue(event.currentTarget.value)}
+                  />
+                </Box>
+              )}
+            </Group>
+          </Box>
+          <Divider />
+        </Fragment>
+      )}
+    </Box>
+  );
+});
+
 function TableFooter({ table }: { table: any }) {
   const pagination = useMantinePagination({
     total: table.getPageCount(),
@@ -174,10 +245,6 @@ function TableFooter({ table }: { table: any }) {
     onChange: (page: number) => table.setPageIndex(page - 1),
     initialPage: table.getState().pagination.pageIndex,
   });
-
-  console.log('pagination', pagination.active);
-
-  console.log('pagination count', table.getPageCount());
 
   return (
     <Group position="apart" px="xs" pb="md" className="table-footer">
@@ -207,8 +274,9 @@ function TableFooter({ table }: { table: any }) {
             { value: '40', label: '40' },
             { value: '50', label: '50' },
           ]}
-          value={table.getState().pagination.value}
+          value={table.getState().pagination.pageSize.toString()}
           onChange={table.setPageSize}
+          sx={{ width: '4rem' }}
         />
       </Group>
     </Group>

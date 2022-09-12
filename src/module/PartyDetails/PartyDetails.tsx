@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Table } from '../../components/common';
 import { ColumnDef } from '@tanstack/react-table';
+import { Tabs } from '@mantine/core';
 
 interface ColumnsData {
   id: number;
