@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Table } from '../../components/common';
 import { ColumnDef } from '@tanstack/react-table';
-import { Tabs } from '@mantine/core';
 
 interface ColumnsData {
   id: number;
@@ -28,6 +27,7 @@ export const PartyDetails = () => {
   useEffect(() => {
     (async () => {
       const data = await fetchData();
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
       setUserData(data);
     })();
   }, [fetchData]);
@@ -59,6 +59,14 @@ export const PartyDetails = () => {
   );
 
   return (
-    <Table columns={columns} data={userData} pagination title="Party Details" />
+    <Table
+      columns={columns}
+      data={userData}
+      pagination
+      toolbarProps={{
+        title: 'Party Details',
+        showSearch: true,
+      }}
+    />
   );
 };
