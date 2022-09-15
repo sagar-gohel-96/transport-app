@@ -21,8 +21,8 @@ export const NavbarItem = ({
   return (
     <Button
       onClick={onClick}
-      py={4}
       variant="subtle"
+      size="md"
       sx={(theme) => ({
         display: 'flex',
         flex: '1',
@@ -45,6 +45,10 @@ export const NavbarItem = ({
               : theme.colorScheme === 'dark'
               ? theme.colors.dark[5]
               : theme.colors.gray[2],
+        },
+        paddingBlock: '5px',
+        '@media (max-width: 1200px) and (min-width: 760px)': {
+          paddingBlock: '16px',
         },
       })}
     >

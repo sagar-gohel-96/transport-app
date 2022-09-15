@@ -11,10 +11,15 @@ import { Activity } from 'tabler-icons-react';
 
 interface HeaderProps {
   opened: boolean;
-  onClick: () => void;
+  onOpenNavbar: () => void;
+  onCloseNavbar: () => void;
 }
 
-export const Header = ({ onClick, opened }: HeaderProps) => {
+export const Header = ({
+  onOpenNavbar,
+  onCloseNavbar,
+  opened,
+}: HeaderProps) => {
   const theme = useMantineTheme();
 
   return (
@@ -31,7 +36,7 @@ export const Header = ({ onClick, opened }: HeaderProps) => {
           <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
             <Burger
               opened={opened}
-              onClick={onClick}
+              onClick={opened ? onCloseNavbar : onOpenNavbar}
               size="sm"
               color={theme.colors.gray[6]}
             />

@@ -6,6 +6,15 @@ import { AppRoutes } from '../../Routes';
 export const Home = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+
+  const openNavbar = () => {
+    setOpened(true);
+  };
+
+  const closeNavbar = () => {
+    setOpened(false);
+  };
+
   return (
     <AppShell
       styles={{
@@ -18,9 +27,15 @@ export const Home = () => {
       }}
       navbarOffsetBreakpoint="md"
       asideOffsetBreakpoint="md"
-      navbar={<Navbar opened={opened} />}
+      navbar={<Navbar opened={opened} onCloseNavbar={closeNavbar} />}
       footer={<Footer />}
-      header={<Header onClick={() => setOpened((o) => !o)} opened={opened} />}
+      header={
+        <Header
+          onOpenNavbar={openNavbar}
+          onCloseNavbar={closeNavbar}
+          opened={opened}
+        />
+      }
     >
       <AppRoutes />
     </AppShell>

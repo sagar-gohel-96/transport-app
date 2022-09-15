@@ -13,6 +13,7 @@ import { NavbarItem, ProfileTab } from '../../common';
 
 interface NavbarProps {
   opened: boolean;
+  onCloseNavbar: () => void;
 }
 
 export const enum Routes {
@@ -64,7 +65,7 @@ const navbarItemList = [
   },
 ];
 
-export const Navbar = ({ opened }: NavbarProps) => {
+export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
   const navigate = useNavigate();
   const [itemIndex, setItemIndex] = useState(0);
 
@@ -97,6 +98,7 @@ export const Navbar = ({ opened }: NavbarProps) => {
               onClick={() => {
                 navigate(item.urlLink);
                 setItemIndex(i);
+                onCloseNavbar();
               }}
             />
           ))}
