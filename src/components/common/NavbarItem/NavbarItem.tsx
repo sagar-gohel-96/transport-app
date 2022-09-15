@@ -19,20 +19,23 @@ export const NavbarItem = ({
   onClick,
 }: NavbarItemProps) => {
   return (
-    <Box
+    <Button
       onClick={onClick}
+      py={4}
+      variant="subtle"
       sx={(theme) => ({
+        display: 'flex',
+        flex: '1',
+        borderTopRightRadius: theme.radius.xl,
+        borderBottomRightRadius: theme.radius.xl,
         backgroundColor:
           index === itemIndex
             ? theme.colorScheme === 'dark'
               ? theme.colors.dark[4]
               : theme.colors.primaryBlue[1]
             : '',
-        paddingBlock: theme.spacing.xs,
-        borderTopRightRadius: theme.radius.xl,
-        borderBottomRightRadius: theme.radius.xl,
-        cursor: 'pointer',
-        marginBottom: '4px',
+        fontSize: theme.fontSizes.xs,
+        fontWeight: 'bold',
         '&:hover': {
           backgroundColor:
             index === itemIndex
@@ -45,43 +48,30 @@ export const NavbarItem = ({
         },
       })}
     >
-      <Button
-        variant="subtle"
-        sx={(theme) => ({
-          background: 'inherit',
-          // color: theme.colorScheme === 'dark' ? 'white' : 'black',
-          fontSize: theme.fontSizes.xs,
-          fontWeight: 'bold',
-          '&:hover': {
-            backgroundColor: 'inherit',
-          },
-        })}
-      >
-        <Box>
-          <Group>
-            <ThemeIcon
-              variant="light"
-              size="lg"
-              color="primaryBlue"
-              sx={{
-                '@media (max-width: 1200px) and (min-width: 760px)': {
-                  display: 'none',
-                },
-              }}
-            >
-              {icon}
-            </ThemeIcon>
-            <Text
-              sx={(theme) => ({
-                color: theme.colors.primary,
-              })}
-              transform="uppercase"
-            >
-              {text}
-            </Text>
-          </Group>
-        </Box>
-      </Button>
-    </Box>
+      <Box>
+        <Group>
+          <ThemeIcon
+            variant="light"
+            size="xl"
+            color="primaryBlue"
+            sx={{
+              '@media (max-width: 1200px) and (min-width: 760px)': {
+                display: 'none',
+              },
+            }}
+          >
+            {icon}
+          </ThemeIcon>
+          <Text
+            sx={(theme) => ({
+              color: theme.colors.primary,
+            })}
+            transform="uppercase"
+          >
+            {text}
+          </Text>
+        </Group>
+      </Box>
+    </Button>
   );
 };

@@ -1,4 +1,4 @@
-import { Navbar as MantineNavbar } from '@mantine/core';
+import { Box, Navbar as MantineNavbar } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -79,20 +79,28 @@ export const Navbar = ({ opened }: NavbarProps) => {
       })}
     >
       <MantineNavbar.Section grow mt="md">
-        {navbarItemList.map((item, i) => (
-          <NavbarItem
-            key={i}
-            index={i}
-            iconColor={item.iconColor}
-            text={item.text}
-            icon={item.icon}
-            itemIndex={itemIndex}
-            onClick={() => {
-              navigate(item.urlLink);
-              setItemIndex(i);
-            }}
-          />
-        ))}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+          }}
+        >
+          {navbarItemList.map((item, i) => (
+            <NavbarItem
+              key={i}
+              index={i}
+              iconColor={item.iconColor}
+              text={item.text}
+              icon={item.icon}
+              itemIndex={itemIndex}
+              onClick={() => {
+                navigate(item.urlLink);
+                setItemIndex(i);
+              }}
+            />
+          ))}
+        </Box>
       </MantineNavbar.Section>
 
       <MantineNavbar.Section mt="md">
