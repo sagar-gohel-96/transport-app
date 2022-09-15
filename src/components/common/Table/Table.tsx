@@ -19,6 +19,7 @@ import {
   TableToolbar,
 } from './components';
 import { EmptyState } from '../EmptyState';
+import { LoadingIndicator } from '../LoadingIndicator';
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -43,6 +44,7 @@ export interface TableProps<T> {
   columns: ColumnDef<T>[];
   pagination?: boolean;
   toolbarProps: TableToolbarProps;
+  isLoading: boolean;
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -63,6 +65,7 @@ export function Table<T>({
   columns,
   pagination,
   toolbarProps,
+  isLoading,
 }: TableProps<T>) {
   const [value, setValue] = useDebouncedState('', 50);
 
@@ -98,18 +101,30 @@ export function Table<T>({
         toolbarProps,
       }}
     >
-      <Paper radius="sm">
+      <Paper
+        radius="sm"
+        sx={{ minHeight: '40rem', display: 'flex', flexDirection: 'column' }}
+      >
         <TableToolbar {...toolbarProps} />
-        <MantineTable
-          horizontalSpacing="sm"
-          verticalSpacing="sm"
-          className="table-body"
-        >
-          <TableHeader />
-          {!isEmptyState && <TableBody />}
-        </MantineTable>
+        {isLoading ? (
+          <LoadingIndicator
+            isLoading={isLoading}
+            position={isApiDataFound ? 'absolute' : 'relative'}
+          />
+        ) : (
+          <MantineTable
+            horizontalSpacing="sm"
+            verticalSpacing="sm"
+            className="table-body"
+          >
+            <TableHeader />
+            {!isEmptyState && <TableBody />}
+          </MantineTable>
+        )}
 
-        {isEmptyState && <EmptyState isApiDataFound={isApiDataFound} />}
+        {!isLoading && isEmptyState && (
+          <EmptyState isApiDataFound={isApiDataFound} />
+        )}
 
         {pagination && !isEmptyState && (
           <Stack>

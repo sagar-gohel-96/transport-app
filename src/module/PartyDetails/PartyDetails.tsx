@@ -12,6 +12,7 @@ interface ColumnsData {
 
 export const PartyDetails = () => {
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -26,9 +27,11 @@ export const PartyDetails = () => {
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const data = await fetchData();
       // await new Promise((resolve) => setTimeout(resolve, 2000));
       setUserData(data);
+      setLoading(false);
     })();
   }, [fetchData]);
 
@@ -67,6 +70,7 @@ export const PartyDetails = () => {
         title: 'Party Details',
         showSearch: true,
       }}
+      isLoading={loading}
     />
   );
 };
