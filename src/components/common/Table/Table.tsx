@@ -10,7 +10,7 @@ import {
 import { Divider, Paper, Stack, Table as MantineTable } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { TableContext } from './context/TableContext';
 import {
   TableHeader,
@@ -68,6 +68,7 @@ export function Table<T>({
   isLoading,
 }: TableProps<T>) {
   const [value, setValue] = useDebouncedState('', 50);
+  const [rowSelection, setRowSelection] = useState({});
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
 
@@ -79,10 +80,11 @@ export function Table<T>({
     },
     state: {
       globalFilter: value,
+      rowSelection,
     },
     onGlobalFilterChange: setValue,
     globalFilterFn: fuzzyFilter,
-
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -125,7 +127,6 @@ export function Table<T>({
         {!isLoading && isEmptyState && (
           <EmptyState isApiDataFound={isApiDataFound} />
         )}
-
         {pagination && !isEmptyState && (
           <Stack>
             <Divider />

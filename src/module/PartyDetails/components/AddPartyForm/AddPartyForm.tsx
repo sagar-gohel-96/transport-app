@@ -28,13 +28,13 @@ interface AddPartyData {
 
 interface AddPartyProps {
   handleCloseModal: () => void;
-  setIsLoading: (value: boolean) => void;
+  // setIsLoading: (value: boolean) => void;
 }
 
 export const AddPartyForm = ({
   handleCloseModal,
-  setIsLoading,
-}: AddPartyProps) => {
+}: // setIsLoading,
+AddPartyProps) => {
   const form = useForm<AddPartyData>({
     initialValues: {
       partyCode: '',
@@ -63,7 +63,7 @@ export const AddPartyForm = ({
   const handleSubmit = (values: AddPartyData) => {
     console.log(values);
     handleCloseModal();
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   return (

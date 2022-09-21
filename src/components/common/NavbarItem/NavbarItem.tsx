@@ -1,23 +1,15 @@
 import { Box, Button, Group, Text, ThemeIcon } from '@mantine/core';
-import { ReactNode } from 'react';
+import { NavbarItemListType } from '../../layout';
 
 interface NavbarItemProps {
-  iconColor: string;
-  text: string;
-  icon: ReactNode;
-  index: number;
-  itemIndex: number;
+  item: NavbarItemListType;
+  pathRef: any;
   onClick: () => void;
 }
 
-export const NavbarItem = ({
-  iconColor,
-  text,
-  icon,
-  index,
-  itemIndex,
-  onClick,
-}: NavbarItemProps) => {
+export const NavbarItem = ({ item, pathRef, onClick }: NavbarItemProps) => {
+  const { text, icon } = item;
+
   return (
     <Button
       onClick={onClick}
@@ -29,7 +21,7 @@ export const NavbarItem = ({
         borderTopRightRadius: theme.radius.xl,
         borderBottomRightRadius: theme.radius.xl,
         backgroundColor:
-          index === itemIndex
+          `/${item.urlLink}` === pathRef
             ? theme.colorScheme === 'dark'
               ? theme.colors.dark[4]
               : theme.colors.primaryBlue[1]
@@ -38,7 +30,7 @@ export const NavbarItem = ({
         fontWeight: 'bold',
         '&:hover': {
           backgroundColor:
-            index === itemIndex
+            `/${item.urlLink}` === pathRef
               ? theme.colorScheme === 'dark'
                 ? theme.colors.dark[4]
                 : theme.colors.gray[4]

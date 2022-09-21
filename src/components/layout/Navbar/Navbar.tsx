@@ -1,6 +1,6 @@
 import { Box, Navbar as MantineNavbar } from '@mantine/core';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ReactNode, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   AB2,
   ApiApp,
@@ -16,14 +16,23 @@ interface NavbarProps {
   onCloseNavbar: () => void;
 }
 
+export interface NavbarItemListType {
+  iconColor: string;
+  icon: ReactNode;
+  text: string;
+  urlLink: string;
+}
+
 export const enum Routes {
-  Dashboard = '/',
+  Dashboard = 'dashboard',
   PartyDetails = 'party-details',
   CompanyDetails = 'company-details',
   AreaDetails = 'area-details',
   Transaction = 'transaction',
   Reports = 'reports',
   Profile = 'profile',
+  Profile2 = 'profile2',
+  Profile3 = 'profile3',
 }
 
 const navbarItemList = [
@@ -67,7 +76,16 @@ const navbarItemList = [
 
 export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
   const navigate = useNavigate();
-  const [itemIndex, setItemIndex] = useState(0);
+  const location = useLocation();
+
+  const pathRefMemo = useMemo(() => {
+    return location.pathname;
+  }, [location.pathname]);
+
+  const handleMenuClick = (item: NavbarItemListType) => {
+    navigate(item.urlLink);
+    onCloseNavbar();
+  };
 
   return (
     <MantineNavbar
@@ -90,16 +108,9 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
           {navbarItemList.map((item, i) => (
             <NavbarItem
               key={i}
-              index={i}
-              iconColor={item.iconColor}
-              text={item.text}
-              icon={item.icon}
-              itemIndex={itemIndex}
-              onClick={() => {
-                navigate(item.urlLink);
-                setItemIndex(i);
-                onCloseNavbar();
-              }}
+              item={item}
+              onClick={() => handleMenuClick(item)}
+              pathRef={pathRefMemo}
             />
           ))}
         </Box>
