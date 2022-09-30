@@ -10,7 +10,7 @@ import {
 import { Divider, Paper, Stack, Table as MantineTable } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { TableContext } from './context/TableContext';
 import {
   TableHeader,
@@ -71,6 +71,8 @@ export function Table<T>({
   const [rowSelection, setRowSelection] = useState({});
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
+  const tableRef = useRef(null);
+  console.log('table-ref', tableRef.current);
 
   const table = useReactTable({
     data,
@@ -118,6 +120,7 @@ export function Table<T>({
             horizontalSpacing="sm"
             verticalSpacing="sm"
             className="table-body"
+            ref={tableRef}
           >
             <TableHeader />
             {!isEmptyState && <TableBody />}
@@ -127,6 +130,7 @@ export function Table<T>({
         {!isLoading && isEmptyState && (
           <EmptyState isApiDataFound={isApiDataFound} />
         )}
+
         {pagination && !isEmptyState && (
           <Stack>
             <Divider />

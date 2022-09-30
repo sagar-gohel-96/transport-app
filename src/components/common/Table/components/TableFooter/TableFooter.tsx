@@ -26,6 +26,16 @@ export function TableFooter() {
       </Text>
       <Group>
         <Pagination
+          styles={(theme) => ({
+            item: {
+              '&[data-active]': {
+                backgroundColor: 'white',
+                borderWidth: '1px',
+                borderColor: 'black',
+                color: 'black',
+              },
+            },
+          })}
           total={table.getPageCount()}
           onChange={pagination.setPage}
           siblings={0}

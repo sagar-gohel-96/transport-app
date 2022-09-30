@@ -1,0 +1,28 @@
+export const Colors: Record<
+  string,
+  [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string
+  ]
+> = {
+  primaryBlue: [
+    '#E7F5FF',
+    '#D9EDFE',
+    '#B3D8FD',
+    '#8DBFFB',
+    '#70A8F8',
+    '#4285F4',
+    '#3066D1',
+    '#214BAF',
+    '#15348D',
+    '#0C2375',
+  ],
+};

@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { AddPartyForm } from './components/AddPartyForm';
 import { CirclePlus, Dots, Edit, Trash } from 'tabler-icons-react';
+import { useGetUsersQuery } from '../../api';
 
 interface ColumnsData {
   id: number;
@@ -26,6 +27,10 @@ export const PartyDetails = () => {
   const [userData, setUserData] = useState<ColumnsData[]>([]);
   const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
+
+  const { data, error, isLoading } = useGetUsersQuery('');
+
+  console.log(data, error, isLoading);
 
   const fetchData = useCallback(async () => {
     try {

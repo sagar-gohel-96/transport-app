@@ -6,6 +6,7 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { BrowserRouter } from 'react-router-dom';
+import { Colors, ThemeColor } from './theme';
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -30,18 +31,8 @@ function App() {
           primaryShade: 6,
           primaryColor: 'primaryBlue',
           colors: {
-            primaryBlue: [
-              '#E7F5FF',
-              '#D9EDFE',
-              '#B3D8FD',
-              '#8DBFFB',
-              '#70A8F8',
-              '#4285F4',
-              '#3066D1',
-              '#214BAF',
-              '#15348D',
-              '#0C2375',
-            ],
+            primaryBlue: Colors.primaryBlue,
+            primaryRed: ThemeColor.primaryRed,
           },
         }}
       >
