@@ -1,8 +1,8 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
-import { Table } from '../../components/common';
-import { ColumnDef } from '@tanstack/react-table';
-import PartyDetails1 from './utils/partiesData.json';
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+// import axios from "axios";
+import { Table } from "../../components/common";
+import { ColumnDef } from "@tanstack/react-table";
+// import PartyDetails1 from "./utils/partiesData.json";
 import {
   ActionIcon,
   Button,
@@ -10,34 +10,33 @@ import {
   Group,
   Menu,
   Modal,
-} from '@mantine/core';
-import { AddPartyForm } from './components/AddPartyForm';
-import { CirclePlus, Dots, Edit, Trash } from 'tabler-icons-react';
-import { useGetUsersQuery } from '../../api';
+} from "@mantine/core";
 
-interface ColumnsData {
-  id: number;
-  partyName: string;
-  contactPerson: string;
-  contactNumber: string;
-  address: string;
-}
+import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
+import { useGetUsersQuery } from "../../api";
+import { LoadingIndicator } from "../../components/common/LoadingIndicator";
+import { AddPartiesForm, EditPartiesForm } from "./components";
+import { Routes } from "../../components/layout";
+import { PartiesData } from "./utils/partiesData1";
+import { AddPartyData } from "../../types";
+
 
 export const PartyDetails = () => {
-  const [userData, setUserData] = useState<ColumnsData[]>([]);
+  const [userData, setUserData] = useState<AddPartyData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [modalData,setModalData] = useState<AddPartyData>()
   const [opened, setOpened] = useState(false);
 
-  const { data, error, isLoading } = useGetUsersQuery('');
+  const { data, error, isLoading } = useGetUsersQuery("");
 
-  console.log(data, error, isLoading);
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        'https://jsonplaceholder.typicode.com/todos'
-      );
-      return response.data;
+      // const response = await axios.get(
+      //   "https://jsonplaceholder.typicode.com/todos"
+      // );
+      // return response.data;
+      return PartiesData
     } catch (error) {
       console.error(error);
     }
@@ -47,24 +46,31 @@ export const PartyDetails = () => {
     (async () => {
       setLoading(true);
       // const data = await fetchData();
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-      setUserData(PartyDetails1);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setUserData(PartiesData);
       setLoading(false);
     })();
   }, [fetchData]);
 
   const handleModalClose = () => {
     setOpened(false);
+    
   };
 
   const handleOpenModal = () => {
     setOpened(true);
   };
 
-  const columns = useMemo<ColumnDef<ColumnsData>[]>(
+  const handleEditPartty = (data:AddPartyData) =>{
+    setModalData(data)
+    setOpened(true)
+  }
+  // console.log('party',PartiesData)
+
+  const columns = useMemo<ColumnDef<AddPartyData>[]>(
     () => [
       {
-        id: 'select',
+        id: "select",
         header: ({ table }) => (
           <Checkbox
             checked={table.getIsAllRowsSelected()}
@@ -81,39 +87,43 @@ export const PartyDetails = () => {
         ),
       },
       {
-        header: 'ID',
-        accessorKey: 'id',
+        header: "Code",
+        accessorKey: "partyCode",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'partyName',
+        header:"Parties Name",
+        accessorKey: "name",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'contactPerson',
+        header: "Conatct Person",
+        accessorKey: "contactPerson",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'address',
+        header: "Address",
+        accessorKey: "address",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'contactNumber',
+        header: "Contact Numebr",
+        accessorKey: "phoneNumber",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: 'Action',
+        header: "Action",
         cell: ({ row, getValue }) => (
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Menu withinPortal position="bottom-end" shadow="sm">
@@ -127,7 +137,7 @@ export const PartyDetails = () => {
                 <Menu.Item icon={<CirclePlus size={20} strokeWidth={1.5} />}>
                   Add Party
                 </Menu.Item>
-                <Menu.Item icon={<Edit size={20} strokeWidth={1.5} />}>
+                <Menu.Item icon={<Edit size={20} strokeWidth={1.5} />} onClick={() => handleEditPartty(row.original)}>
                   Edit Party
                 </Menu.Item>
                 <Menu.Item
@@ -153,19 +163,22 @@ export const PartyDetails = () => {
 
   return (
     <Fragment>
+      {false && <LoadingIndicator isLoading loadingType="overlay" />}
       <Table
         columns={columns}
         data={userData}
         pagination
         toolbarProps={{
-          title: 'Party Details',
+          title: "Party Details",
           rightContent: tabletoolbarRightContent,
           showSearch: true,
         }}
         isLoading={loading}
+        LoadingType="relative"
       />
       <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddPartyForm handleCloseModal={handleModalClose} />
+        {/* <AddPartiesForm handleCloseModal={handleModalClose} /> */}
+        <EditPartiesForm handleCloseModal={handleModalClose} data={modalData ?? null}/>
       </Modal>
     </Fragment>
   );

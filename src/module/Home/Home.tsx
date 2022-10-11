@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { AppShell, useMantineTheme } from '@mantine/core';
-import { Footer, Header, Navbar } from '../../components/layout';
-import { AppRoutes } from '../../Routes';
+import { useState } from "react";
+import { AppShell, useMantineTheme } from "@mantine/core";
+import {  Header, Navbar } from "../../components/layout";
+import { AppRoutes } from "../../Routes";
 
 export const Home = () => {
   const theme = useMantineTheme();
@@ -20,7 +20,7 @@ export const Home = () => {
       styles={{
         main: {
           background:
-            theme.colorScheme === 'dark'
+            theme.colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[2],
         },
@@ -28,7 +28,7 @@ export const Home = () => {
       navbarOffsetBreakpoint="md"
       asideOffsetBreakpoint="md"
       navbar={<Navbar opened={opened} onCloseNavbar={closeNavbar} />}
-      footer={<Footer />}
+      // footer={<Footer />}
       header={
         <Header
           onOpenNavbar={openNavbar}

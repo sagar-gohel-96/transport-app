@@ -1,15 +1,15 @@
-import { Loader, LoadingOverlay } from '@mantine/core';
+import { Loader, LoadingOverlay } from "@mantine/core";
 
-export type LoadingPosition = 'relative' | 'overlay' | 'absolute';
+export type LoadingType = "relative" | "overlay" | "absolute";
 export type PositionAlign =
-  | 'topLeft'
-  | 'topRight'
-  | 'bottomLeft'
-  | 'bottomRight';
+  | "topLeft"
+  | "topRight"
+  | "bottomLeft"
+  | "bottomRight";
 
 interface LoadingIndicatorProps {
   isLoading: boolean;
-  position: LoadingPosition;
+  loadingType: LoadingType;
   align?: PositionAlign;
 }
 
@@ -33,34 +33,34 @@ export const positionStyle = {
 };
 
 export const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { align, position, isLoading } = props;
+  const { align, loadingType: position, isLoading } = props;
 
-  return position === 'relative' ? (
+  return position === "relative" ? (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: '1',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flex: "1",
       }}
     >
-      <Loader size="lg" sx={{ display: 'flex', flex: '1' }} />
+      <Loader size="lg" sx={{ display: "flex", flex: "1" }} />
     </div>
-  ) : position === 'absolute' ? (
+  ) : position === "absolute" ? (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: '1',
-        position: 'relative',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flex: "1",
+        position: "relative",
       }}
     >
       <Loader
         size="md"
         sx={[
-          { display: 'flex', flex: '1', position: 'absolute' },
-          positionStyle[align ?? 'topLeft'],
+          { display: "flex", flex: "1", position: "absolute" },
+          positionStyle[align ?? "topLeft"],
         ]}
       />
     </div>

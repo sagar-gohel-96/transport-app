@@ -5,23 +5,23 @@ import {
   getPaginationRowModel,
   ColumnDef,
   FilterFn,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
-import { Divider, Paper, Stack, Table as MantineTable } from '@mantine/core';
-import { useDebouncedState } from '@mantine/hooks';
-import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
-import { ReactNode, useMemo, useRef, useState } from 'react';
-import { TableContext } from './context/TableContext';
+import { Divider, Paper, Stack, Table as MantineTable } from "@mantine/core";
+import { useDebouncedState } from "@mantine/hooks";
+import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
+import { ReactNode, useMemo, useRef, useState } from "react";
+import { TableContext } from "./context/TableContext";
 import {
   TableHeader,
   TableBody,
   TableFooter,
   TableToolbar,
-} from './components';
-import { EmptyState } from '../EmptyState';
-import { LoadingIndicator } from '../LoadingIndicator';
+} from "./components";
+import { EmptyState } from "../EmptyState";
+import { LoadingIndicator, LoadingType } from "../LoadingIndicator";
 
-declare module '@tanstack/table-core' {
+declare module "@tanstack/table-core" {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
   }
@@ -35,8 +35,6 @@ export interface TableToolbarProps {
   showSearch?: boolean;
   leftContent?: ReactNode;
   rightContent?: ReactNode;
-  // value: string;
-  // setValue: (value: string) => void;
 }
 
 export interface TableProps<T> {
@@ -45,6 +43,7 @@ export interface TableProps<T> {
   pagination?: boolean;
   toolbarProps: TableToolbarProps;
   isLoading: boolean;
+  LoadingType?: LoadingType;
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -66,14 +65,13 @@ export function Table<T>({
   pagination,
   toolbarProps,
   isLoading,
+  LoadingType,
 }: TableProps<T>) {
-  const [value, setValue] = useDebouncedState('', 50);
+  const [value, setValue] = useDebouncedState("", 50);
   const [rowSelection, setRowSelection] = useState({});
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
   const tableRef = useRef(null);
-  console.log('table-ref', tableRef.current);
-
   const table = useReactTable({
     data,
     columns,
@@ -107,13 +105,14 @@ export function Table<T>({
     >
       <Paper
         radius="sm"
-        sx={{ minHeight: '40rem', display: 'flex', flexDirection: 'column' }}
+        sx={{ minHeight: "40rem", display: "flex", flexDirection: "column" }}
       >
         <TableToolbar {...toolbarProps} />
         {isLoading ? (
           <LoadingIndicator
             isLoading={isLoading}
-            position={isApiDataFound ? 'absolute' : 'relative'}
+            // position={isApiDataFound ? "absolute" : "relative"}
+            loadingType={LoadingType!}
           />
         ) : (
           <MantineTable

@@ -1,11 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // console.log('url', process.env.BASE_URL);
 
 export const merchantApi = createApi({
-  reducerPath: 'merchantApi',
+  reducerPath: "merchantApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://jsonplaceholder.typicode.com/',
+    baseUrl: "https://jsonplaceholder.typicode.com/",
     // baseUrl: process.env.BASE_URL,
   }),
   endpoints: (builder) => ({
