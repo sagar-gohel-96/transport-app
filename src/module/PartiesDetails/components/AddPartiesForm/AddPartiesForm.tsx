@@ -6,70 +6,130 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { AddPartyData } from "../../../../types";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { useMemo } from "react";
+import { Check } from "tabler-icons-react";
 
-interface EditPartiesProps {
+import { AddPartyData, FetchPartiesData } from "../../../../types";
+
+interface AddPartyProps {
   handleCloseModal: () => void;
-  data:Partial<AddPartyData> | null ;
-  // setIsLoading: (value: boolean) => void;
+  data?: FetchPartiesData | null;
+  addParty: (value: any) => void;
+  updateParty: (value: any) => void;
+  refetch: () => void;
 }
 
-export const EditPartiesForm = ({
+const formInitialValue: AddPartyData = {
+  partyCode: "",
+  name: "",
+  category: "",
+  address: "",
+  city: "",
+  pincode: 0,
+  district: "",
+  state: "",
+  contactPerson: "",
+  phoneNumber: "",
+  email: "",
+  GSTIN: "",
+  PAN: "",
+  creditLimit: 0,
+  creditPeriod: 0,
+  creditInvoice: 0,
+};
+
+const setPartyData = (data: FetchPartiesData): FetchPartiesData => {
+  return {
+    _id: data?._id ?? "",
+    partyCode: "12345",
+    name: data?.name ?? "",
+    category: data?.category ?? "",
+    address: data?.address ?? "",
+    city: data?.city ?? "",
+    pincode: data?.pincode ?? 0,
+    district: data?.district ?? "",
+    state: data?.state ?? "",
+    contactPerson: data?.contactPerson ?? "",
+    phoneNumber: data?.phoneNumber ?? "",
+    email: data?.email ?? "",
+    GSTIN: data?.GSTIN ?? "",
+    PAN: data?.PAN ?? "",
+    creditLimit: data?.creditLimit ?? 0,
+    creditPeriod: data?.creditPeriod ?? 0,
+    creditInvoice: data?.creditInvoice ?? 0,
+  };
+};
+
+export const AddPartiesForm = ({
   handleCloseModal,
   data,
-}: // setIsLoading,
-EditPartiesProps) => {
-  const initialPartiesData:AddPartyData = {
-    partyCode: data?.partyCode || "",
-    name: data?.name || "",
-    category: data?.category || "",
-    address: data?.address || "",
-    city: data?.city || "",
-    pincode: data?.pincode || 0,
-    district: data?.district || "",
-    state: data?.state || "",
-    contactPerson: data?.contactPerson || "",
-    phoneNumber: data?.phoneNumber || "",
-    email: data?.email || "",
-    GSTIN: data?.GSTIN || "",
-    PAN: data?.PAN || "",
-    creditLimit: data?.creditLimit || 0,
-    creditPeriod: data?.creditPeriod || 0,
-    creditInvoice: data?.creditInvoice || 0,
-  }
+  addParty,
+  updateParty,
+  refetch,
+}: AddPartyProps) => {
+  const PartiesData = useMemo(() => data, [data]);
 
   const form = useForm<AddPartyData>({
-    initialValues: initialPartiesData,
+    initialValues: PartiesData ? setPartyData(PartiesData) : formInitialValue,
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
-  
-  const handleSubmit = (values: AddPartyData) => {
-    
-    // console.log(values);
-    form.setValues({
-      partyCode: "",
-      name: "",
-      category:  "",
-      address: "",
-      city:  "",
-      pincode:  0,
-      district:  "",
-      state: "",
-      contactPerson: "",
-      phoneNumber: "",
-      email: "",
-      GSTIN:"",
-      PAN:  "",
-      creditLimit:  0,
-      creditPeriod: 0,
-      creditInvoice:  0,
-    })
-    handleCloseModal();
-   
-    // setIsLoading(false);
+
+  const handleSubmit = async (values: AddPartyData) => {
+    const _id = values._id;
+    try {
+      console.log(values);
+      if (values?._id) {
+        const updateData: any = await updateParty({ _id, ...values });
+        // await updatePost({ id, name }).unwrap();
+        console.log("updateData", updateData);
+        if (updateData.data.success) {
+          // showNotification({
+          //   title: "Party",
+          //   message: updateData.data.message,
+          // });
+          showNotification({
+            id: "load-data",
+            loading: true,
+            title: "Loading your data",
+            message:
+              "Data will be loaded in 3 seconds, you cannot close this yet",
+            autoClose: false,
+            disallowClose: true,
+          });
+
+          setTimeout(() => {
+            updateNotification({
+              id: "load-data",
+              color: "teal",
+              title: "Data was loaded",
+              message:
+                "Notification will close in 2 seconds, you can close this notification now",
+              icon: <Check size={16} />,
+              autoClose: 2000,
+            });
+          }, 3000);
+        }
+      } else {
+        const addData: any = await addParty(values);
+        if (addData.data.success) {
+          showNotification({
+            title: "Party",
+            message: addData.data.message,
+          });
+        }
+      }
+    } catch (err) {
+      console.log("Error");
+    } finally {
+      console.log("is Final");
+      // form.setValues(formInitialValue);
+      handleCloseModal();
+      refetch();
+    }
   };
 
   return (

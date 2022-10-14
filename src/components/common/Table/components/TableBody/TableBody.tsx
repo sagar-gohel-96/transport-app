@@ -1,6 +1,6 @@
-import { flexRender } from '@tanstack/react-table';
-import { useContext } from 'react';
-import { TableContext } from '../../context/TableContext';
+import { flexRender } from "@tanstack/react-table";
+import { useContext } from "react";
+import { TableContext } from "../../context/TableContext";
 
 export const TableBody = () => {
   const { table } = useContext(TableContext);

@@ -6,64 +6,106 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 
-interface AddPartyData {
-  partyCode: string;
-  name: string;
-  category: string;
-  address: string;
-  city: string;
-  pincode: number;
-  district: string;
-  state: string;
-  contactPerson: string;
-  phoneNumber: "";
-  email: string;
-  GSTIN: string;
-  PAN: string;
-  creditLimit: number;
-  creditPeriod: number;
-  creditInvoice: number;
-}
+import { AddPartyData, FetchPartiesData } from "../../../../types";
 
 interface AddPartyProps {
   handleCloseModal: () => void;
+  data?: FetchPartiesData | null;
+  addParty: (value: any) => void;
+  updateParty: (value: any) => void;
+  refetch: () => void;
   // setIsLoading: (value: boolean) => void;
 }
 
+const formInitialValue: AddPartyData = {
+  _id: "",
+  partyCode: "",
+  name: "",
+  category: "",
+  address: "",
+  city: "",
+  pincode: 0,
+  district: "",
+  state: "",
+  contactPerson: "",
+  phoneNumber: "",
+  email: "",
+  GSTIN: "",
+  PAN: "",
+  creditLimit: 0,
+  creditPeriod: 0,
+  creditInvoice: 0,
+};
+
+const setPartyData = (data: FetchPartiesData): FetchPartiesData => {
+  return {
+    _id: data?._id ?? "",
+    partyCode: "12345",
+    name: data?.name ?? "",
+    category: data?.category ?? "",
+    address: data?.address ?? "",
+    city: data?.city ?? "",
+    pincode: data?.pincode ?? 0,
+    district: data?.district ?? "",
+    state: data?.state ?? "",
+    contactPerson: data?.contactPerson ?? "",
+    phoneNumber: data?.phoneNumber ?? "",
+    email: data?.email ?? "",
+    GSTIN: data?.GSTIN ?? "",
+    PAN: data?.PAN ?? "",
+    creditLimit: data?.creditLimit ?? 0,
+    creditPeriod: data?.creditPeriod ?? 0,
+    creditInvoice: data?.creditInvoice ?? 0,
+  };
+};
+
 export const AddPartiesForm = ({
   handleCloseModal,
-}: // setIsLoading,
-AddPartyProps) => {
+  data,
+  addParty,
+  updateParty,
+  refetch,
+}: AddPartyProps) => {
   const form = useForm<AddPartyData>({
-    initialValues: {
-      partyCode: "",
-      name: "",
-      category: "",
-      address: "",
-      city: "",
-      pincode: 0,
-      district: "",
-      state: "",
-      contactPerson: "",
-      phoneNumber: "",
-      email: "",
-      GSTIN: "",
-      PAN: "",
-      creditLimit: 0,
-      creditPeriod: 0,
-      creditInvoice: 0,
-    },
+    initialValues: data ? setPartyData(data) : formInitialValue,
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
 
-  const handleSubmit = (values: AddPartyData) => {
-    console.log(values);
-    handleCloseModal();
-    // setIsLoading(false);
+  const handleSubmit = async (values: AddPartyData) => {
+    const _id = values._id;
+    try {
+      console.log(values);
+      if (values?._id) {
+        const updateData: any = await updateParty({ _id, ...values });
+        // await updatePost({ id, name }).unwrap();
+        console.log("updateData", updateData);
+        if (updateData.data.statusCode === 200) {
+          showNotification({
+            title: "Party",
+            message: "update ",
+          });
+          handleCloseModal();
+        }
+      } else {
+        const addData: any = await addParty(values);
+        if (addData.data.statusCode === 200) {
+          showNotification({
+            title: "Party",
+            message: addData.data.massege,
+          });
+        }
+      }
+    } catch (err) {
+      console.log("Error");
+    } finally {
+      handleCloseModal();
+      refetch();
+    }
   };
 
   return (

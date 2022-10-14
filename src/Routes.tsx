@@ -1,25 +1,26 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
+import { Routes as RoutesEnum } from "./components/layout/Navbar";
 import {
   AreaDetails,
   CompanyDetails,
   Dashboard,
-  PartyDetails,
+  PartiesDetails,
   Profile,
   Report,
   Transaction,
-} from './module';
+} from "./module";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="dashboard" element={<Dashboard />} />
-      <Route path="party-details" element={<PartyDetails />} />
-      <Route path="Company-details" element={<CompanyDetails />} />
-      <Route path="area-details" element={<AreaDetails />} />
-      <Route path="transaction" element={<Transaction />} />
-      <Route path="reports" element={<Report />} />
-      <Route path="profile" element={<Profile />} />
+      <Route path={RoutesEnum.Dashboard} element={<Dashboard />} />
+      <Route path={RoutesEnum.PartiesDetails} element={<PartiesDetails />} />
+      <Route path={RoutesEnum.CompanyDetails} element={<CompanyDetails />} />
+      <Route path={RoutesEnum.AreaDetails} element={<AreaDetails />} />
+      <Route path={RoutesEnum.Transaction} element={<Transaction />} />
+      <Route path={RoutesEnum.Reports} element={<Report />} />
+      <Route path={RoutesEnum.Profile} element={<Profile />} />
     </Routes>
   );
 };

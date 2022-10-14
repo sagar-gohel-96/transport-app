@@ -1,6 +1,6 @@
-import { Box, Navbar as MantineNavbar } from '@mantine/core';
-import { ReactNode, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Box, Navbar as MantineNavbar } from "@mantine/core";
+import { ReactNode, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   AB2,
   ApiApp,
@@ -8,8 +8,8 @@ import {
   FileReport,
   LayoutDashboard,
   Users,
-} from 'tabler-icons-react';
-import { NavbarItem, ProfileTab } from '../../common';
+} from "tabler-icons-react";
+import { NavbarItem, ProfileTab } from "../../common";
 
 interface NavbarProps {
   opened: boolean;
@@ -24,51 +24,49 @@ export interface NavbarItemListType {
 }
 
 export const enum Routes {
-  Dashboard = 'dashboard',
-  PartyDetails = 'party-details',
-  CompanyDetails = 'company-details',
-  AreaDetails = 'area-details',
-  Transaction = 'transaction',
-  Reports = 'reports',
-  Profile = 'profile',
-  Profile2 = 'profile2',
-  Profile3 = 'profile3',
+  Dashboard = "dashboard",
+  PartiesDetails = "parties-details",
+  CompanyDetails = "company-details",
+  AreaDetails = "area-details",
+  Transaction = "transaction",
+  Reports = "reports",
+  Profile = "profile",
 }
 
 const navbarItemList = [
   {
-    iconColor: 'blue',
-    text: 'Dashboard',
+    iconColor: "blue",
+    text: "Dashboard",
     icon: <LayoutDashboard />,
     urlLink: Routes.Dashboard,
   },
   {
-    iconColor: 'blue',
-    text: 'Party Details',
+    iconColor: "blue",
+    text: "Parties Details",
     icon: <Users />,
-    urlLink: Routes.PartyDetails,
+    urlLink: Routes.PartiesDetails,
   },
   {
-    iconColor: 'blue',
-    text: 'Company Details',
+    iconColor: "blue",
+    text: "Company Details",
     icon: <ApiApp />,
     urlLink: Routes.CompanyDetails,
   },
   {
-    iconColor: 'blue',
-    text: 'Area Details',
+    iconColor: "blue",
+    text: "Area Details",
     icon: <AB2 />,
     urlLink: Routes.AreaDetails,
   },
   {
-    iconColor: 'blue',
-    text: 'Transaction',
+    iconColor: "blue",
+    text: "Transaction",
     icon: <Book2 />,
     urlLink: Routes.Transaction,
   },
   {
-    iconColor: 'blue',
-    text: 'Reports',
+    iconColor: "blue",
+    text: "Reports",
     icon: <FileReport />,
     urlLink: Routes.Reports,
   },
@@ -100,8 +98,8 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
       <MantineNavbar.Section grow mt="md">
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
+            display: "flex",
+            flexDirection: "column",
             gap: 6,
           }}
         >

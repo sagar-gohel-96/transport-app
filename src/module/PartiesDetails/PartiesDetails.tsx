@@ -1,8 +1,3 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-// import axios from "axios";
-import { Table } from "../../components/common";
-import { ColumnDef } from "@tanstack/react-table";
-// import PartyDetails1 from "./utils/partiesData.json";
 import {
   ActionIcon,
   Button,
@@ -11,63 +6,66 @@ import {
   Menu,
   Modal,
 } from "@mantine/core";
-
+import { showNotification } from "@mantine/notifications";
+import { ColumnDef } from "@tanstack/react-table";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
-import { useGetUsersQuery } from "../../api";
-import { LoadingIndicator } from "../../components/common/LoadingIndicator";
-import { AddPartiesForm, EditPartiesForm } from "./components";
-import { Routes } from "../../components/layout";
-import { PartiesData } from "./utils/partiesData1";
-import { AddPartyData } from "../../types";
+import {
+  useAddPartyMutation,
+  useDeletePartyMutation,
+  useGetPartiesQuery,
+  useUpdatePartyMutation,
+} from "../../api/parties";
+import { Table } from "../../components/common";
+import { FetchPartiesData } from "../../types";
+import { AddPartiesForm } from "./components";
 
+export const PartiesDetails = () => {
+  const [PartiesData, setPartiesData] = useState<FetchPartiesData[]>([]);
+  const [opened, setOpened] = useState<boolean>(false);
+  const [partyRecord, setPartyRecord] = useState<FetchPartiesData>();
+  // const [loading, setLoading] = useState(false);
 
-export const PartyDetails = () => {
-  const [userData, setUserData] = useState<AddPartyData[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [modalData,setModalData] = useState<AddPartyData>()
-  const [opened, setOpened] = useState(false);
-
-  const { data, error, isLoading } = useGetUsersQuery("");
-
-
-  const fetchData = useCallback(async () => {
-    try {
-      // const response = await axios.get(
-      //   "https://jsonplaceholder.typicode.com/todos"
-      // );
-      // return response.data;
-      return PartiesData
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  const { data, isLoading, refetch } = useGetPartiesQuery("");
+  const [addParty] = useAddPartyMutation();
+  const [updateParty] = useUpdatePartyMutation();
+  const [deleteParty] = useDeletePartyMutation();
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
-      // const data = await fetchData();
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setUserData(PartiesData);
-      setLoading(false);
+      try {
+        const fetchData = await data.data;
+        setPartiesData(fetchData ? fetchData : []);
+      } catch (err) {
+        console.log("Error");
+      }
     })();
-  }, [fetchData]);
+  }, [data]);
 
-  const handleModalClose = () => {
-    setOpened(false);
-    
-  };
-
-  const handleOpenModal = () => {
+  const handleEditPartty = (data: FetchPartiesData) => {
+    console.log("Fetch By Id", data);
+    setPartyRecord(data);
     setOpened(true);
   };
 
-  const handleEditPartty = (data:AddPartyData) =>{
-    setModalData(data)
-    setOpened(true)
-  }
-  // console.log('party',PartiesData)
+  const handledeleteParty = async (id: string) => {
+    const response: any = await deleteParty(id);
+    console.log("responce", response);
+    if (response.data.success) {
+      refetch();
+      showNotification({
+        title: "Party",
+        message: response.data.message,
+      });
+    } else {
+      showNotification({
+        title: "Party",
+        message: response.data.message,
+      });
+    }
+  };
 
-  const columns = useMemo<ColumnDef<AddPartyData>[]>(
+  const columns = useMemo<ColumnDef<FetchPartiesData>[]>(
     () => [
       {
         id: "select",
@@ -87,13 +85,13 @@ export const PartyDetails = () => {
         ),
       },
       {
-        header: "Code",
-        accessorKey: "partyCode",
-        cell: (info) => info.getValue(),
+        header: "#",
+        // accessorKey: "partyCode",
+        cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header:"Parties Name",
+        header: "Parties Name",
         accessorKey: "name",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -118,7 +116,7 @@ export const PartyDetails = () => {
       },
       {
         header: "Action",
-        cell: ({ row, getValue }) => (
+        cell: ({ row }) => (
           <div
             style={{
               display: "flex",
@@ -137,12 +135,16 @@ export const PartyDetails = () => {
                 <Menu.Item icon={<CirclePlus size={20} strokeWidth={1.5} />}>
                   Add Party
                 </Menu.Item>
-                <Menu.Item icon={<Edit size={20} strokeWidth={1.5} />} onClick={() => handleEditPartty(row.original)}>
+                <Menu.Item
+                  icon={<Edit size={20} strokeWidth={1.5} />}
+                  onClick={() => handleEditPartty(row.original)}
+                >
                   Edit Party
                 </Menu.Item>
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
+                  onClick={() => handledeleteParty(row.original._id)}
                 >
                   Delete all
                 </Menu.Item>
@@ -155,6 +157,16 @@ export const PartyDetails = () => {
     []
   );
 
+  const handleModalClose = () => {
+    console.log("is close");
+    setOpened(false);
+  };
+
+  const handleOpenModal = () => {
+    console.log("is opend");
+    setOpened(true);
+  };
+
   const tabletoolbarRightContent = (
     <Group>
       <Button onClick={handleOpenModal}>Add Party</Button>
@@ -163,22 +175,26 @@ export const PartyDetails = () => {
 
   return (
     <Fragment>
-      {false && <LoadingIndicator isLoading loadingType="overlay" />}
       <Table
         columns={columns}
-        data={userData}
+        data={PartiesData}
         pagination
         toolbarProps={{
           title: "Party Details",
-          rightContent: tabletoolbarRightContent,
           showSearch: true,
+          rightContent: tabletoolbarRightContent,
         }}
-        isLoading={loading}
+        isLoading={isLoading}
         LoadingType="relative"
       />
       <Modal opened={opened} onClose={handleModalClose} size="xl">
-        {/* <AddPartiesForm handleCloseModal={handleModalClose} /> */}
-        <EditPartiesForm handleCloseModal={handleModalClose} data={modalData ?? null}/>
+        <AddPartiesForm
+          handleCloseModal={handleModalClose}
+          data={partyRecord}
+          addParty={addParty}
+          updateParty={updateParty}
+          refetch={refetch}
+        />
       </Modal>
     </Fragment>
   );

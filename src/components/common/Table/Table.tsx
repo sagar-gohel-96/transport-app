@@ -7,7 +7,13 @@ import {
   FilterFn,
 } from "@tanstack/react-table";
 
-import { Divider, Paper, Stack, Table as MantineTable } from "@mantine/core";
+import {
+  Box,
+  Divider,
+  Paper,
+  Stack,
+  Table as MantineTable,
+} from "@mantine/core";
 import { useDebouncedState } from "@mantine/hooks";
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import { ReactNode, useMemo, useRef, useState } from "react";
@@ -71,6 +77,7 @@ export function Table<T>({
   const [rowSelection, setRowSelection] = useState({});
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
+
   const tableRef = useRef(null);
   const table = useReactTable({
     data,
@@ -92,6 +99,7 @@ export function Table<T>({
   });
 
   const isEmptyState = table.getRowModel().rows.length === 0;
+  // const isEmptyState = false;
 
   return (
     <TableContext.Provider
@@ -115,15 +123,19 @@ export function Table<T>({
             loadingType={LoadingType!}
           />
         ) : (
-          <MantineTable
-            horizontalSpacing="sm"
-            verticalSpacing="sm"
-            className="table-body"
-            ref={tableRef}
-          >
-            <TableHeader />
-            {!isEmptyState && <TableBody />}
-          </MantineTable>
+          <Box sx={{ flex: "1", paddingBottom: 16 }}>
+            <MantineTable
+              horizontalSpacing="sm"
+              verticalSpacing="sm"
+              className="table-body"
+              style={{ borderBottom: "1px", borderColor: "red" }}
+              ref={tableRef}
+            >
+              <TableHeader />
+              {!isEmptyState && <TableBody />}
+            </MantineTable>
+            <Divider />
+          </Box>
         )}
 
         {!isLoading && isEmptyState && (
@@ -132,7 +144,6 @@ export function Table<T>({
 
         {pagination && !isEmptyState && (
           <Stack>
-            <Divider />
             <TableFooter />
           </Stack>
         )}
