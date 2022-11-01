@@ -8,9 +8,14 @@ import {
   Image,
   Stack,
   Textarea,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { Photo } from 'tabler-icons-react';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
+import { Photo } from "tabler-icons-react";
+import { useLocalStorage } from "../../hooks";
+import { useAppDispatch } from "../../store";
+import { authAction } from "../../store/auth-slice";
+import { config } from "../../utils";
 
 interface UserBasicInfoData {
   firstName: string;
@@ -29,15 +34,15 @@ interface UserContactInfoData {
 export const UserBasicInfo = () => {
   const form = useForm<UserBasicInfoData>({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      dob: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      dob: "",
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
 
@@ -59,22 +64,22 @@ export const UserBasicInfo = () => {
           <Group>
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: '1',
-                minWidth: '250px',
+                display: "flex",
+                flexDirection: "column",
+                flex: "1",
+                minWidth: "250px",
               }}
             >
               <Group grow>
                 <TextInput
                   placeholder="First Name"
                   label="First Name"
-                  {...form.getInputProps('firstName')}
+                  {...form.getInputProps("firstName")}
                 />
                 <TextInput
                   placeholder="Last Name"
                   label="Last Name"
-                  {...form.getInputProps('lastName')}
+                  {...form.getInputProps("lastName")}
                 />
               </Group>
 
@@ -82,30 +87,30 @@ export const UserBasicInfo = () => {
                 type="email"
                 placeholder="Email"
                 label="Email"
-                {...form.getInputProps('email')}
+                {...form.getInputProps("email")}
               />
               <TextInput
                 placeholder="Phone"
                 label="Phone"
-                {...form.getInputProps('phone')}
+                {...form.getInputProps("phone")}
               />
               <TextInput
                 placeholder="Birth Date"
                 label="Birth Date"
-                {...form.getInputProps('dob')}
+                {...form.getInputProps("dob")}
               />
             </div>
 
             <Box
               sx={{
-                flex: '1',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                flex: "1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Stack sx={{ textAlign: 'center' }}>
-                <div style={{ position: 'relative' }}>
+              <Stack sx={{ textAlign: "center" }}>
+                <div style={{ position: "relative" }}>
                   <Image
                     height={160}
                     width={160}
@@ -119,15 +124,15 @@ export const UserBasicInfo = () => {
                     px={3}
                     sx={(theme) => ({
                       backgroundColor:
-                        theme.colorScheme === 'dark'
+                        theme.colorScheme === "dark"
                           ? theme.colors.dark[4]
                           : theme.colors.gray[2],
-                      position: 'absolute',
+                      position: "absolute",
                       bottom: 5,
                       right: 5,
-                      '&:hover': {
+                      "&:hover": {
                         backgroundColor:
-                          theme.colorScheme === 'dark'
+                          theme.colorScheme === "dark"
                             ? theme.colors.dark[5]
                             : theme.colors.gray[2],
                       },
@@ -150,9 +155,9 @@ export const UserBasicInfo = () => {
 export const UserContactInfo = () => {
   const form = useForm<UserContactInfoData>({
     initialValues: {
-      address: '',
-      city: '',
-      state: '',
+      address: "",
+      city: "",
+      state: "",
     },
 
     validate: {},
@@ -178,17 +183,17 @@ export const UserContactInfo = () => {
             <Textarea
               placeholder="Address"
               label="Address"
-              {...form.getInputProps('address')}
+              {...form.getInputProps("address")}
             />
             <TextInput
               placeholder="City"
               label="City"
-              {...form.getInputProps('city')}
+              {...form.getInputProps("city")}
             />
             <TextInput
               placeholder="State"
               label="State"
-              {...form.getInputProps('state')}
+              {...form.getInputProps("state")}
             />
           </div>
         </Card.Section>
@@ -198,16 +203,30 @@ export const UserContactInfo = () => {
 };
 
 export const Profile = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { getLocalStorageItem: user, setLocalStorageItem: setUser } =
+    useLocalStorage(config.userLocalStorageKey as string);
+
+  const onLogout = () => {
+    if (user) {
+      setUser("");
+      dispatch(authAction.setUser(null));
+      navigate("/");
+    }
+  };
+
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
       }}
     >
       <UserBasicInfo />
       <UserContactInfo />
+      <Button onClick={onLogout}>Logout</Button>
     </div>
   );
 };

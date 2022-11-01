@@ -6,3 +6,5 @@ export * from "./AreaDetails";
 export * from "./CompanyDetails";
 export * from "./Report";
 export * from "./Profile";
+export * from "./NotFoundPage";
+export * from "./Authentication";

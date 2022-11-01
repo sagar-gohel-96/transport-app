@@ -1,21 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AddPartyData } from "../types";
-
-console.log("url", process.env.BASE_URL);
+import { config } from "../utils";
 
 export const partiesApi = createApi({
   reducerPath: "partiesApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/",
+    baseUrl: config.apiBaseUrl,
   }),
   endpoints: (builder) => ({
     getParties: builder.query<any, string>({
-      query: (id: string) => `getParties/${id}`,
+      query: (id: string) => `get-parties/${id}`,
     }),
     addParty: builder.mutation<AddPartyData, Partial<AddPartyData>>({
       query: (body) => {
         return {
-          url: `addParty/`,
+          url: `add-party/`,
           method: "POST",
           body,
         };
@@ -26,7 +25,7 @@ export const partiesApi = createApi({
       Pick<AddPartyData, "_id"> & Partial<AddPartyData>
     >({
       query: ({ _id, ...patch }) => ({
-        url: `updateParty/${_id}`,
+        url: `update-party/${_id}`,
         method: "PUT",
         body: patch,
       }),
@@ -34,7 +33,7 @@ export const partiesApi = createApi({
     }),
     deleteParty: builder.mutation({
       query: (id) => ({
-        url: `/deleteParty/${id}`,
+        url: `/delete-party/${id}`,
         method: "DELETE",
       }),
     }),

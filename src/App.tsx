@@ -3,20 +3,21 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  Box,
 } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import { BrowserRouter } from "react-router-dom";
 import { Colors, ThemeColor } from "./theme";
 import { NotificationsProvider } from "@mantine/notifications";
+import { AuthRoutes } from "./Routes";
+import { useAuth, useLocalStorage } from "./hooks";
 
 function App() {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: "color-scheme",
-    defaultValue: "dark",
-  });
+  const { getLocalStorageItem: colorScheme, setLocalStorageItem } =
+    useLocalStorage<ColorScheme>("color-scheme");
+  const { user } = useAuth();
 
   const toggleColorScheme = (value: ColorScheme) => {
-    setColorScheme(value || colorScheme === "dark" ? "light" : "dark");
+    setLocalStorageItem(value || colorScheme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -39,7 +40,19 @@ function App() {
       >
         <NotificationsProvider position="top-right">
           <BrowserRouter>
-            <Home />
+            {!user ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  flex: 1,
+                  height: "100vh",
+                }}
+              >
+                <AuthRoutes />
+              </Box>
+            ) : (
+              <Home />
+            )}
           </BrowserRouter>
         </NotificationsProvider>
       </MantineProvider>

@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
 import {
   useAddPartyMutation,
@@ -48,22 +48,25 @@ export const PartiesDetails = () => {
     setOpened(true);
   };
 
-  const handledeleteParty = async (id: string) => {
-    const response: any = await deleteParty(id);
-    console.log("responce", response);
-    if (response.data.success) {
-      refetch();
-      showNotification({
-        title: "Party",
-        message: response.data.message,
-      });
-    } else {
-      showNotification({
-        title: "Party",
-        message: response.data.message,
-      });
-    }
-  };
+  const handledeleteParty = useCallback(
+    async (id: string) => {
+      const response: any = await deleteParty(id);
+      console.log("responce", response);
+      if (response.data.success) {
+        refetch();
+        showNotification({
+          title: "Party",
+          message: response.data.message,
+        });
+      } else {
+        showNotification({
+          title: "Party",
+          message: response.data.message,
+        });
+      }
+    },
+    [deleteParty, refetch]
+  );
 
   const columns = useMemo<ColumnDef<FetchPartiesData>[]>(
     () => [
@@ -154,7 +157,7 @@ export const PartiesDetails = () => {
         ),
       },
     ],
-    []
+    [handledeleteParty]
   );
 
   const handleModalClose = () => {

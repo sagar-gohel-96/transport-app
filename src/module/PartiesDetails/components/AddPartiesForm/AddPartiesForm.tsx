@@ -84,19 +84,13 @@ export const AddPartiesForm = ({
       console.log(values);
       if (values?._id) {
         const updateData: any = await updateParty({ _id, ...values });
-        // await updatePost({ id, name }).unwrap();
         console.log("updateData", updateData);
         if (updateData.data.success) {
-          // showNotification({
-          //   title: "Party",
-          //   message: updateData.data.message,
-          // });
           showNotification({
             id: "load-data",
             loading: true,
-            title: "Loading your data",
-            message:
-              "Data will be loaded in 3 seconds, you cannot close this yet",
+            title: "Party",
+            message: "Party Updating...",
             autoClose: false,
             disallowClose: true,
           });
@@ -105,9 +99,9 @@ export const AddPartiesForm = ({
             updateNotification({
               id: "load-data",
               color: "teal",
-              title: "Data was loaded",
-              message:
-                "Notification will close in 2 seconds, you can close this notification now",
+              title: "Party",
+              message: updateData.data.message,
+
               icon: <Check size={16} />,
               autoClose: 2000,
             });

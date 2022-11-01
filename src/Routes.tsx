@@ -8,6 +8,9 @@ import {
   Profile,
   Report,
   Transaction,
+  NotFoundPage,
+  Signin,
+  Signup,
 } from "./module";
 
 export const AppRoutes = () => {
@@ -21,6 +24,18 @@ export const AppRoutes = () => {
       <Route path={RoutesEnum.Transaction} element={<Transaction />} />
       <Route path={RoutesEnum.Reports} element={<Report />} />
       <Route path={RoutesEnum.Profile} element={<Profile />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+};
+
+export const AuthRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/Signup" element={<Signup />} />
+      <Route path="/" element={<Signin />} />
+      <Route path="/Signin" element={<Signin />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
