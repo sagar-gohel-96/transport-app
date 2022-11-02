@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AddUserPayload } from "../types/userType";
+import { UserResponse } from "../types/userType";
 
 interface UserStore {
-  user: AddUserPayload;
+  user: UserResponse;
   token: string;
 }
 
@@ -20,8 +20,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<any | null>) => {
-      console.log("payload", action.payload);
+    setUser: (state, action: PayloadAction<UserStore | null>) => {
       return {
         ...state,
         initialized: true,

@@ -45,7 +45,7 @@ export const Signup = () => {
     },
 
     validate: {
-      //   email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      email: (value) => (value.length > 10 ? null : "Invalid email"),
     },
   });
 
@@ -57,13 +57,14 @@ export const Signup = () => {
           title: "Register",
           message: addUserResponce.data.message,
         });
-        setLocalStorageItem(addUserResponce.data.user);
+
         dispatch(
           authAction.setUser({
             user: addUserResponce.data.user,
             token: addUserResponce.data.token,
           })
         );
+        setLocalStorageItem(addUserResponce.data.user);
         navigate("/");
         form.reset();
       }
@@ -90,7 +91,7 @@ export const Signup = () => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Stack spacing={12}>
             <Text align="center" weight={600} size="xl">
-              Sign In With
+              Sign up With
             </Text>
             <Group>
               <Button

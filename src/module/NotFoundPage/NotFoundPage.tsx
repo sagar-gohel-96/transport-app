@@ -5,13 +5,16 @@ import {
   Button,
   Container,
   Group,
+  Box,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   root: {
-    paddingTop: 80,
-    paddingBottom: 80,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
   },
 
   label: {
@@ -23,7 +26,7 @@ const useStyles = createStyles((theme) => ({
     color:
       theme.colorScheme === "dark"
         ? theme.colors.dark[4]
-        : theme.colors.gray[2],
+        : theme.colors.gray[3],
 
     [theme.fn.smallerThan("sm")]: {
       fontSize: 120,
@@ -55,22 +58,35 @@ export const NotFoundPage = () => {
 
   return (
     <Container className={classes.root}>
-      <div className={classes.label}>404</div>
-      <Title className={classes.title}>You have found a secret place.</Title>
-      <Text
-        color="dimmed"
-        size="lg"
-        align="center"
-        className={classes.description}
+      <Box
+        sx={{
+          backgroundColor: `rgba(171, 170, 169, 0.8)`,
+          padding: 32,
+          borderRadius: 8,
+        }}
       >
-        Unfortunately, this is only a 404 page. You may have mistyped the
-        address, or the page has been moved to another URL.
-      </Text>
-      <Group position="center">
-        <Button variant="subtle" size="md" onClick={() => navigate("/")}>
-          Take me back to Signin page
-        </Button>
-      </Group>
+        <div className={classes.label}>404</div>
+        <Title className={classes.title}>You have found a secret place.</Title>
+        <Text
+          color="black"
+          size="lg"
+          align="center"
+          className={classes.description}
+        >
+          Unfortunately, this is only a 404 page. You may have mistyped the
+          address, or the page has been moved to another URL.
+        </Text>
+        <Group position="center">
+          <Button
+            variant="outline"
+            color="dark"
+            size="md"
+            onClick={() => navigate("/")}
+          >
+            Go to Signin
+          </Button>
+        </Group>
+      </Box>
     </Container>
   );
 };

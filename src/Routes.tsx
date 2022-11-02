@@ -24,7 +24,7 @@ export const AppRoutes = () => {
       <Route path={RoutesEnum.Transaction} element={<Transaction />} />
       <Route path={RoutesEnum.Reports} element={<Report />} />
       <Route path={RoutesEnum.Profile} element={<Profile />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Dashboard />} />
     </Routes>
   );
 };
