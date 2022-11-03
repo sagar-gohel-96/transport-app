@@ -34,12 +34,12 @@ export const Signup = () => {
     console.log("User", getUser);
   }, [getUser]);
 
-  const form = useForm<AddUserPayload>({
+  const form = useForm<
+    Pick<AddUserPayload, "name" | "email" | "password" | "phone">
+  >({
     initialValues: {
-      role: "",
       name: "",
       email: "",
-      // birthDate: "",
       phone: "",
       password: "",
     },
@@ -49,7 +49,9 @@ export const Signup = () => {
     },
   });
 
-  const handleSubmit = async (values: AddUserPayload) => {
+  const handleSubmit = async (
+    values: Pick<AddUserPayload, "name" | "email" | "password" | "phone">
+  ) => {
     try {
       const addUserResponce: any = await addUser(values);
       if (addUserResponce.data.success) {

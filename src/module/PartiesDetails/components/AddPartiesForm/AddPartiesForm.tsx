@@ -81,10 +81,8 @@ export const AddPartiesForm = ({
   const handleSubmit = async (values: AddPartyData) => {
     const _id = values._id;
     try {
-      console.log(values);
       if (values?._id) {
         const updateData: any = await updateParty({ _id, ...values });
-        console.log("updateData", updateData);
         if (updateData.data.success) {
           showNotification({
             id: "load-data",
@@ -119,8 +117,6 @@ export const AddPartiesForm = ({
     } catch (err) {
       console.log("Error");
     } finally {
-      console.log("is Final");
-      // form.setValues(formInitialValue);
       handleCloseModal();
       refetch();
     }

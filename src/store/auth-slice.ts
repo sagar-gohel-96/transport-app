@@ -3,7 +3,7 @@ import { UserResponse } from "../types/userType";
 
 interface UserStore {
   user: UserResponse;
-  token: string;
+  token?: string;
 }
 
 interface AuthState {

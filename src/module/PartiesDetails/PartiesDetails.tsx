@@ -43,7 +43,6 @@ export const PartiesDetails = () => {
   }, [data]);
 
   const handleEditPartty = (data: FetchPartiesData) => {
-    console.log("Fetch By Id", data);
     setPartyRecord(data);
     setOpened(true);
   };
@@ -51,7 +50,6 @@ export const PartiesDetails = () => {
   const handledeleteParty = useCallback(
     async (id: string) => {
       const response: any = await deleteParty(id);
-      console.log("responce", response);
       if (response.data.success) {
         refetch();
         showNotification({
@@ -161,12 +159,10 @@ export const PartiesDetails = () => {
   );
 
   const handleModalClose = () => {
-    console.log("is close");
     setOpened(false);
   };
 
   const handleOpenModal = () => {
-    console.log("is opend");
     setOpened(true);
   };
 

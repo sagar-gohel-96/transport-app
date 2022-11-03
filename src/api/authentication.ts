@@ -26,7 +26,19 @@ export const authenticationApi = createApi({
         };
       },
     }),
+    updateUser: builder.mutation<
+      void,
+      Pick<AddUserPayload, "_id"> & Partial<AddUserPayload>
+    >({
+      query: ({ _id, ...patch }) => ({
+        url: `update-user/${_id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      // invalidatesTags: (result, error, { _id }) => [{ type: "Post", _id }],
+    }),
   }),
 });
 
-export const { useAddUserMutation, useSigninMutation } = authenticationApi;
+export const { useAddUserMutation, useSigninMutation, useUpdateUserMutation } =
+  authenticationApi;
