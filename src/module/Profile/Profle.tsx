@@ -45,7 +45,7 @@ export const Profile = () => {
         updateNotification({
           id: "load-data",
           color: "teal",
-          title: "Party",
+          title: "Profile",
           message: updateData.data.message,
 
           icon: <Check size={16} />,

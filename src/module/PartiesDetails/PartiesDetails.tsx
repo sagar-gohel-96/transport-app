@@ -8,39 +8,17 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
-import {
-  useAddPartyMutation,
-  useDeletePartyMutation,
-  useGetPartiesQuery,
-  useUpdatePartyMutation,
-} from "../../api/parties";
 import { Table } from "../../components/common";
+import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
 import { AddPartiesForm } from "./components";
 
 export const PartiesDetails = () => {
-  const [PartiesData, setPartiesData] = useState<FetchPartiesData[]>([]);
   const [opened, setOpened] = useState<boolean>(false);
   const [partyRecord, setPartyRecord] = useState<FetchPartiesData>();
-  // const [loading, setLoading] = useState(false);
-
-  const { data, isLoading, refetch } = useGetPartiesQuery("");
-  const [addParty] = useAddPartyMutation();
-  const [updateParty] = useUpdatePartyMutation();
-  const [deleteParty] = useDeletePartyMutation();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const fetchData = await data.data;
-        setPartiesData(fetchData ? fetchData : []);
-      } catch (err) {
-        console.log("Error");
-      }
-    })();
-  }, [data]);
+  const { getParties, addParty, deleteParty, updateParty } = useParties();
 
   const handleEditPartty = (data: FetchPartiesData) => {
     setPartyRecord(data);
@@ -51,7 +29,7 @@ export const PartiesDetails = () => {
     async (id: string) => {
       const response: any = await deleteParty(id);
       if (response.data.success) {
-        refetch();
+        getParties.refetch();
         showNotification({
           title: "Party",
           message: response.data.message,
@@ -63,28 +41,28 @@ export const PartiesDetails = () => {
         });
       }
     },
-    [deleteParty, refetch]
+    [deleteParty, getParties]
   );
 
   const columns = useMemo<ColumnDef<FetchPartiesData>[]>(
     () => [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
-            indeterminate={table.getIsSomeRowsSelected()}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onChange={row.getToggleSelectedHandler()}
-            indeterminate={row.getIsSomeSelected()}
-          />
-        ),
-      },
+      // {
+      //   id: "select",
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       checked={table.getIsAllRowsSelected()}
+      //       onChange={table.getToggleAllRowsSelectedHandler()}
+      //       indeterminate={table.getIsSomeRowsSelected()}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       checked={row.getIsSelected()}
+      //       onChange={row.getToggleSelectedHandler()}
+      //       indeterminate={row.getIsSomeSelected()}
+      //     />
+      //   ),
+      // },
       {
         header: "#",
         // accessorKey: "partyCode",
@@ -133,7 +111,10 @@ export const PartiesDetails = () => {
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Item icon={<CirclePlus size={20} strokeWidth={1.5} />}>
+                <Menu.Item
+                  icon={<CirclePlus size={20} strokeWidth={1.5} />}
+                  onClick={handleOpenModal}
+                >
                   Add Party
                 </Menu.Item>
                 <Menu.Item
@@ -147,7 +128,7 @@ export const PartiesDetails = () => {
                   color="red"
                   onClick={() => handledeleteParty(row.original._id)}
                 >
-                  Delete all
+                  Delete
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
@@ -176,14 +157,14 @@ export const PartiesDetails = () => {
     <Fragment>
       <Table
         columns={columns}
-        data={PartiesData}
+        data={getParties.data ? getParties.data : []}
         pagination
         toolbarProps={{
           title: "Party Details",
           showSearch: true,
           rightContent: tabletoolbarRightContent,
         }}
-        isLoading={isLoading}
+        isLoading={getParties.isLoading}
         LoadingType="relative"
       />
       <Modal opened={opened} onClose={handleModalClose} size="xl">
@@ -192,7 +173,7 @@ export const PartiesDetails = () => {
           data={partyRecord}
           addParty={addParty}
           updateParty={updateParty}
-          refetch={refetch}
+          refetch={getParties.refetch}
         />
       </Modal>
     </Fragment>
