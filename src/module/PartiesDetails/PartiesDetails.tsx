@@ -9,7 +9,7 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
 import { Fragment, useCallback, useMemo, useState } from "react";
-import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
+import { CirclePlus, Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
@@ -149,7 +149,9 @@ export const PartiesDetails = () => {
 
   const tabletoolbarRightContent = (
     <Group>
-      <Button onClick={handleOpenModal}>Add Party</Button>
+      <Button onClick={handleOpenModal} leftIcon={<Plus />} variant="outline">
+        Party
+      </Button>
     </Group>
   );
 

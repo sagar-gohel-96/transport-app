@@ -2,19 +2,22 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { TypedUseSelectorHook, useDispatch } from "react-redux";
 import { authenticationApi, partiesApi } from "../api";
+import { companiesApi } from "../api/companies";
 import { authSlice } from "./auth-slice";
 
 export const Store = configureStore({
   reducer: {
     [partiesApi.reducerPath]: partiesApi.reducer,
     [authenticationApi.reducerPath]: authenticationApi.reducer,
+    [companiesApi.reducerPath]: companiesApi.reducer,
 
     auth: authSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       partiesApi.middleware,
-      authenticationApi.middleware
+      authenticationApi.middleware,
+      companiesApi.middleware
     ),
 });
 
