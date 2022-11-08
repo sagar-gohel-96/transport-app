@@ -1,14 +1,20 @@
 import {
+  Box,
   Button,
   Card,
+  Group,
+  Image,
   NumberInput,
   SimpleGrid,
+  Text,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Check } from "tabler-icons-react";
+import { Dropzon, LoadingIndicator } from "../../../../components/common";
+import { useAuth } from "../../../../hooks";
 
 import { AddCompanyData, FetchCompanyData } from "../../../../types";
 
@@ -73,6 +79,17 @@ export const AddCompany = ({
   refetch,
 }: AddCompanyProps) => {
   const CompanyData = useMemo(() => data, [data]);
+  const [headerImageUrl, setHeaderImageUrl] = useState(
+    data?.headerImage ? data?.headerImage : ""
+  );
+  const [logoImageUrl, setLogoImageUrl] = useState(
+    data?.logoImage ? data?.logoImage : ""
+  );
+  const [progresspercent, setProgresspercent] = useState(0);
+
+  const isImageUploading = useMemo(() => !!progresspercent, [progresspercent]);
+
+  const { user } = useAuth();
 
   const form = useForm<AddCompanyData>({
     initialValues: CompanyData ? setCompanyData(CompanyData) : formInitialValue,
@@ -86,7 +103,12 @@ export const AddCompany = ({
     const _id = values._id;
     try {
       if (values?._id) {
-        const updateData: any = await updateCompany({ _id, ...values });
+        const updateData: any = await updateCompany({
+          _id,
+          ...values,
+          logoImage: logoImageUrl,
+          headerImage: headerImageUrl,
+        });
         if (updateData.data.success) {
           showNotification({
             id: "load-data",
@@ -110,8 +132,11 @@ export const AddCompany = ({
           }, 3000);
         }
       } else {
-        const addData: any = await addCompany(values);
-        console.log("create company", addCompany);
+        const addData: any = await addCompany({
+          ...values,
+          logoImage: logoImageUrl,
+          headerImage: headerImageUrl,
+        });
         if (addData.data.success) {
           showNotification({
             title: "Company",
@@ -133,8 +158,94 @@ export const AddCompany = ({
   return (
     <Card withBorder radius="sm">
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <SimpleGrid cols={1} spacing="md">
+          {isImageUploading && (
+            <Box sx={{ marginBottom: 8 }}>
+              <LoadingIndicator
+                isLoading
+                loadingType="absolute"
+                align="topRight"
+              />
+            </Box>
+          )}
+          <Box>
+            <>
+              <Text align="left" weight={600} size="md">
+                Logo Image
+              </Text>
+              {!logoImageUrl && (
+                <Dropzon
+                  folderName={`${user?._id}/company-logo-image`}
+                  description={{
+                    title: "Upload Company Logo Image",
+                    aboutImage: "File should not exceed 5mb",
+                  }}
+                  setImgUrl={setLogoImageUrl}
+                  setProgresspercent={setProgresspercent}
+                />
+              )}
+
+              {logoImageUrl && (
+                <Group
+                  position="center"
+                  sx={(theme) => ({
+                    border: "1px solid",
+                    borderColor: theme.colors.gray[4],
+                    borderRadius: 4,
+                  })}
+                >
+                  <Image
+                    fit="contain"
+                    radius={50}
+                    src={logoImageUrl}
+                    alt="Logo image"
+                    height={100}
+                    width={100}
+                  />
+                </Group>
+              )}
+            </>
+          </Box>
+          <Box>
+            <>
+              <Text align="left" weight={600} size="md">
+                Header Image
+              </Text>
+              {!headerImageUrl && (
+                <Dropzon
+                  folderName={`${user?._id}/company-header-image`}
+                  description={{
+                    title: "Upload Company Header Image",
+                    aboutImage: "File should not exceed 5mb",
+                  }}
+                  setImgUrl={setHeaderImageUrl}
+                  setProgresspercent={setProgresspercent}
+                />
+              )}
+              {headerImageUrl && (
+                <Group
+                  position="center"
+                  sx={(theme) => ({
+                    border: "1px solid",
+                    borderColor: theme.colors.gray[4],
+                    borderRadius: 4,
+                  })}
+                >
+                  <Image
+                    fit="contain"
+                    radius={4}
+                    src={headerImageUrl}
+                    alt="Header image"
+                    height={200}
+                  />
+                </Group>
+              )}
+            </>
+          </Box>
+        </SimpleGrid>
         <SimpleGrid
           cols={2}
+          pt="md"
           breakpoints={[{ maxWidth: 600, cols: 1, spacing: "sm" }]}
         >
           <TextInput
@@ -144,9 +255,10 @@ export const AddCompany = ({
             placeholder="10001"
             {...form.getInputProps("companyCode")}
           />
+
           <TextInput
             required
-            label="Name"
+            label="Company Name"
             placeholder="Company Name"
             {...form.getInputProps("companyName")}
           />

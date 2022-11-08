@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppShell, useMantineTheme } from "@mantine/core";
-import {  Header, Navbar } from "../../components/layout";
+import { Header, Navbar } from "../../components/layout";
 import { AppRoutes } from "../../Routes";
 
 export const Home = () => {
@@ -23,6 +23,7 @@ export const Home = () => {
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[2],
+          overflowX: "hidden",
         },
       }}
       navbarOffsetBreakpoint="md"
