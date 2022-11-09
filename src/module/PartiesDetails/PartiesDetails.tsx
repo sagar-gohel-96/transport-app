@@ -1,15 +1,17 @@
 import {
   ActionIcon,
   Button,
-  Checkbox,
+  // Checkbox,
   Group,
   Menu,
   Modal,
+  Text,
 } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
 import { Fragment, useCallback, useMemo, useState } from "react";
-import { CirclePlus, Dots, Edit, Plus, Trash } from "tabler-icons-react";
+import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
@@ -25,7 +27,7 @@ export const PartiesDetails = () => {
     setOpened(true);
   };
 
-  const handledeleteParty = useCallback(
+  const handlePartyDelete = useCallback(
     async (id: string) => {
       const response: any = await deleteParty(id);
       if (response.data.success) {
@@ -112,12 +114,6 @@ export const PartiesDetails = () => {
 
               <Menu.Dropdown>
                 <Menu.Item
-                  icon={<CirclePlus size={20} strokeWidth={1.5} />}
-                  onClick={handleOpenModal}
-                >
-                  Add Party
-                </Menu.Item>
-                <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
                   onClick={() => handleEditPartty(row.original)}
                 >
@@ -126,7 +122,24 @@ export const PartiesDetails = () => {
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
-                  onClick={() => handledeleteParty(row.original._id)}
+                  onClick={() =>
+                    openConfirmModal({
+                      title: "Delete your Party",
+                      centered: true,
+                      children: (
+                        <Text size="sm">
+                          Are you sure you want to delete your Party?
+                        </Text>
+                      ),
+                      labels: {
+                        confirm: "Delete Party",
+                        cancel: "No don't delete it",
+                      },
+                      confirmProps: { color: "red" },
+                      onCancel: () => console.log("Cancel"),
+                      onConfirm: () => handlePartyDelete(row.original._id),
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>
@@ -136,7 +149,7 @@ export const PartiesDetails = () => {
         ),
       },
     ],
-    [handledeleteParty]
+    [handlePartyDelete]
   );
 
   const handleModalClose = () => {

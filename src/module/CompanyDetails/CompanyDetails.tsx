@@ -1,8 +1,9 @@
-import { ActionIcon, Button, Group, Menu, Modal } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Modal, Text } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
 import { Fragment, useCallback, useMemo, useState } from "react";
-import { CirclePlus, Dots, Edit, Plus, Trash } from "tabler-icons-react";
+import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useCompanies } from "../../hooks";
 import { FetchCompanyData } from "../../types";
@@ -19,7 +20,7 @@ export const CompanyDetails = () => {
     setOpened(true);
   };
 
-  const handledeleteCompany = useCallback(
+  const handleCompanyDelete = useCallback(
     async (id: string) => {
       const response: any = await deletecompany(id);
       if (response.data.success) {
@@ -106,12 +107,6 @@ export const CompanyDetails = () => {
 
               <Menu.Dropdown>
                 <Menu.Item
-                  icon={<CirclePlus size={20} strokeWidth={1.5} />}
-                  onClick={handleOpenModal}
-                >
-                  Add Company
-                </Menu.Item>
-                <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
                   onClick={() => handleEditPartty(row.original)}
                 >
@@ -120,7 +115,24 @@ export const CompanyDetails = () => {
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
-                  onClick={() => handledeleteCompany(row.original._id)}
+                  onClick={() =>
+                    openConfirmModal({
+                      title: "Delete your Company",
+                      centered: true,
+                      children: (
+                        <Text size="sm">
+                          Are you sure you want to delete your Company?
+                        </Text>
+                      ),
+                      labels: {
+                        confirm: "Delete Company",
+                        cancel: "No don't delete it",
+                      },
+                      confirmProps: { color: "red" },
+                      onCancel: () => console.log("Cancel"),
+                      onConfirm: () => handleCompanyDelete(row.original._id),
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>
@@ -130,7 +142,7 @@ export const CompanyDetails = () => {
         ),
       },
     ],
-    [handledeleteCompany]
+    [handleCompanyDelete]
   );
 
   const handleModalClose = () => {
