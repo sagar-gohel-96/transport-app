@@ -35,7 +35,7 @@ export const AuthRoutes = () => {
       <Route path="/Signup" element={<Signup />} />
       <Route path="/" element={<Signin />} />
       <Route path="/Signin" element={<Signin />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Signin />} />
     </Routes>
   );
 };

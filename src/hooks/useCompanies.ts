@@ -4,7 +4,7 @@ import {
   useDeleteCompanyMutation,
   useGetcompaniesQuery,
   useUpdateCompanyMutation,
-} from "../api/companies";
+} from "../api";
 
 export const useCompanies = () => {
   const { data, isLoading, refetch } = useGetcompaniesQuery("");
