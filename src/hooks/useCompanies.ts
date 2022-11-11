@@ -6,8 +6,11 @@ import {
   useUpdateCompanyMutation,
 } from "../api";
 
-export const useCompanies = () => {
-  const { data, isLoading, refetch } = useGetcompaniesQuery("");
+export const useCompanies = (id: string) => {
+  const isUpdateId = parseInt(id);
+  const { data, isLoading, refetch } = useGetcompaniesQuery(
+    !!isUpdateId ? id : ""
+  );
   const [addCompany] = useAddCompanyMutation();
   const [updateCompany] = useUpdateCompanyMutation();
   const [deletecompany] = useDeleteCompanyMutation();

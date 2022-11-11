@@ -11,6 +11,7 @@ import {
   PartyDetails,
   PartiesList,
   AreasList,
+  CompanyDetails,
 } from "./module";
 
 export const enum RoutesEnum {
@@ -35,6 +36,7 @@ export const AppRoutes = () => {
       <Route path={RoutesEnum.Reports} element={<Report />} />
       <Route path={RoutesEnum.Profile} element={<Profile />} />
       <Route path={"parties/:id"} element={<PartyDetails />} />
+      <Route path={"companies/:id"} element={<CompanyDetails />} />
       <Route path="*" element={<Dashboard />} />
     </Routes>
   );

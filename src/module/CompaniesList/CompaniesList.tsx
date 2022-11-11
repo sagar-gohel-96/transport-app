@@ -1,24 +1,20 @@
-import { ActionIcon, Button, Group, Menu, Modal, Text } from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { Fragment, useCallback, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useCompanies } from "../../hooks";
 import { FetchCompanyData } from "../../types";
-import { AddCompany } from "./components/AddCompany";
 
 export const CompaniesList = () => {
-  const [opened, setOpened] = useState<boolean>(false);
-  const [companyRecord, setCompanyRecord] = useState<FetchCompanyData>();
-  const { getCompanies, addCompany, deletecompany, updateCompany } =
-    useCompanies();
+  const param = useParams();
+  const { getCompanies, deletecompany } = useCompanies(param.id!);
 
-  const handleEditPartty = (data: FetchCompanyData) => {
-    setCompanyRecord(data);
-    setOpened(true);
-  };
+  const navigate = useNavigate();
+  const id = "00000000000000000000000";
 
   const handleCompanyDelete = useCallback(
     async (id: string) => {
@@ -108,9 +104,9 @@ export const CompaniesList = () => {
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
-                  onClick={() => handleEditPartty(row.original)}
+                  onClick={() => navigate(`/companies/${row.original._id}`)}
                 >
-                  Edit Company
+                  Edit
                 </Menu.Item>
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
@@ -142,20 +138,16 @@ export const CompaniesList = () => {
         ),
       },
     ],
-    [handleCompanyDelete]
+    [handleCompanyDelete, navigate]
   );
-
-  const handleModalClose = () => {
-    setOpened(false);
-  };
-
-  const handleOpenModal = () => {
-    setOpened(true);
-  };
 
   const tabletoolbarRightContent = (
     <Group>
-      <Button onClick={handleOpenModal} leftIcon={<Plus />} variant="outline">
+      <Button
+        onClick={() => navigate(`/companies/${id}`)}
+        leftIcon={<Plus />}
+        variant="outline"
+      >
         Company
       </Button>
     </Group>
@@ -175,15 +167,6 @@ export const CompaniesList = () => {
         isLoading={getCompanies.isLoading}
         LoadingType="relative"
       />
-      <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddCompany
-          handleCloseModal={handleModalClose}
-          data={companyRecord}
-          addCompany={addCompany}
-          updateCompany={updateCompany}
-          refetch={getCompanies.refetch}
-        />
-      </Modal>
     </Fragment>
   );
 };

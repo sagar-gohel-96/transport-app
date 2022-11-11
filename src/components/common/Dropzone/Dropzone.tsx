@@ -5,12 +5,14 @@ import {
   IMAGE_MIME_TYPE,
 } from "@mantine/dropzone";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ReactNode } from "react";
 import { Photo, PhotoUp, PhotoX } from "tabler-icons-react";
 import { storage } from "../../../firebase";
 import { uploadImage } from "./utils";
 
 interface IDropzoneProps extends Partial<DropzoneProps> {
   folderName: string;
+  children: ReactNode;
   description: { title: string; aboutImage?: string };
   setProgresspercent: (value: number) => void;
   setImgUrl: (value: string) => void;
@@ -19,6 +21,7 @@ interface IDropzoneProps extends Partial<DropzoneProps> {
 export const Dropzon = ({
   folderName,
   description,
+  children,
   setProgresspercent,
   setImgUrl,
   ...props
@@ -60,18 +63,19 @@ export const Dropzon = ({
             color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]}
           />
         </MantineDropzone.Reject>
-        <MantineDropzone.Idle>
+        {/* <MantineDropzone.Idle>
           <Photo size={50} strokeWidth={1.5} />
-        </MantineDropzone.Idle>
+        </MantineDropzone.Idle> */}
 
-        <div>
+        {/* <div>
           <Text size="xl" inline>
             {description.title}
           </Text>
           <Text size="sm" color="dimmed" inline mt={7}>
             {description.aboutImage}
           </Text>
-        </div>
+      </div> */}
+        {children}
       </Group>
     </MantineDropzone>
   );

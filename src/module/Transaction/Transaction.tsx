@@ -30,7 +30,6 @@ export const Transaction = () => {
   const param = useParams();
   const [value, setValue] = useState<TransactionData[]>([]);
   const { getParties } = useParties(param.id!);
-  // console.log("get Party", getParties);
 
   const form = useForm<TransactionData>({
     initialValues: {
