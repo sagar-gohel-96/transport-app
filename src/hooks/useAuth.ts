@@ -7,10 +7,10 @@ import { useLocalStorage } from "./useLocalStorage";
 export const useAuth = () => {
   const { getLocalStorageItem: userLocalStorage } =
     useLocalStorage<UserResponse>(config.userLocalStorageKey as string);
-  const { user: userData } = useAppSelector((state) => state.auth);
+  const { user: userData, initialized } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  const isInitialised = false;
+  const isInitialised = initialized;
 
   let user = userData?.user;
   const token = userData?.token;

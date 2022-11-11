@@ -6,8 +6,12 @@ import {
   useUpdatePartyMutation,
 } from "../api";
 
-export const useParties = () => {
-  const { data, isLoading, refetch } = useGetPartiesQuery("");
+export const useParties = (id: string) => {
+  const isUpdateId = parseInt(id);
+
+  const { data, isLoading, refetch } = useGetPartiesQuery(
+    !!isUpdateId ? id : ""
+  );
   const [addParty] = useAddPartyMutation();
   const [updateParty] = useUpdatePartyMutation();
   const [deleteParty] = useDeletePartyMutation();

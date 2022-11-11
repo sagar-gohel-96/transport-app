@@ -1,74 +1,90 @@
-import {
-  ActionIcon,
-  Button,
-  // Checkbox,
-  Group,
-  Menu,
-  Modal,
-  Text,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Menu, Modal, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
-import { useAreas } from "../../hooks";
-import { FetchAreaData } from "../../types";
-import { AddArea } from "./components";
+import { useCompanies } from "../../hooks";
+import { FetchCompanyData } from "../../types";
+import { AddCompany } from "./components/AddCompany";
 
-export const AreaDetails = () => {
+export const CompaniesList = () => {
   const [opened, setOpened] = useState<boolean>(false);
-  const [AreaRecord, setAreaRecord] = useState<FetchAreaData>();
-  const { getAreas, addArea, updateArea, deleteArea } = useAreas();
+  const [companyRecord, setCompanyRecord] = useState<FetchCompanyData>();
+  const { getCompanies, addCompany, deletecompany, updateCompany } =
+    useCompanies();
 
-  const handleEditArea = (data: FetchAreaData) => {
-    setAreaRecord(data);
+  const handleEditPartty = (data: FetchCompanyData) => {
+    setCompanyRecord(data);
     setOpened(true);
   };
 
-  const handleAreaDelete = useCallback(
+  const handleCompanyDelete = useCallback(
     async (id: string) => {
-      const response: any = await deleteArea(id);
+      const response: any = await deletecompany(id);
       if (response.data.success) {
-        getAreas.refetch();
+        getCompanies.refetch();
         showNotification({
-          title: "Area",
+          title: "Company",
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Area",
+          title: "Company",
           message: response.data.message,
         });
       }
     },
-    [deleteArea, getAreas]
+    [deletecompany, getCompanies]
   );
 
-  const columns = useMemo<ColumnDef<FetchAreaData>[]>(
+  const columns = useMemo<ColumnDef<FetchCompanyData>[]>(
     () => [
+      // {
+      //   id: "select",
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       checked={table.getIsAllRowsSelected()}
+      //       onChange={table.getToggleAllRowsSelectedHandler()}
+      //       indeterminate={table.getIsSomeRowsSelected()}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       checked={row.getIsSelected()}
+      //       onChange={row.getToggleSelectedHandler()}
+      //       indeterminate={row.getIsSomeSelected()}
+      //     />
+      //   ),
+      // },
       {
         header: "#",
-        // accessorKey: "AreaCode",
+
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Area Name",
-        accessorKey: "areaName",
+        header: "Company Name",
+        accessorKey: "companyName",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "City",
-        accessorKey: "city",
+        header: "Conatct Person",
+        accessorKey: "contactPerson",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Contact Person",
-        accessorKey: "name",
+        header: "Address",
+        accessorKey: "address",
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      },
+      {
+        header: "Contact Numebr",
+        accessorKey: "phoneNumber",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
@@ -78,7 +94,7 @@ export const AreaDetails = () => {
           <div
             style={{
               display: "flex",
-              // justifyContent: "center",
+              justifyContent: "center",
               alignItems: "center",
             }}
           >
@@ -92,29 +108,29 @@ export const AreaDetails = () => {
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
-                  onClick={() => handleEditArea(row.original)}
+                  onClick={() => handleEditPartty(row.original)}
                 >
-                  Edit Area
+                  Edit Company
                 </Menu.Item>
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
                   onClick={() =>
                     openConfirmModal({
-                      title: "Delete your Area",
+                      title: "Delete your Company",
                       centered: true,
                       children: (
                         <Text size="sm">
-                          Are you sure you want to delete your Area?
+                          Are you sure you want to delete your Company?
                         </Text>
                       ),
                       labels: {
-                        confirm: "Delete Area",
+                        confirm: "Delete Company",
                         cancel: "No don't delete it",
                       },
                       confirmProps: { color: "red" },
                       onCancel: () => console.log("Cancel"),
-                      onConfirm: () => handleAreaDelete(row.original._id),
+                      onConfirm: () => handleCompanyDelete(row.original._id),
                     })
                   }
                 >
@@ -126,7 +142,7 @@ export const AreaDetails = () => {
         ),
       },
     ],
-    [handleAreaDelete]
+    [handleCompanyDelete]
   );
 
   const handleModalClose = () => {
@@ -140,7 +156,7 @@ export const AreaDetails = () => {
   const tabletoolbarRightContent = (
     <Group>
       <Button onClick={handleOpenModal} leftIcon={<Plus />} variant="outline">
-        Area
+        Company
       </Button>
     </Group>
   );
@@ -149,23 +165,23 @@ export const AreaDetails = () => {
     <Fragment>
       <Table
         columns={columns}
-        data={getAreas.data ? getAreas.data : []}
+        data={getCompanies.data ? getCompanies.data : []}
         pagination
         toolbarProps={{
-          title: "Area Details",
+          title: "Company Details",
           showSearch: true,
           rightContent: tabletoolbarRightContent,
         }}
-        isLoading={getAreas.isLoading}
+        isLoading={getCompanies.isLoading}
         LoadingType="relative"
       />
       <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddArea
+        <AddCompany
           handleCloseModal={handleModalClose}
-          data={AreaRecord}
-          addArea={addArea}
-          updateArea={updateArea}
-          refetch={getAreas.refetch}
+          data={companyRecord}
+          addCompany={addCompany}
+          updateCompany={updateCompany}
+          refetch={getCompanies.refetch}
         />
       </Modal>
     </Fragment>

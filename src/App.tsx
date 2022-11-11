@@ -12,11 +12,12 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { AuthRoutes } from "./Routes";
 import { useAuth, useLocalStorage } from "./hooks";
 import { ModalsProvider } from "@mantine/modals";
+import { LoadingIndicator } from "./components/common";
 
 function App() {
   const { getLocalStorageItem: colorScheme, setLocalStorageItem } =
     useLocalStorage<ColorScheme>("color-scheme");
-  const { user } = useAuth();
+  const { user, isInitialised } = useAuth();
 
   const toggleColorScheme = (value: ColorScheme) => {
     setLocalStorageItem(value || colorScheme === "dark" ? "light" : "dark");
@@ -43,7 +44,10 @@ function App() {
         <ModalsProvider labels={{ confirm: "Submit", cancel: "Cancel" }}>
           <NotificationsProvider position="top-right">
             <BrowserRouter>
-              {!user ? (
+              {!isInitialised && (
+                <LoadingIndicator isLoading loadingType="overlay" />
+              )}
+              {!user && (
                 <Box sx={{ position: "relative", width: "100%" }}>
                   <Box
                     sx={{
@@ -62,9 +66,8 @@ function App() {
                     sx={{ opacity: 0.8, height: "100vh", position: "relative" }}
                   />
                 </Box>
-              ) : (
-                <Home />
               )}
+              {user && <Home />}
             </BrowserRouter>
           </NotificationsProvider>
         </ModalsProvider>

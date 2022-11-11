@@ -65,6 +65,6 @@ export const LoadingIndicator = (props: LoadingIndicatorProps) => {
       />
     </div>
   ) : (
-    <LoadingOverlay visible={isLoading} overlayBlur={2} />
+    <LoadingOverlay visible={isLoading} overlayBlur={50} />
   );
 };

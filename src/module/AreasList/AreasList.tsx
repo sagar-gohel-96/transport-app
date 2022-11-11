@@ -13,85 +13,62 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
-import { useParties } from "../../hooks";
-import { FetchPartiesData } from "../../types";
-import { AddPartiesForm } from "./components";
+import { useAreas } from "../../hooks";
+import { FetchAreaData } from "../../types";
+import { AddArea } from "./components";
 
-export const PartiesDetails = () => {
+export const AreasList = () => {
   const [opened, setOpened] = useState<boolean>(false);
-  const [partyRecord, setPartyRecord] = useState<FetchPartiesData>();
-  const { getParties, addParty, deleteParty, updateParty } = useParties();
+  const [AreaRecord, setAreaRecord] = useState<FetchAreaData>();
+  const { getAreas, addArea, updateArea, deleteArea } = useAreas();
 
-  const handleEditPartty = (data: FetchPartiesData) => {
-    setPartyRecord(data);
+  const handleEditArea = (data: FetchAreaData) => {
+    setAreaRecord(data);
     setOpened(true);
   };
 
-  const handlePartyDelete = useCallback(
+  const handleAreaDelete = useCallback(
     async (id: string) => {
-      const response: any = await deleteParty(id);
+      const response: any = await deleteArea(id);
       if (response.data.success) {
-        getParties.refetch();
+        getAreas.refetch();
         showNotification({
-          title: "Party",
+          title: "Area",
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Party",
+          title: "Area",
           message: response.data.message,
         });
       }
     },
-    [deleteParty, getParties]
+    [deleteArea, getAreas]
   );
 
-  const columns = useMemo<ColumnDef<FetchPartiesData>[]>(
+  const columns = useMemo<ColumnDef<FetchAreaData>[]>(
     () => [
-      // {
-      //   id: "select",
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       checked={table.getIsAllRowsSelected()}
-      //       onChange={table.getToggleAllRowsSelectedHandler()}
-      //       indeterminate={table.getIsSomeRowsSelected()}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       checked={row.getIsSelected()}
-      //       onChange={row.getToggleSelectedHandler()}
-      //       indeterminate={row.getIsSomeSelected()}
-      //     />
-      //   ),
-      // },
       {
         header: "#",
-        // accessorKey: "partyCode",
+        // accessorKey: "AreaCode",
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Parties Name",
+        header: "Area Name",
+        accessorKey: "areaName",
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      },
+      {
+        header: "City",
+        accessorKey: "city",
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      },
+      {
+        header: "Contact Person",
         accessorKey: "name",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Conatct Person",
-        accessorKey: "contactPerson",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Address",
-        accessorKey: "address",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Contact Numebr",
-        accessorKey: "phoneNumber",
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
@@ -101,7 +78,7 @@ export const PartiesDetails = () => {
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
+              // justifyContent: "center",
               alignItems: "center",
             }}
           >
@@ -115,29 +92,29 @@ export const PartiesDetails = () => {
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
-                  onClick={() => handleEditPartty(row.original)}
+                  onClick={() => handleEditArea(row.original)}
                 >
-                  Edit Party
+                  Edit Area
                 </Menu.Item>
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
                   onClick={() =>
                     openConfirmModal({
-                      title: "Delete your Party",
+                      title: "Delete your Area",
                       centered: true,
                       children: (
                         <Text size="sm">
-                          Are you sure you want to delete your Party?
+                          Are you sure you want to delete your Area?
                         </Text>
                       ),
                       labels: {
-                        confirm: "Delete Party",
+                        confirm: "Delete Area",
                         cancel: "No don't delete it",
                       },
                       confirmProps: { color: "red" },
                       onCancel: () => console.log("Cancel"),
-                      onConfirm: () => handlePartyDelete(row.original._id),
+                      onConfirm: () => handleAreaDelete(row.original._id),
                     })
                   }
                 >
@@ -149,7 +126,7 @@ export const PartiesDetails = () => {
         ),
       },
     ],
-    [handlePartyDelete]
+    [handleAreaDelete]
   );
 
   const handleModalClose = () => {
@@ -163,7 +140,7 @@ export const PartiesDetails = () => {
   const tabletoolbarRightContent = (
     <Group>
       <Button onClick={handleOpenModal} leftIcon={<Plus />} variant="outline">
-        Party
+        Area
       </Button>
     </Group>
   );
@@ -172,23 +149,23 @@ export const PartiesDetails = () => {
     <Fragment>
       <Table
         columns={columns}
-        data={getParties.data ? getParties.data : []}
+        data={getAreas.data ? getAreas.data : []}
         pagination
         toolbarProps={{
-          title: "Party Details",
+          title: "Area Details",
           showSearch: true,
           rightContent: tabletoolbarRightContent,
         }}
-        isLoading={getParties.isLoading}
+        isLoading={getAreas.isLoading}
         LoadingType="relative"
       />
       <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddPartiesForm
+        <AddArea
           handleCloseModal={handleModalClose}
-          data={partyRecord}
-          addParty={addParty}
-          updateParty={updateParty}
-          refetch={getParties.refetch}
+          data={AreaRecord}
+          addArea={addArea}
+          updateArea={updateArea}
+          refetch={getAreas.refetch}
         />
       </Modal>
     </Fragment>

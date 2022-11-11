@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Users,
 } from "tabler-icons-react";
+import { RoutesEnum } from "../../../Routes";
 import { NavbarItem, ProfileTab } from "../../common";
 
 interface NavbarProps {
@@ -23,52 +24,42 @@ export interface NavbarItemListType {
   urlLink: string;
 }
 
-export const enum Routes {
-  Dashboard = "dashboard",
-  PartiesDetails = "parties-details",
-  CompanyDetails = "company-details",
-  AreaDetails = "area-details",
-  Transaction = "transaction",
-  Reports = "reports",
-  Profile = "profile",
-}
-
 const navbarItemList = [
   {
     iconColor: "blue",
     text: "Dashboard",
     icon: <LayoutDashboard />,
-    urlLink: Routes.Dashboard,
+    urlLink: RoutesEnum.Dashboard,
   },
   {
     iconColor: "blue",
-    text: "Parties Details",
+    text: "Parties ",
     icon: <Users />,
-    urlLink: Routes.PartiesDetails,
+    urlLink: RoutesEnum.PartiesList,
   },
   {
     iconColor: "blue",
-    text: "Company Details",
+    text: "Companies",
     icon: <ApiApp />,
-    urlLink: Routes.CompanyDetails,
+    urlLink: RoutesEnum.CompaniesList,
   },
   {
     iconColor: "blue",
-    text: "Area Details",
+    text: "Areas ",
     icon: <AB2 />,
-    urlLink: Routes.AreaDetails,
+    urlLink: RoutesEnum.AreasList,
   },
   {
     iconColor: "blue",
     text: "Transaction",
     icon: <Book2 />,
-    urlLink: Routes.Transaction,
+    urlLink: RoutesEnum.Transaction,
   },
   {
     iconColor: "blue",
     text: "Reports",
     icon: <FileReport />,
-    urlLink: Routes.Reports,
+    urlLink: RoutesEnum.Reports,
   },
 ];
 
@@ -115,7 +106,7 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
       </MantineNavbar.Section>
 
       <MantineNavbar.Section mt="md">
-        <ProfileTab navigationPath={Routes.Profile} />
+        <ProfileTab navigationPath={RoutesEnum.Profile} />
       </MantineNavbar.Section>
     </MantineNavbar>
   );
