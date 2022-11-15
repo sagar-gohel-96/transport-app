@@ -1,31 +1,28 @@
 import {
   ActionIcon,
   Button,
-  Checkbox,
+  // Checkbox,
   Group,
   Menu,
-  Modal,
+  Text,
 } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { Fragment, useCallback, useMemo, useState } from "react";
-import { CirclePlus, Dots, Edit, Trash } from "tabler-icons-react";
+import { useCallback, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
-import { AddPartiesForm } from "./components";
 
-export const PartiesDetails = () => {
-  const [opened, setOpened] = useState<boolean>(false);
-  const [partyRecord, setPartyRecord] = useState<FetchPartiesData>();
-  const { getParties, addParty, deleteParty, updateParty } = useParties();
+export const PartiesList = () => {
+  const param = useParams();
+  const { getParties, deleteParty } = useParties(param.id!);
+  const navigate = useNavigate();
+  const id = "00000000000000000000000";
 
-  const handleEditPartty = (data: FetchPartiesData) => {
-    setPartyRecord(data);
-    setOpened(true);
-  };
-
-  const handledeleteParty = useCallback(
+  const handlePartyDelete = useCallback(
     async (id: string) => {
       const response: any = await deleteParty(id);
       if (response.data.success) {
@@ -112,21 +109,33 @@ export const PartiesDetails = () => {
 
               <Menu.Dropdown>
                 <Menu.Item
-                  icon={<CirclePlus size={20} strokeWidth={1.5} />}
-                  onClick={handleOpenModal}
-                >
-                  Add Party
-                </Menu.Item>
-                <Menu.Item
                   icon={<Edit size={20} strokeWidth={1.5} />}
-                  onClick={() => handleEditPartty(row.original)}
+                  // onClick={() => handleEditPartty(row.original)}
+                  onClick={() => navigate(`/parties/${row.original._id}`)}
                 >
                   Edit Party
                 </Menu.Item>
                 <Menu.Item
                   icon={<Trash size={20} strokeWidth={1.5} />}
                   color="red"
-                  onClick={() => handledeleteParty(row.original._id)}
+                  onClick={() =>
+                    openConfirmModal({
+                      title: "Delete your Party",
+                      centered: true,
+                      children: (
+                        <Text size="sm">
+                          Are you sure you want to delete your Party?
+                        </Text>
+                      ),
+                      labels: {
+                        confirm: "Delete Party",
+                        cancel: "No don't delete it",
+                      },
+                      confirmProps: { color: "red" },
+                      onCancel: () => console.log("Cancel"),
+                      onConfirm: () => handlePartyDelete(row.original._id),
+                    })
+                  }
                 >
                   Delete
                 </Menu.Item>
@@ -136,46 +145,33 @@ export const PartiesDetails = () => {
         ),
       },
     ],
-    [handledeleteParty]
+    [handlePartyDelete, navigate]
   );
-
-  const handleModalClose = () => {
-    setOpened(false);
-  };
-
-  const handleOpenModal = () => {
-    setOpened(true);
-  };
 
   const tabletoolbarRightContent = (
     <Group>
-      <Button onClick={handleOpenModal}>Add Party</Button>
+      <Button
+        onClick={() => navigate(`/parties/${id}`)}
+        leftIcon={<Plus />}
+        variant="outline"
+      >
+        Party
+      </Button>
     </Group>
   );
 
   return (
-    <Fragment>
-      <Table
-        columns={columns}
-        data={getParties.data ? getParties.data : []}
-        pagination
-        toolbarProps={{
-          title: "Party Details",
-          showSearch: true,
-          rightContent: tabletoolbarRightContent,
-        }}
-        isLoading={getParties.isLoading}
-        LoadingType="relative"
-      />
-      <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddPartiesForm
-          handleCloseModal={handleModalClose}
-          data={partyRecord}
-          addParty={addParty}
-          updateParty={updateParty}
-          refetch={getParties.refetch}
-        />
-      </Modal>
-    </Fragment>
+    <Table
+      columns={columns}
+      data={getParties.data ? getParties.data : []}
+      pagination
+      toolbarProps={{
+        title: "Party Details",
+        showSearch: true,
+        rightContent: tabletoolbarRightContent,
+      }}
+      isLoading={getParties.isLoading}
+      LoadingType="relative"
+    />
   );
 };
