@@ -51,9 +51,9 @@ const navbarItemList = [
   },
   {
     iconColor: "blue",
-    text: "Transaction",
+    text: "Transaction list",
     icon: <Book2 />,
-    urlLink: RoutesEnum.Transaction,
+    urlLink: RoutesEnum.TransactionList,
   },
   {
     iconColor: "blue",

@@ -1,7 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { TypedUseSelectorHook, useDispatch } from "react-redux";
-import { authenticationApi, partiesApi, areasApi, companiesApi } from "../api";
+import {
+  authenticationApi,
+  partiesApi,
+  areasApi,
+  companiesApi,
+  transactionApi,
+} from "../api";
 import { authSlice } from "./auth-slice";
 
 export const Store = configureStore({
@@ -10,6 +16,7 @@ export const Store = configureStore({
     [authenticationApi.reducerPath]: authenticationApi.reducer,
     [companiesApi.reducerPath]: companiesApi.reducer,
     [areasApi.reducerPath]: areasApi.reducer,
+    [transactionApi.reducerPath]: transactionApi.reducer,
 
     auth: authSlice.reducer,
   },
@@ -18,7 +25,8 @@ export const Store = configureStore({
       partiesApi.middleware,
       authenticationApi.middleware,
       companiesApi.middleware,
-      areasApi.middleware
+      areasApi.middleware,
+      transactionApi.middleware
     ),
 });
 
