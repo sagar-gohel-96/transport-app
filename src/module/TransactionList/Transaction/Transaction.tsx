@@ -1,20 +1,14 @@
 import {
-  Autocomplete,
   Box,
   Button,
   Divider,
   Group,
-  Input,
-  MediaQuery,
-  NumberInput,
   Paper,
   Select,
   SimpleGrid,
   Stack,
-  Table,
   Text,
   Textarea,
-  UnstyledButton,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -37,10 +31,16 @@ import { Pricing, TranactionTable, TransactionCardView } from "./components";
 export const Transaction = () => {
   const param = useParams();
   const navigate = useNavigate();
-  const { getParties } = useParties(param.id!);
-  const { addTransaction, addTransactionLoading, getTransactions } =
-    useTransaction();
+  const { getParties } = useParties("");
+  const {
+    addTransaction,
+    addTransactionLoading,
+    getTransactions,
+    updateTransaction,
+    updateTransactionLoading,
+  } = useTransaction(param.id!);
   const { getAreas } = useAreas();
+  const isUpdate = parseInt(param.id!);
 
   const transactionInitialValues = {
     invoiceDate: new Date(),
@@ -61,27 +61,29 @@ export const Transaction = () => {
     ],
   };
 
-  // const getTransactionData = (data: FetchTransaction): FetchTransaction => {
-  //   return {
-  //     invoiceDate: new Date(),
-  //     partyName: "",
-  //     totalAmount: 0,
-  //     GSTAmount: 0,
-  //     netAmount: 0,
-  //     comments: "",
-  //     transactions: [
-  //       {
-  //         fromPlace: "",
-  //         toPlace: "",
-  //         noOfArts: 0,
-  //         freint: 0,
-  //         humali: 0,
-  //         amount: 0,
-  //       },
-  //     ],
-  //   };
-  // };
+  const getTransactionData = (data: FetchTransaction): TransactionData => {
+    const {
+      _id,
+      invoiceDate,
+      partyName,
+      totalAmount,
+      GSTAmount,
+      netAmount,
+      comments,
+      transactions,
+    } = data;
 
+    return {
+      _id,
+      invoiceDate: moment.unix(invoiceDate).toDate(),
+      partyName,
+      totalAmount,
+      GSTAmount,
+      netAmount,
+      comments,
+      transactions,
+    };
+  };
   const form = useForm<TransactionData>({
     initialValues: transactionInitialValues,
 
@@ -90,6 +92,7 @@ export const Transaction = () => {
         value.length < 0 ? "Please Select Party Name" : null,
     },
   });
+
   const calculateTotalAmount = useMemo(
     () => form.values.transactions.reduce((acc, crr) => acc + crr.amount, 0),
     [form.values.transactions]
@@ -98,6 +101,11 @@ export const Transaction = () => {
   const calculateNetAmount = useMemo(
     () => calculateTotalAmount + form.values.GSTAmount,
     [calculateTotalAmount, form.values.GSTAmount]
+  );
+
+  const TransactionData = useMemo(
+    () => getTransactions.data,
+    [getTransactions.data]
   );
 
   const formRef = useRef(form);
@@ -110,39 +118,79 @@ export const Transaction = () => {
       totalAmount: calculateTotalAmount || 0,
       netAmount: calculateNetAmount || 0,
     });
-  }, [calculateNetAmount, calculateTotalAmount]);
+  }, [TransactionData, calculateNetAmount, calculateTotalAmount, isUpdate]);
+
+  useEffect(() => {
+    if (!TransactionData) {
+      return;
+    }
+
+    if (!!isUpdate) {
+      formRef.current.setValues(
+        getTransactionData({
+          ...TransactionData,
+        })
+      );
+    }
+  }, [TransactionData, isUpdate]);
 
   const handleSubmit = async (values: TransactionData) => {
-    console.log("Form Trans", values);
-    const { invoiceDate, ...rest } = values;
+    const { _id, invoiceDate, ...rest } = values;
 
     const getInvoiceDate = moment(new Date(invoiceDate)).unix();
 
     try {
-      const addData: any = await addTransaction({
-        invoiceDate: getInvoiceDate,
-        ...rest,
-      });
-      if (addData.data.success) {
-        showNotification({
-          id: "load-data",
-          loading: addTransactionLoading,
-          title: "Transaction",
-          message: "Transaction Creating...",
-          autoClose: false,
-          disallowClose: true,
+      if (!!isUpdate) {
+        const updateData: any = await updateTransaction({
+          _id,
+          invoiceDate: getInvoiceDate,
+          ...rest,
         });
+        if (updateData.data.success) {
+          showNotification({
+            id: "load-data",
+            loading: updateTransactionLoading,
+            title: "Transaction",
+            message: "Transaction Updating...",
+            autoClose: false,
+            disallowClose: true,
+          });
 
-        updateNotification({
-          id: "load-data",
-          color: "teal",
-          title: "Transaction",
-          message: addData.data.message,
-          icon: <Check size={16} />,
-          autoClose: 2000,
+          updateNotification({
+            id: "load-data",
+            color: "teal",
+            title: "Transaction",
+            message: updateData.data.message,
+            icon: <Check size={16} />,
+            autoClose: 2000,
+          });
+        }
+      } else {
+        const addData: any = await addTransaction({
+          invoiceDate: getInvoiceDate,
+          ...rest,
         });
+        if (addData.data.success) {
+          showNotification({
+            id: "load-data",
+            loading: addTransactionLoading,
+            title: "Transaction",
+            message: "Transaction Creating...",
+            autoClose: false,
+            disallowClose: true,
+          });
 
-        form.reset();
+          updateNotification({
+            id: "load-data",
+            color: "teal",
+            title: "Transaction",
+            message: addData.data.message,
+            icon: <Check size={16} />,
+            autoClose: 2000,
+          });
+
+          form.reset();
+        }
       }
     } catch (err) {
       console.log("error", err);

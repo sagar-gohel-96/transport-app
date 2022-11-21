@@ -34,9 +34,10 @@ export const TransactionCardView = ({
         },
       }}
     >
-      <Stack sx={{}}>
+      <Stack>
         {form.values.transactions.map((element, i) => (
           <Box
+            key={i}
             sx={(theme) => ({
               border: "1px solid",
               borderColor: theme.colors.gray[4],

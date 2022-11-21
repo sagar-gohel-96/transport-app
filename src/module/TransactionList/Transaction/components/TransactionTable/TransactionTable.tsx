@@ -87,7 +87,6 @@ export const TranactionTable = ({
                 <NumberInput
                   required
                   placeholder="Amount"
-                  onChange={() => console.log("a")}
                   {...form.getInputProps(`transactions.${i}.amount`)}
                 />
               </td>

@@ -28,15 +28,27 @@ export const transactionApi = createApi({
       void,
       Pick<TransactionPayload, "_id"> & Partial<TransactionPayload>
     >({
-      query: ({ _id, ...patch }) => ({
-        url: `update-transactions/${_id}`,
-        method: "PUT",
-        body: patch,
-      }),
+      query: ({ _id, ...patch }) => {
+        return {
+          url: `update-transactions/${_id}`,
+          method: "PUT",
+          body: patch,
+        };
+      },
       // invalidatesTags: (result, error, { _id }) => [{ type: "Post", _id }],
+    }),
+    deleteTransaction: builder.mutation({
+      query: (id) => ({
+        url: `/delete-transactions/${id}`,
+        method: "DELETE",
+      }),
     }),
   }),
 });
 
-export const { useGetTransactionsQuery, useAddTransactionMutation } =
-  transactionApi;
+export const {
+  useGetTransactionsQuery,
+  useAddTransactionMutation,
+  useUpdateTransactionMutation,
+  useDeleteTransactionMutation,
+} = transactionApi;
