@@ -1,4 +1,5 @@
 export interface TransactionItem {
+  _id?: string;
   fromPlace: string;
   toPlace: string;
   noOfArts: number;

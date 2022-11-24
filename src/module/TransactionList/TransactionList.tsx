@@ -1,24 +1,21 @@
-import {
-  ActionIcon,
-  Button,
-  Group,
-  Menu,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
+import { Button, Group, Text, UnstyledButton } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
 import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dots, Edit, Plus, Printer, Trash } from "tabler-icons-react";
+import { Download, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
-import { useTransaction } from "../../hooks";
+import { useCompanies, useParties, useTransaction } from "../../hooks";
 import { FetchTransaction } from "../../types";
+import { TransactionChallan } from "./TransactionChallan";
 
 export const TransactionList = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
+  const { getCompanies } = useCompanies("");
+  const { getParties } = useParties("");
   const navigate = useNavigate();
   const id = "00000000000000000000000";
 
@@ -80,56 +77,36 @@ export const TransactionList = () => {
         header: "Action",
         cell: ({ row }) => (
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={
+              {
+                // display: "flex",
+                // justifyContent: "center",
+                // alignItems: "center",
+              }
+            }
           >
-            {/* <Menu withinPortal position="bottom-end" shadow="sm">
-              <Menu.Target>
-                <ActionIcon>
-                  <Dots size={16} />
-                </ActionIcon>
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Item
-                  icon={<Edit size={20} strokeWidth={1.5} />}
-                  onClick={() => navigate(`/transaction/${row.original._id}`)}
-                >
-                  Edit
-                </Menu.Item>
-                <Menu.Item
-                  icon={<Trash size={20} strokeWidth={1.5} />}
-                  color="red"
-                  onClick={() =>
-                    openConfirmModal({
-                      title: "Delete your Tranaction ",
-                      centered: true,
-                      children: (
-                        <Text size="sm">
-                          Are you sure you want to delete your ?
-                        </Text>
-                      ),
-                      labels: {
-                        confirm: "Delete Transaction",
-                        cancel: "No don't delete it",
-                      },
-                      confirmProps: { color: "red" },
-                      onCancel: () => console.log("Cancel"),
-                      onConfirm: () =>
-                        handleTransactionDelete(row.original._id),
-                    })
-                  }
-                >
-                  Delete
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu> */}
             <Group spacing={8}>
               <UnstyledButton>
-                <Printer />
+                <PDFDownloadLink
+                  document={
+                    <TransactionChallan
+                      parties={getParties.data}
+                      companies={getCompanies.data}
+                      data={row.original ?? []}
+                    />
+                  }
+                  fileName="Transaction-Challan.pdf"
+                  style={{
+                    textDecoration: "none",
+                    padding: "10px",
+                    color: "#4a4a4a",
+                  }}
+                >
+                  {/* {({ blob, url, loading, error }) =>
+                    loading ? "Loading document..." : "Download Pdf"
+                  } */}
+                  <Download />
+                </PDFDownloadLink>
               </UnstyledButton>
               <UnstyledButton
                 onClick={() => navigate(`/transaction/${row.original._id}`)}
@@ -163,7 +140,7 @@ export const TransactionList = () => {
         ),
       },
     ],
-    [handleTransactionDelete, navigate]
+    [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
   const tabletoolbarRightContent = (

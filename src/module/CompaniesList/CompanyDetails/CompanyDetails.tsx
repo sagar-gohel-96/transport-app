@@ -71,6 +71,7 @@ export const CompanyDetails = () => {
   const CompaniesData = useMemo(() => data, [data]);
 
   const isImageUploading = useMemo(() => !!progresspercent, [progresspercent]);
+  console.log("isImageUploading", isImageUploading);
 
   const form = useForm<AddCompanyData>({
     initialValues: formInitialValue,
@@ -100,7 +101,11 @@ export const CompanyDetails = () => {
     const _id = values._id;
     try {
       if (values?._id) {
-        const updateData: any = await updateCompany({ _id, ...values });
+        const updateData: any = await updateCompany({
+          _id,
+          headerImage: headerImageUrl,
+          logoImage: logoImageUrl,
+        });
         if (updateData.data.success) {
           showNotification({
             id: "load-data",
@@ -121,7 +126,11 @@ export const CompanyDetails = () => {
           });
         }
       } else {
-        const addData: any = await addCompany(values);
+        const addData: any = await addCompany({
+          ...values,
+          headerImage: headerImageUrl,
+          logoImage: logoImageUrl,
+        });
         if (addData.data.success) {
           showNotification({
             title: "Company",
