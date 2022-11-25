@@ -1,11 +1,13 @@
 import { Box, Navbar as MantineNavbar } from "@mantine/core";
-import { ReactNode, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   AB2,
   ApiApp,
   Book2,
+  ChevronRight,
   FileReport,
+  Fingerprint,
   LayoutDashboard,
   Users,
 } from "tabler-icons-react";
@@ -17,62 +19,59 @@ interface NavbarProps {
   onCloseNavbar: () => void;
 }
 
-export interface NavbarItemListType {
-  iconColor: string;
-  icon: ReactNode;
-  text: string;
-  urlLink: string;
-}
-
-const navbarItemList = [
+const data = [
   {
-    iconColor: "blue",
-    text: "Dashboard",
     icon: <LayoutDashboard />,
-    urlLink: RoutesEnum.Dashboard,
+    label: "Dashboard",
+    path: RoutesEnum.Dashboard,
   },
   {
-    iconColor: "blue",
-    text: "Parties ",
     icon: <Users />,
-    urlLink: RoutesEnum.PartiesList,
+    label: "Parties",
+    path: RoutesEnum.PartiesList,
   },
   {
-    iconColor: "blue",
-    text: "Companies",
-    icon: <ApiApp />,
-    urlLink: RoutesEnum.CompaniesList,
-  },
-  {
-    iconColor: "blue",
-    text: "Areas ",
     icon: <AB2 />,
-    urlLink: RoutesEnum.AreasList,
+    label: "Areas",
+    path: RoutesEnum.AreasList,
   },
   {
-    iconColor: "blue",
-    text: "Transaction list",
     icon: <Book2 />,
-    urlLink: RoutesEnum.TransactionList,
+    label: "Transactions",
+    path: RoutesEnum.TransactionList,
   },
   {
-    iconColor: "blue",
-    text: "Reports",
     icon: <FileReport />,
-    urlLink: RoutesEnum.Reports,
+    label: "Report",
+    rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
+    subItems: [
+      {
+        icon: <Fingerprint />,
+        label: "Date Wise",
+        path: RoutesEnum.DateWiseReports,
+      },
+      {
+        icon: <Fingerprint />,
+        label: "party wise",
+        path: RoutesEnum.PartyWiseReports,
+      },
+    ],
   },
+  { icon: <ApiApp />, label: "Companies", path: RoutesEnum.CompaniesList },
 ];
 
 export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [active, setActive] = useState(0);
 
   const pathRefMemo = useMemo(() => {
     return location.pathname;
   }, [location.pathname]);
 
-  const handleMenuClick = (item: NavbarItemListType) => {
-    navigate(item.urlLink);
+  const handleNavbarClick = (item: any, index: number) => {
+    navigate(item.path);
+    setActive(index);
     onCloseNavbar();
   };
 
@@ -94,11 +93,13 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
             gap: 6,
           }}
         >
-          {navbarItemList.map((item, i) => (
+          {data.map((item, index) => (
             <NavbarItem
-              key={i}
-              item={item}
-              onClick={() => handleMenuClick(item)}
+              data={item}
+              index={index}
+              key={index}
+              active={active}
+              handleNavbarClick={handleNavbarClick}
               pathRef={pathRefMemo}
             />
           ))}
