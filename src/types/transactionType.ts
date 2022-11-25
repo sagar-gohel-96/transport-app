@@ -1,11 +1,19 @@
 export interface TransactionItem {
   _id?: string;
+  CGNo: number;
+  date: Date | string;
   fromPlace: string;
   toPlace: string;
   noOfArts: number;
-  freint: number;
-  humali: number;
+  freight: number;
+  hamali: number;
   amount: number;
+}
+
+type Transaction = Omit<TransactionItem, "date">;
+
+export interface TransactionItemPayload extends Transaction {
+  date: number;
 }
 
 export interface TransactionData {
@@ -27,7 +35,7 @@ export interface TransactionPayload {
   GSTAmount: number;
   netAmount: number;
   comments: string;
-  transactions: TransactionItem[];
+  transactions: TransactionItemPayload[];
 }
 
 export interface FetchTransaction {
@@ -41,5 +49,5 @@ export interface FetchTransaction {
   comments: string;
   createdAt: Date;
   updatedAt: Date;
-  transactions: TransactionItem[];
+  transactions: TransactionItemPayload[];
 }

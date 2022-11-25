@@ -23,6 +23,7 @@ import {
   FetchPartiesData,
   FetchTransaction,
   TransactionData,
+  TransactionItemPayload,
 } from "../../../types";
 import moment from "moment";
 import { RoutesEnum } from "../../../Routes";
@@ -51,11 +52,13 @@ export const Transaction = () => {
     comments: "",
     transactions: [
       {
+        CGNo: 0,
+        date: new Date(),
         fromPlace: "",
         toPlace: "",
         noOfArts: 0,
-        freint: 0,
-        humali: 0,
+        freight: 0,
+        hamali: 0,
         amount: 0,
       },
     ],
@@ -73,6 +76,10 @@ export const Transaction = () => {
       transactions,
     } = data;
 
+    const transformTransaction = transactions.map((transaction) => {
+      return { ...transaction, date: moment.unix(transaction.date).toDate() };
+    });
+
     return {
       _id,
       invoiceDate: moment.unix(invoiceDate).toDate(),
@@ -81,7 +88,7 @@ export const Transaction = () => {
       GSTAmount,
       netAmount,
       comments,
-      transactions,
+      transactions: transformTransaction,
     };
   };
   const form = useForm<TransactionData>({
@@ -121,6 +128,17 @@ export const Transaction = () => {
   }, [TransactionData, calculateNetAmount, calculateTotalAmount, isUpdate]);
 
   useEffect(() => {
+    formRef.current.values.transactions.forEach((transaction, i) => {
+      const calculateTransactionAmount =
+        transaction.freight + transaction.hamali;
+      formRef.current.setFieldValue(
+        `transactions.${i}.amount`,
+        calculateTransactionAmount || 0
+      );
+    });
+  }, []);
+
+  useEffect(() => {
     if (!TransactionData) {
       return;
     }
@@ -135,15 +153,24 @@ export const Transaction = () => {
   }, [TransactionData, isUpdate]);
 
   const handleSubmit = async (values: TransactionData) => {
-    const { _id, invoiceDate, ...rest } = values;
+    const { _id, invoiceDate, transactions, ...rest } = values;
 
     const getInvoiceDate = moment(new Date(invoiceDate)).unix();
+    const transactionTransform: TransactionItemPayload[] = transactions.map(
+      (val) => {
+        return {
+          ...val,
+          date: moment(new Date(val.date)).unix(),
+        };
+      }
+    );
 
     try {
       if (!!isUpdate) {
         const updateData: any = await updateTransaction({
           _id,
           invoiceDate: getInvoiceDate,
+          transactions: transactionTransform,
           ...rest,
         });
         if (updateData.data.success) {
@@ -168,6 +195,7 @@ export const Transaction = () => {
       } else {
         const addData: any = await addTransaction({
           invoiceDate: getInvoiceDate,
+          transactions: transactionTransform,
           ...rest,
         });
         if (addData.data.success) {
@@ -188,7 +216,6 @@ export const Transaction = () => {
             icon: <Check size={16} />,
             autoClose: 2000,
           });
-
           form.reset();
         }
       }
@@ -202,11 +229,13 @@ export const Transaction = () => {
 
   const handleAddTransaction = () => {
     form.insertListItem("transactions", {
+      CGNo: 0,
+      date: "",
       fromPlace: "",
       toPlace: "",
       noOfArts: 0,
-      freint: 0,
-      humali: 0,
+      freight: 0,
+      hamali: 0,
       amount: 0,
     });
   };
@@ -245,6 +274,7 @@ export const Transaction = () => {
                   placeholder="Parties"
                   nothingFound="No Area Found"
                   data={parties}
+                  searchable
                   {...form.getInputProps("partyName")}
                 />
 
