@@ -13,7 +13,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import { Photo, PhotoUp, UserCircle } from "tabler-icons-react";
+import { Photo, PhotoUp } from "tabler-icons-react";
 import { Dropzon } from "../../../../components/common";
 
 import { AddCompanyData } from "../../../../types";

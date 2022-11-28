@@ -1,12 +1,10 @@
 import {
   Autocomplete,
   Box,
-  Button,
   Group,
   NumberInput,
   SimpleGrid,
   Stack,
-  Table,
   Text,
   UnstyledButton,
 } from "@mantine/core";
@@ -98,7 +96,6 @@ export const TransactionCardView = ({
                 required
                 placeholder="Amount"
                 label="Amount"
-                onChange={() => console.log("a")}
                 {...form.getInputProps(`transactions.${i}.amount`)}
               />
             </SimpleGrid>

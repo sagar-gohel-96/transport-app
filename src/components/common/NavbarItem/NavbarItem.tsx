@@ -1,73 +1,64 @@
-import { Box, Button, Group, Text, ThemeIcon } from '@mantine/core';
-import { NavbarItemListType } from '../../layout';
+import { Box, NavLink } from "@mantine/core";
+import { ReactNode } from "react";
 
-interface NavbarItemProps {
-  item: NavbarItemListType;
-  pathRef: any;
-  onClick: () => void;
+interface SubItemType {
+  icon: ReactNode;
+  label: string;
+  path?: string;
 }
 
-export const NavbarItem = ({ item, pathRef, onClick }: NavbarItemProps) => {
-  const { text, icon } = item;
+export interface NavbarItemType {
+  icon: ReactNode;
+  label: string;
+  path?: string;
+  subItems?: SubItemType[];
+  rightSection?: ReactNode;
+}
+
+interface NavbarItemProps {
+  data: NavbarItemType;
+  pathRef: any;
+  index: number;
+  handleNavbarClick: (item: NavbarItemType, index: number) => void;
+}
+
+export const NavbarItem = ({
+  data,
+  pathRef,
+  index,
+  handleNavbarClick,
+}: NavbarItemProps) => {
+  const { icon, label, subItems, path, rightSection } = data;
 
   return (
-    <Button
-      onClick={onClick}
-      variant="subtle"
-      size="md"
-      sx={(theme) => ({
-        display: 'flex',
-        flex: '1',
-        borderTopRightRadius: theme.radius.xl,
-        borderBottomRightRadius: theme.radius.xl,
-        backgroundColor:
-          `/${item.urlLink}` === pathRef
-            ? theme.colorScheme === 'dark'
-              ? theme.colors.dark[4]
-              : theme.colors.primaryBlue[1]
-            : '',
-        fontSize: theme.fontSizes.xs,
-        fontWeight: 'bold',
-        '&:hover': {
-          backgroundColor:
-            `/${item.urlLink}` === pathRef
-              ? theme.colorScheme === 'dark'
-                ? theme.colors.dark[4]
-                : theme.colors.gray[4]
-              : theme.colorScheme === 'dark'
-              ? theme.colors.dark[5]
-              : theme.colors.gray[2],
-        },
-        paddingBlock: '5px',
-        '@media (max-width: 1200px) and (min-width: 760px)': {
-          paddingBlock: '16px',
-        },
-      })}
-    >
-      <Box>
-        <Group>
-          <ThemeIcon
-            variant="light"
-            size="xl"
-            color="primaryBlue"
-            sx={{
-              '@media (max-width: 1200px) and (min-width: 760px)': {
-                display: 'none',
-              },
-            }}
-          >
-            {icon}
-          </ThemeIcon>
-          <Text
-            sx={(theme) => ({
-              color: theme.colors.primary,
-            })}
-            transform="uppercase"
-          >
-            {text}
-          </Text>
-        </Group>
-      </Box>
-    </Button>
+    <Box sx={{}}>
+      {!subItems && (
+        <NavLink
+          py="sm"
+          key={index}
+          active={`/${path}` === pathRef}
+          label={label}
+          rightSection={rightSection}
+          icon={icon}
+          onClick={() => handleNavbarClick(data, index)}
+          sx={{ borderRadius: 8 }}
+        />
+      )}
+
+      {subItems && (
+        <NavLink label={label} icon={icon}>
+          {subItems.map((sub, i) => (
+            <NavLink
+              key={sub.label}
+              active={`/${sub.path}` === pathRef}
+              label={sub.label}
+              icon={sub.icon}
+              onClick={() => handleNavbarClick(sub, i)}
+              sx={{ borderRadius: 8 }}
+            />
+          ))}
+        </NavLink>
+      )}
+    </Box>
   );
 };

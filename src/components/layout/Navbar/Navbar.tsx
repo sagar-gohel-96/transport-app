@@ -1,65 +1,56 @@
 import { Box, Navbar as MantineNavbar } from "@mantine/core";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   AB2,
   ApiApp,
   Book2,
+  ChevronRight,
   FileReport,
+  Fingerprint,
   LayoutDashboard,
   Users,
 } from "tabler-icons-react";
 import { RoutesEnum } from "../../../Routes";
-import { NavbarItem, ProfileTab } from "../../common";
+import { NavbarItem, NavbarItemType, ProfileTab } from "../../common";
 
 interface NavbarProps {
   opened: boolean;
   onCloseNavbar: () => void;
 }
 
-export interface NavbarItemListType {
-  iconColor: string;
-  icon: ReactNode;
-  text: string;
-  urlLink: string;
-}
-
-const navbarItemList = [
+const data: NavbarItemType[] = [
   {
-    iconColor: "blue",
-    text: "Dashboard",
+    label: "Dashboard",
     icon: <LayoutDashboard />,
-    urlLink: RoutesEnum.Dashboard,
+    path: RoutesEnum.Dashboard,
   },
+  { label: "Parties ", icon: <Users />, path: RoutesEnum.PartiesList },
+  { label: "Companies", icon: <ApiApp />, path: RoutesEnum.CompaniesList },
+  { label: "Areas ", icon: <AB2 />, path: RoutesEnum.AreasList },
   {
-    iconColor: "blue",
-    text: "Parties ",
-    icon: <Users />,
-    urlLink: RoutesEnum.PartiesList,
-  },
-  {
-    iconColor: "blue",
-    text: "Companies",
-    icon: <ApiApp />,
-    urlLink: RoutesEnum.CompaniesList,
-  },
-  {
-    iconColor: "blue",
-    text: "Areas ",
-    icon: <AB2 />,
-    urlLink: RoutesEnum.AreasList,
-  },
-  {
-    iconColor: "blue",
-    text: "Transaction list",
+    label: "Transaction list",
     icon: <Book2 />,
-    urlLink: RoutesEnum.TransactionList,
+    path: RoutesEnum.TransactionList,
   },
+
   {
-    iconColor: "blue",
-    text: "Reports",
     icon: <FileReport />,
-    urlLink: RoutesEnum.Reports,
+    label: "Report",
+    rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
+    path: RoutesEnum.TransactionList,
+    subItems: [
+      {
+        icon: <Fingerprint />,
+        label: "Date Wise",
+        path: RoutesEnum.DateWiseReports,
+      },
+      {
+        icon: <Fingerprint />,
+        label: "Party wise",
+        path: RoutesEnum.PartyWiseReports,
+      },
+    ],
   },
 ];
 
@@ -71,8 +62,8 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
     return location.pathname;
   }, [location.pathname]);
 
-  const handleMenuClick = (item: NavbarItemListType) => {
-    navigate(item.urlLink);
+  const handleNavbarClick = (item: NavbarItemType, index: number) => {
+    navigate(item.path!);
     onCloseNavbar();
   };
 
@@ -94,11 +85,12 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
             gap: 6,
           }}
         >
-          {navbarItemList.map((item, i) => (
+          {data.map((item, i) => (
             <NavbarItem
               key={i}
-              item={item}
-              onClick={() => handleMenuClick(item)}
+              data={item}
+              handleNavbarClick={handleNavbarClick}
+              index={i}
               pathRef={pathRefMemo}
             />
           ))}
