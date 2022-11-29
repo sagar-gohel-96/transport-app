@@ -10,20 +10,17 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrandFacebook, BrandGoogle } from "tabler-icons-react";
 import { useAddUserMutation } from "../../../api";
 import { useLocalStorage } from "../../../hooks";
-import { useAppDispatch, useAppSelector } from "../../../store";
+import { useAppDispatch } from "../../../store";
 import { authAction } from "../../../store/auth-slice";
 import { AddUserPayload, UserResponse } from "../../../types/userType";
 import { config } from "../../../utils";
 
 export const Signup = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
-  const getUser = useMemo(() => user, [user]);
   const [addUser] = useAddUserMutation();
   const { setLocalStorageItem } = useLocalStorage<UserResponse>(
     config.userLocalStorageKey as string

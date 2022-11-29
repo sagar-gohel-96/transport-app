@@ -1,24 +1,25 @@
-import { Button, Group, Text, UnstyledButton } from "@mantine/core";
+import { Group, MultiSelect, Text, UnstyledButton } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Plus, Trash } from "tabler-icons-react";
+import { Download, Edit, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
-import { FetchTransaction } from "../../../types";
+import { FetchPartiesData, FetchTransaction } from "../../../types";
 import { TransactionChallan } from "../../TransactionList";
+import { FilterTransactionByParties } from "../utils";
 
 export const PartyWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
+  const [filterParties, setFilterParties] = useState([""]);
 
   const navigate = useNavigate();
-  const id = "00000000000000000000000";
 
   useEffect(() => {
     getTransactions.refetch();
@@ -95,9 +96,6 @@ export const PartyWiseReports = () => {
                     color: "#4a4a4a",
                   }}
                 >
-                  {/* {({ blob, url, loading, error }) =>
-                    loading ? "Loading document..." : "Download Pdf"
-                  } */}
                   <Download />
                 </PDFDownloadLink>
               </UnstyledButton>
@@ -136,22 +134,35 @@ export const PartyWiseReports = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
+  const parties = useMemo(
+    () =>
+      !getParties.isLoading &&
+      getParties.data.map((val: FetchPartiesData) => val.name),
+    [getParties]
+  );
+
+  const FilteredData = FilterTransactionByParties(
+    getTransactions.data,
+    filterParties
+  );
+
   const tabletoolbarRightContent = (
     <Group>
-      <Button
-        onClick={() => navigate(`/transaction/${id}`)}
-        leftIcon={<Plus />}
-        variant="outline"
-      >
-        Transaction
-      </Button>
+      <MultiSelect
+        data={parties ? parties : []}
+        placeholder="Select Parties"
+        value={filterParties}
+        onChange={setFilterParties}
+        sx={{ maxWidth: "18rem" }}
+      />
     </Group>
   );
 
   return (
     <Table
       columns={columns}
-      data={getTransactions.data ? getTransactions.data : []}
+      // data={getTransactions.data ? getTransactions.data : []}
+      data={!!FilteredData.length ? FilteredData : []}
       pagination
       toolbarProps={{
         title: "Party Wise Reports",

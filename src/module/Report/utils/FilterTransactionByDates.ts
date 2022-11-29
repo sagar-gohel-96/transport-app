@@ -1,6 +1,6 @@
 import moment, { Moment } from "moment";
 
-export const FilterTransactionByDate = (
+export const FilterTransactionByDates = (
   fromdate: Moment | undefined,
   toDate: Moment | undefined,
   transactionsData: any

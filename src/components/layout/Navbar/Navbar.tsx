@@ -1,5 +1,5 @@
 import { Box, Navbar as MantineNavbar } from "@mantine/core";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   AB2,

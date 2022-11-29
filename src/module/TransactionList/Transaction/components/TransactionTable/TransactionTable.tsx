@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
-import { CirclePlus, Plus, Trash } from "tabler-icons-react";
+import { CirclePlus, Trash } from "tabler-icons-react";
 import { TransactionData } from "../../../../../types";
 
 export interface TransactionTableProps {

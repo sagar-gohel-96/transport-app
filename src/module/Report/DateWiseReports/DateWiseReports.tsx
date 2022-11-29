@@ -12,12 +12,14 @@ import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
 import { TransactionChallan } from "../../TransactionList";
-import { FilterTransactionByDate } from "../utils";
+import { FilterTransactionByDates } from "../utils";
 
 export const DateWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
+  const [pickFromDate, setPickFromDate] = useState<Date | null>();
+  const [pickToDate, setPickToDate] = useState<Date | null>();
 
   const navigate = useNavigate();
 
@@ -134,10 +136,7 @@ export const DateWiseReports = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
-  const [pickFromDate, setPickFromDate] = useState<Date | null>();
-  const [pickToDate, setPickToDate] = useState<Date | null>();
-
-  const FilteredData = FilterTransactionByDate(
+  const FilteredData = FilterTransactionByDates(
     pickFromDate ? moment(pickFromDate) : undefined,
     pickToDate ? moment(pickToDate) : undefined,
     getTransactions.data ? getTransactions.data : []
