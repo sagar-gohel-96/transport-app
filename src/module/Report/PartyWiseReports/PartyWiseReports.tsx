@@ -10,6 +10,7 @@ import { Download, Edit, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchPartiesData, FetchTransaction } from "../../../types";
+import { format } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
 import { FilterTransactionByParties } from "../utils";
 
@@ -17,7 +18,7 @@ export const PartyWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const [filterParties, setFilterParties] = useState([""]);
+  const [filterParties, setFilterParties] = useState<string[]>();
 
   const navigate = useNavigate();
 
@@ -60,7 +61,7 @@ export const PartyWiseReports = () => {
       {
         header: "Invoice Date",
         accessorKey: "invoiceDate",
-        cell: (info) => moment.unix(info.getValue() as number).format("LL"),
+        cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
@@ -143,7 +144,7 @@ export const PartyWiseReports = () => {
 
   const FilteredData = FilterTransactionByParties(
     getTransactions.data,
-    filterParties
+    filterParties ?? []
   );
 
   const tabletoolbarRightContent = (
@@ -162,7 +163,7 @@ export const PartyWiseReports = () => {
     <Table
       columns={columns}
       // data={getTransactions.data ? getTransactions.data : []}
-      data={!!FilteredData.length ? FilteredData : []}
+      data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
         title: "Party Wise Reports",

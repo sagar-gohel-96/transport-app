@@ -9,6 +9,7 @@ import {
   FetchTransaction,
   TransactionItem,
 } from "../../../types";
+import { format } from "../../../utils";
 import { Styles } from "./components/Styles";
 
 interface TransactionChallanProps {
@@ -48,7 +49,7 @@ export const TransactionChallan = ({
     (transaction) => {
       return {
         ...transaction,
-        date: moment.unix(transaction.date).format("DD/MM/YYYY"),
+        date: moment.unix(transaction.date).format(format),
       };
     }
   );
@@ -143,7 +144,7 @@ export const TransactionChallan = ({
                   }}
                 >
                   <Text>Invoice Date: </Text>
-                  <Text>{moment.unix(invoiceDate).format("DD/MM/YYYY")}</Text>
+                  <Text>{moment.unix(invoiceDate).format(format)}</Text>
                 </View>
               </View>
             </View>

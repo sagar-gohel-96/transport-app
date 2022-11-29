@@ -10,6 +10,7 @@ import { Download, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../hooks";
 import { FetchTransaction } from "../../types";
+import { format } from "../../utils";
 import { TransactionChallan } from "./TransactionChallan";
 
 export const TransactionList = () => {
@@ -58,7 +59,7 @@ export const TransactionList = () => {
       {
         header: "Invoice Date",
         accessorKey: "invoiceDate",
-        cell: (info) => moment.unix(info.getValue() as number).format("LL"),
+        cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {

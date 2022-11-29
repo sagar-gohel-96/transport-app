@@ -11,6 +11,7 @@ import { Download, Edit, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
+import { format } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
 import { FilterTransactionByDates } from "../utils";
 
@@ -18,8 +19,18 @@ export const DateWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const [pickFromDate, setPickFromDate] = useState<Date | null>();
-  const [pickToDate, setPickToDate] = useState<Date | null>();
+
+  const toDayDate = new Date();
+  const currentMonthFirstDate = new Date(
+    toDayDate.getFullYear(),
+    toDayDate.getMonth(),
+    1
+  );
+
+  const [pickFromDate, setPickFromDate] = useState<Date | null>(
+    currentMonthFirstDate
+  );
+  const [pickToDate, setPickToDate] = useState<Date | null>(toDayDate);
 
   const navigate = useNavigate();
 
@@ -62,7 +73,7 @@ export const DateWiseReports = () => {
       {
         header: "Invoice Date",
         accessorKey: "invoiceDate",
-        cell: (info) => moment.unix(info.getValue() as number).format("LL"),
+        cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
@@ -147,10 +158,18 @@ export const DateWiseReports = () => {
       <DatePicker
         placeholder="From Date"
         withAsterisk
+        value={pickFromDate}
         onChange={setPickFromDate}
+        inputFormat={format}
       />
       <Text>To</Text>
-      <DatePicker placeholder="To Date" withAsterisk onChange={setPickToDate} />
+      <DatePicker
+        placeholder="To Date"
+        withAsterisk
+        value={pickToDate}
+        onChange={setPickToDate}
+        inputFormat={format}
+      />
     </Group>
   );
 
