@@ -30,10 +30,6 @@ export const Signup = () => {
   );
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("User", getUser);
-  }, [getUser]);
-
   const form = useForm<
     Pick<AddUserPayload, "name" | "email" | "password" | "phone">
   >({

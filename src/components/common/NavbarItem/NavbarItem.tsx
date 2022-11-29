@@ -1,7 +1,7 @@
 import { Box, NavLink } from "@mantine/core";
 import { ReactNode } from "react";
 
-export interface NavbarSubItemType {
+interface SubItemType {
   icon: ReactNode;
   label: string;
   path?: string;
@@ -11,26 +11,24 @@ export interface NavbarItemType {
   icon: ReactNode;
   label: string;
   path?: string;
+  subItems?: SubItemType[];
   rightSection?: ReactNode;
-  subItems?: NavbarSubItemType[];
 }
 
-export interface NavbarItemProps {
+interface NavbarItemProps {
   data: NavbarItemType;
-  index: number;
-  active: number;
   pathRef: any;
+  index: number;
   handleNavbarClick: (item: NavbarItemType, index: number) => void;
 }
 
 export const NavbarItem = ({
   data,
-  index,
-  active,
   pathRef,
+  index,
   handleNavbarClick,
 }: NavbarItemProps) => {
-  const { icon, label, subItems, rightSection, path } = data;
+  const { icon, label, subItems, path, rightSection } = data;
 
   return (
     <Box sx={{}}>
@@ -47,22 +45,20 @@ export const NavbarItem = ({
         />
       )}
 
-      {subItems &&
-        (console.log("isActive", subItems, pathRef),
-        (
-          <NavLink label={label} icon={icon}>
-            {subItems.map((sub, i) => (
-              <NavLink
-                key={sub.label}
-                active={`/${sub.path}` === pathRef}
-                label={sub.label}
-                icon={sub.icon}
-                onClick={() => handleNavbarClick(sub, i)}
-                sx={{ borderRadius: 8 }}
-              />
-            ))}
-          </NavLink>
-        ))}
+      {subItems && (
+        <NavLink label={label} icon={icon}>
+          {subItems.map((sub, i) => (
+            <NavLink
+              key={sub.label}
+              active={`/${sub.path}` === pathRef}
+              label={sub.label}
+              icon={sub.icon}
+              onClick={() => handleNavbarClick(sub, i)}
+              sx={{ borderRadius: 8 }}
+            />
+          ))}
+        </NavLink>
+      )}
     </Box>
   );
 };

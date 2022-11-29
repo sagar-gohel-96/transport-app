@@ -13,8 +13,8 @@ import {
   AreasList,
   CompanyDetails,
   TransactionList,
-  DateWiseRepots,
-  PartyWiseRepots,
+  DateWiseReports,
+  PartyWiseReports,
 } from "./module";
 
 export const enum RoutesEnum {
@@ -26,8 +26,8 @@ export const enum RoutesEnum {
   Reports = "reports",
   Profile = "profile",
   TransactionList = "transactions",
-  DateWiseReports = "date-wire-reports",
-  PartyWiseReports = "party-wire-reports",
+  DateWiseReports = "date-wise-reports",
+  PartyWiseReports = "party-wise-reports",
 }
 
 export const AppRoutes = () => {
@@ -42,8 +42,11 @@ export const AppRoutes = () => {
       <Route path={RoutesEnum.Reports} element={<Report />} />
       <Route path={RoutesEnum.Profile} element={<Profile />} />
       <Route path={RoutesEnum.TransactionList} element={<TransactionList />} />
-      <Route path={RoutesEnum.DateWiseReports} element={<DateWiseRepots />} />
-      <Route path={RoutesEnum.PartyWiseReports} element={<PartyWiseRepots />} />
+      <Route path={RoutesEnum.DateWiseReports} element={<DateWiseReports />} />
+      <Route
+        path={RoutesEnum.PartyWiseReports}
+        element={<PartyWiseReports />}
+      />
       <Route path={"transaction/:id"} element={<Transaction />} />
       <Route path={"parties/:id"} element={<PartyDetails />} />
       <Route path={"companies/:id"} element={<CompanyDetails />} />

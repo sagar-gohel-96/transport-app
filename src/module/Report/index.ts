@@ -1,3 +1,3 @@
 export * from "./Report";
-export * from "./DateWiseRepots";
-export * from "./PartyWiseRepots";
+export * from "./DateWiseReports";
+export * from "./PartyWiseReports";

@@ -1,6 +1,6 @@
 import { Box, Navbar as MantineNavbar } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   AB2,
   ApiApp,
@@ -12,38 +12,33 @@ import {
   Users,
 } from "tabler-icons-react";
 import { RoutesEnum } from "../../../Routes";
-import { NavbarItem, ProfileTab } from "../../common";
+import { NavbarItem, NavbarItemType, ProfileTab } from "../../common";
 
 interface NavbarProps {
   opened: boolean;
   onCloseNavbar: () => void;
 }
 
-const data = [
+const data: NavbarItemType[] = [
   {
-    icon: <LayoutDashboard />,
     label: "Dashboard",
+    icon: <LayoutDashboard />,
     path: RoutesEnum.Dashboard,
   },
+  { label: "Parties ", icon: <Users />, path: RoutesEnum.PartiesList },
+  { label: "Companies", icon: <ApiApp />, path: RoutesEnum.CompaniesList },
+  { label: "Areas ", icon: <AB2 />, path: RoutesEnum.AreasList },
   {
-    icon: <Users />,
-    label: "Parties",
-    path: RoutesEnum.PartiesList,
-  },
-  {
-    icon: <AB2 />,
-    label: "Areas",
-    path: RoutesEnum.AreasList,
-  },
-  {
+    label: "Transaction list",
     icon: <Book2 />,
-    label: "Transactions",
     path: RoutesEnum.TransactionList,
   },
+
   {
     icon: <FileReport />,
     label: "Report",
     rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
+    path: RoutesEnum.TransactionList,
     subItems: [
       {
         icon: <Fingerprint />,
@@ -52,7 +47,7 @@ const data = [
       },
       {
         icon: <Fingerprint />,
-        label: "party wise",
+        label: "Party wise",
         path: RoutesEnum.PartyWiseReports,
       },
     ],
@@ -69,9 +64,8 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
     return location.pathname;
   }, [location.pathname]);
 
-  const handleNavbarClick = (item: any, index: number) => {
-    navigate(item.path);
-    setActive(index);
+  const handleNavbarClick = (item: NavbarItemType, index: number) => {
+    navigate(item.path!);
     onCloseNavbar();
   };
 
@@ -93,13 +87,12 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
             gap: 6,
           }}
         >
-          {data.map((item, index) => (
+          {data.map((item, i) => (
             <NavbarItem
+              key={i}
               data={item}
-              index={index}
-              key={index}
-              active={active}
               handleNavbarClick={handleNavbarClick}
+              index={i}
               pathRef={pathRefMemo}
             />
           ))}

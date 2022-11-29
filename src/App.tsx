@@ -44,9 +44,9 @@ function App() {
         <ModalsProvider labels={{ confirm: "Submit", cancel: "Cancel" }}>
           <NotificationsProvider position="top-right">
             <BrowserRouter>
-              {!isInitialised && (
+              {/* {!isInitialised && (
                 <LoadingIndicator isLoading loadingType="overlay" />
-              )}
+              )} */}
               {!user && (
                 <Box sx={{ position: "relative", width: "100%" }}>
                   <Box
