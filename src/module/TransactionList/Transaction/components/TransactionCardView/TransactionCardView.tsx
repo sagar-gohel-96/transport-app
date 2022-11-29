@@ -6,8 +6,10 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
   UnstyledButton,
 } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
 import { CirclePlus, X } from "tabler-icons-react";
 import { TransactionData } from "../../../../../types";
@@ -60,6 +62,17 @@ export const TransactionCardView = ({
                 { maxWidth: 600, cols: 1, spacing: "sm" },
               ]}
             >
+              <TextInput
+                placeholder="C. G. No."
+                label="C. G. No."
+                {...form.getInputProps(`transactions.${i}.CGNo`)}
+              />
+              <DatePicker
+                label=" Date"
+                placeholder="Date"
+                withAsterisk
+                {...form.getInputProps(`transactions.${i}.date`)}
+              />
               <Autocomplete
                 placeholder="From Place"
                 label="From Place"
@@ -82,15 +95,15 @@ export const TransactionCardView = ({
               />
               <NumberInput
                 required
-                placeholder="Freint"
-                label="Freint"
-                {...form.getInputProps(`transactions.${i}.freint`)}
+                placeholder="Freight"
+                label="Freight"
+                {...form.getInputProps(`transactions.${i}.freight`)}
               />
               <NumberInput
                 required
-                placeholder="Humali"
-                label="Humali"
-                {...form.getInputProps(`transactions.${i}.humali`)}
+                placeholder="Hamali"
+                label="Hamali"
+                {...form.getInputProps(`transactions.${i}.hamali`)}
               />
               <NumberInput
                 required

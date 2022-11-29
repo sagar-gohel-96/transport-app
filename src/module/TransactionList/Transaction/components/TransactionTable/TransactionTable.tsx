@@ -1,12 +1,16 @@
 import {
   Autocomplete,
   Box,
+  Group,
   NumberInput,
   Table,
+  Text,
+  TextInput,
   UnstyledButton,
 } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { UseFormReturnType } from "@mantine/form";
-import { Plus, Trash } from "tabler-icons-react";
+import { CirclePlus, Plus, Trash } from "tabler-icons-react";
 import { TransactionData } from "../../../../../types";
 
 export interface TransactionTableProps {
@@ -32,12 +36,13 @@ export const TranactionTable = ({
       <Table verticalSpacing="sm">
         <thead>
           <tr>
-            {/* <th>Invoice Date</th> */}
+            <th>C. G. No</th>
+            <th>Date</th>
             <th>From</th>
             <th>To</th>
             <th>No of Arts</th>
-            <th>Freint</th>
-            <th>Humali</th>
+            <th>Freight</th>
+            <th>Hamali</th>
             <th>Amount</th>
             <th>Action</th>
           </tr>
@@ -46,6 +51,20 @@ export const TranactionTable = ({
           {/* {rows} */}
           {form.values.transactions.map((element, i) => (
             <tr key={i}>
+              <td>
+                <TextInput
+                  {...form.getInputProps(`transactions.${i}.CGNo`)}
+                  required
+                />
+              </td>
+              <td>
+                <DatePicker
+                  // label=" Date"
+                  placeholder="Date"
+                  withAsterisk
+                  {...form.getInputProps(`transactions.${i}.date`)}
+                />
+              </td>
               <td>
                 <Autocomplete
                   placeholder="From Place"
@@ -72,15 +91,15 @@ export const TranactionTable = ({
               <td>
                 <NumberInput
                   required
-                  placeholder="Freint"
-                  {...form.getInputProps(`transactions.${i}.freint`)}
+                  placeholder="Freight"
+                  {...form.getInputProps(`transactions.${i}.freight`)}
                 />
               </td>
               <td>
                 <NumberInput
                   required
-                  placeholder="Humali"
-                  {...form.getInputProps(`transactions.${i}.humali`)}
+                  placeholder="Hamali"
+                  {...form.getInputProps(`transactions.${i}.hamali`)}
                 />
               </td>
               <td>
@@ -92,9 +111,7 @@ export const TranactionTable = ({
               </td>
               <td>
                 {i === form.values.transactions.length - 1 ? (
-                  <UnstyledButton type="button" onClick={handleAddTransaction}>
-                    <Plus />
-                  </UnstyledButton>
+                  <Box></Box>
                 ) : (
                   <UnstyledButton
                     type="button"
@@ -107,6 +124,14 @@ export const TranactionTable = ({
             </tr>
           ))}
         </tbody>
+        <UnstyledButton type="button" onClick={handleAddTransaction}>
+          <Group spacing={4}>
+            <CirclePlus />
+            <Text weight={600} size="sm">
+              Add New
+            </Text>
+          </Group>
+        </UnstyledButton>
       </Table>
     </Box>
   );

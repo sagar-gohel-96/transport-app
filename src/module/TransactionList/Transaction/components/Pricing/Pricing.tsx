@@ -30,7 +30,6 @@ export const Pricing = ({ form }: PricingProps) => {
           icon={<CurrencyRupee size={18} />}
           variant="filled"
           placeholder="0"
-          readOnly
           {...form.getInputProps("GSTAmount")}
           sx={{ maxWidth: 130 }}
         />

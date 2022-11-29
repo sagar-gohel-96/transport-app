@@ -34,6 +34,8 @@ export const TransactionChallan = ({
   } = data;
 
   const TableHeader = [
+    "C. G. No.",
+    "Date",
     "From",
     "To",
     "No of Arts",
@@ -42,10 +44,15 @@ export const TransactionChallan = ({
     "Amount",
   ];
 
-  const transaformTransactionData = transactions.map((val: TransactionItem) => {
-    const { _id, ...rest } = val;
-    return rest;
-  });
+  const transaformTransactionData: TransactionItem[] = transactions.map(
+    (transaction) => {
+      return {
+        ...transaction,
+        date: moment.unix(transaction.date).format("DD/MM/YYYY"),
+      };
+    }
+  );
+
   const filterPartyData = useMemo(
     () => parties.filter((val) => val.name === partyName),
     [parties, partyName]
