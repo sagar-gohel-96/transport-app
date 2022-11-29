@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { authAction } from "../store/auth-slice";
 import { UserResponse } from "../types/userType";
@@ -15,12 +16,15 @@ export const useAuth = () => {
   let user = userData?.user;
   const token = userData?.token;
 
-  if (!user && userLocalStorage) {
+  useEffect(() => {
     dispatch(
       authAction.setUser({
         user: JSON.parse(JSON.stringify(userLocalStorage)),
       })
     );
+  }, [dispatch, userLocalStorage]);
+
+  if (!user && userLocalStorage) {
     user = JSON.parse(JSON.stringify(userLocalStorage));
   }
 
