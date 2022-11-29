@@ -1,6 +1,7 @@
-import { Box, Image, Text } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'tabler-icons-react';
+import { Box, Image, Text } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "tabler-icons-react";
+import { useAuth } from "../../../hooks";
 
 interface ProfileTabProps {
   navigationPath: string;
@@ -8,6 +9,7 @@ interface ProfileTabProps {
 
 export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   return (
     <Box
       onClick={() => {
@@ -15,16 +17,15 @@ export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
       }}
       sx={(theme) => ({
         backgroundColor:
-          theme.colorScheme === 'dark'
+          theme.colorScheme === "dark"
             ? theme.colors.dark[4]
             : theme.colors.gray[2],
-        borderTopRightRadius: theme.radius.xl,
-        borderBottomRightRadius: theme.radius.xl,
+        borderRadius: 8,
         padding: theme.spacing.xs,
-        cursor: 'pointer',
-        '&:hover': {
+        cursor: "pointer",
+        "&:hover": {
           backgroundColor:
-            theme.colorScheme === 'dark'
+            theme.colorScheme === "dark"
               ? theme.colors.dark[4]
               : theme.colors.gray[2],
         },
@@ -32,24 +33,24 @@ export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
     >
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          justifyContent: 'space-between',
-          textDecoration: 'none',
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          justifyContent: "space-between",
+          textDecoration: "none",
         }}
       >
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
         >
           <Image
             sx={{
-              '@media (max-width: 1200px) and (min-width: 760px)': {
-                display: 'none',
+              "@media (max-width: 1200px) and (min-width: 760px)": {
+                display: "none",
               },
             }}
             width={48}
@@ -59,8 +60,8 @@ export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
             alt="Random unsplash image"
           />
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text sx={(theme) => ({ fontWeight: 'bolder' })}>User Name</Text>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Text sx={(theme) => ({ fontWeight: "bolder" })}>{user?.name}</Text>
             <Text
               sx={(theme) => ({
                 fontSize: theme.fontSizes.sm,
@@ -69,7 +70,7 @@ export const ProfileTab = ({ navigationPath }: ProfileTabProps) => {
                 // },
               })}
             >
-              text@gmail.com
+              {user?.email}
             </Text>
           </div>
         </div>

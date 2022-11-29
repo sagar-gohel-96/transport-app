@@ -1,13 +1,11 @@
-import { Group, Text, useMantineTheme } from "@mantine/core";
+import { Group, useMantineTheme } from "@mantine/core";
 import {
   Dropzone as MantineDropzone,
   DropzoneProps,
   IMAGE_MIME_TYPE,
 } from "@mantine/dropzone";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { ReactNode } from "react";
-import { Photo, PhotoUp, PhotoX } from "tabler-icons-react";
-import { storage } from "../../../firebase";
+import { PhotoUp, PhotoX } from "tabler-icons-react";
 import { uploadImage } from "./utils";
 
 interface IDropzoneProps extends Partial<DropzoneProps> {

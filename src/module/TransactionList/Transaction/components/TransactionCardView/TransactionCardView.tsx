@@ -109,7 +109,6 @@ export const TransactionCardView = ({
                 required
                 placeholder="Amount"
                 label="Amount"
-                value={520}
                 {...form.getInputProps(`transactions.${i}.amount`)}
               />
             </SimpleGrid>
