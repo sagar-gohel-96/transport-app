@@ -1,16 +1,18 @@
-import { Button, Group, Text, UnstyledButton } from "@mantine/core";
+import { Group, Text, UnstyledButton } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Plus, Trash } from "tabler-icons-react";
+import { Download, Edit, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
 import { TransactionChallan } from "../../TransactionList";
+import { FilterTransactionByDate } from "../utils";
 
 export const DateWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
@@ -18,7 +20,6 @@ export const DateWiseReports = () => {
   const { getParties } = useParties("");
 
   const navigate = useNavigate();
-  const id = "00000000000000000000000";
 
   useEffect(() => {
     getTransactions.refetch();
@@ -95,9 +96,6 @@ export const DateWiseReports = () => {
                     color: "#4a4a4a",
                   }}
                 >
-                  {/* {({ blob, url, loading, error }) =>
-                    loading ? "Loading document..." : "Download Pdf"
-                  } */}
                   <Download />
                 </PDFDownloadLink>
               </UnstyledButton>
@@ -136,22 +134,32 @@ export const DateWiseReports = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
+  const [pickFromDate, setPickFromDate] = useState<Date | null>();
+  const [pickToDate, setPickToDate] = useState<Date | null>();
+
+  const FilteredData = FilterTransactionByDate(
+    pickFromDate ? moment(pickFromDate) : undefined,
+    pickToDate ? moment(pickToDate) : undefined,
+    getTransactions.data ? getTransactions.data : []
+  );
+
   const tabletoolbarRightContent = (
     <Group>
-      <Button
-        onClick={() => navigate(`/transaction/${id}`)}
-        leftIcon={<Plus />}
-        variant="outline"
-      >
-        Transaction
-      </Button>
+      <DatePicker
+        placeholder="From Date"
+        withAsterisk
+        onChange={setPickFromDate}
+      />
+      <Text>To</Text>
+      <DatePicker placeholder="To Date" withAsterisk onChange={setPickToDate} />
     </Group>
   );
 
   return (
     <Table
       columns={columns}
-      data={getTransactions.data ? getTransactions.data : []}
+      // data={getTransactions.data ? getTransactions.data : []}
+      data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
         title: "Date Wise Reports",

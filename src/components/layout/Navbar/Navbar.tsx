@@ -5,10 +5,11 @@ import {
   AB2,
   ApiApp,
   Book2,
+  Calendar,
   ChevronRight,
   FileReport,
-  Fingerprint,
   LayoutDashboard,
+  User,
   Users,
 } from "tabler-icons-react";
 import { RoutesEnum } from "../../../Routes";
@@ -41,13 +42,13 @@ const data: NavbarItemType[] = [
     path: RoutesEnum.TransactionList,
     subItems: [
       {
-        icon: <Fingerprint />,
-        label: "Date Wise",
+        icon: <Calendar />,
+        label: "Date Wise Report",
         path: RoutesEnum.DateWiseReports,
       },
       {
-        icon: <Fingerprint />,
-        label: "Party wise",
+        icon: <User />,
+        label: "Party Wise Report",
         path: RoutesEnum.PartyWiseReports,
       },
     ],
@@ -58,7 +59,6 @@ const data: NavbarItemType[] = [
 export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [active, setActive] = useState(0);
 
   const pathRefMemo = useMemo(() => {
     return location.pathname;
