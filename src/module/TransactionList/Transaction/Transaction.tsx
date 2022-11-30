@@ -9,13 +9,14 @@ import {
   Stack,
   Text,
   Textarea,
+  UnstyledButton,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Check } from "tabler-icons-react";
+import { Check, CirclePlus } from "tabler-icons-react";
 import { LoadingIndicator } from "../../../components/common";
 import { useAreas, useParties, useTransaction } from "../../../hooks";
 import {
@@ -28,6 +29,7 @@ import {
 import moment from "moment";
 import { RoutesEnum } from "../../../Routes";
 import { Pricing, TranactionTable, TransactionCardView } from "./components";
+import { format } from "../../../utils";
 
 export const Transaction = () => {
   const param = useParams();
@@ -253,6 +255,13 @@ export const Transaction = () => {
     }
   }, [getAreas.data, getAreas.isLoading]);
 
+  const clculateInvoiceNo = useMemo(() => {
+    const { data } = getTransactions;
+    const getLastIndex = data && data.length - 1;
+    const getLastInvoiceNo = data && data[getLastIndex].invoiceNo;
+    return getLastInvoiceNo + 1;
+  }, [getTransactions]);
+
   return (
     <Fragment>
       {getParties.isLoading && (
@@ -264,6 +273,9 @@ export const Transaction = () => {
             <Group position="apart">
               <Text weight={600} size={24}>
                 Transaction
+              </Text>
+              <Text weight={600} size={18}>
+                InvoiceNo : AMS-{clculateInvoiceNo}
               </Text>
             </Group>
             <Paper radius="sm" sx={{}}>
@@ -279,9 +291,11 @@ export const Transaction = () => {
                 />
 
                 <DatePicker
+                  dropdownType="modal"
                   placeholder="Invoice Date"
                   label="Invoice Date"
                   withAsterisk
+                  inputFormat={format}
                   {...form.getInputProps("invoiceDate")}
                 />
               </SimpleGrid>
@@ -303,13 +317,26 @@ export const Transaction = () => {
                     form={form}
                     handleAddTransaction={handleAddTransaction}
                   />
-
-                  <TransactionCardView
-                    areas={areas}
-                    form={form}
-                    handleAddTransaction={handleAddTransaction}
-                  />
+                  <Stack>
+                    {form.values.transactions.map((element, i) => (
+                      <TransactionCardView
+                        key={i}
+                        index={i}
+                        areas={areas}
+                        form={form}
+                        handleAddTransaction={handleAddTransaction}
+                      />
+                    ))}
+                  </Stack>
                 </Box>
+                <UnstyledButton type="button" onClick={handleAddTransaction}>
+                  <Group spacing={4}>
+                    <CirclePlus />
+                    <Text weight={600} size="sm">
+                      Add New
+                    </Text>
+                  </Group>
+                </UnstyledButton>
                 <Divider />
                 <Box>
                   <Textarea

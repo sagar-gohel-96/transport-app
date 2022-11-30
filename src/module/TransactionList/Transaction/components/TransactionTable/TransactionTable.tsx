@@ -1,17 +1,7 @@
-import {
-  Autocomplete,
-  Box,
-  Group,
-  NumberInput,
-  Table,
-  Text,
-  TextInput,
-  UnstyledButton,
-} from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { Box, Table } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import { CirclePlus, Trash } from "tabler-icons-react";
 import { TransactionData } from "../../../../../types";
+import { TableBody } from "./components/TableBody";
 
 export interface TransactionTableProps {
   form: UseFormReturnType<TransactionData>;
@@ -48,90 +38,10 @@ export const TranactionTable = ({
           </tr>
         </thead>
         <tbody>
-          {/* {rows} */}
           {form.values.transactions.map((element, i) => (
-            <tr key={i}>
-              <td>
-                <TextInput
-                  {...form.getInputProps(`transactions.${i}.CGNo`)}
-                  required
-                />
-              </td>
-              <td>
-                <DatePicker
-                  // label=" Date"
-                  placeholder="Date"
-                  withAsterisk
-                  {...form.getInputProps(`transactions.${i}.date`)}
-                />
-              </td>
-              <td>
-                <Autocomplete
-                  placeholder="From Place"
-                  data={areas ?? []}
-                  {...form.getInputProps(`transactions.${i}.fromPlace`)}
-                  limit={5}
-                />
-              </td>
-              <td>
-                <Autocomplete
-                  placeholder="To Place"
-                  data={areas ?? []}
-                  {...form.getInputProps(`transactions.${i}.toPlace`)}
-                  limit={5}
-                />
-              </td>
-              <td>
-                <NumberInput
-                  required
-                  placeholder="No of Arts"
-                  {...form.getInputProps(`transactions.${i}.noOfArts`)}
-                />
-              </td>
-              <td>
-                <NumberInput
-                  required
-                  placeholder="Freight"
-                  {...form.getInputProps(`transactions.${i}.freight`)}
-                />
-              </td>
-              <td>
-                <NumberInput
-                  required
-                  placeholder="Hamali"
-                  {...form.getInputProps(`transactions.${i}.hamali`)}
-                />
-              </td>
-              <td>
-                <NumberInput
-                  required
-                  placeholder="Amount"
-                  {...form.getInputProps(`transactions.${i}.amount`)}
-                />
-              </td>
-              <td>
-                {i === form.values.transactions.length - 1 ? (
-                  <Box></Box>
-                ) : (
-                  <UnstyledButton
-                    type="button"
-                    onClick={() => form.removeListItem("transactions", i)}
-                  >
-                    <Trash color="red" />
-                  </UnstyledButton>
-                )}
-              </td>
-            </tr>
+            <TableBody form={form} index={i} key={i} areas={areas} />
           ))}
         </tbody>
-        <UnstyledButton type="button" onClick={handleAddTransaction}>
-          <Group spacing={4}>
-            <CirclePlus />
-            <Text weight={600} size="sm">
-              Add New
-            </Text>
-          </Group>
-        </UnstyledButton>
       </Table>
     </Box>
   );
