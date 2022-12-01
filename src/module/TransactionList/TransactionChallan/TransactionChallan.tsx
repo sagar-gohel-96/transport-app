@@ -60,7 +60,7 @@ export const TransactionChallan = ({
   );
 
   const partyData = filterPartyData[0] ?? {};
-  const companyData = companies[0];
+  const companyData = companies.length > 0 ? companies[0] : null;
 
   return (
     <Document>
@@ -70,12 +70,12 @@ export const TransactionChallan = ({
             <View style={Styles.logoSection}>
               <Image
                 cache={false}
-                src={companyData.logoImage}
+                src={companyData?.logoImage}
                 style={{ borderRadius: "30px" }}
               />
             </View>
             <View style={Styles.headerImageSection}>
-              <Image src={companyData.headerImage} />
+              <Image src={companyData?.headerImage} />
             </View>
           </View>
         </View>
@@ -213,11 +213,11 @@ export const TransactionChallan = ({
             <View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>GST No.: </Text>
-                <Text>{companyData.GSTIN}</Text>
+                <Text>{companyData?.GSTIN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>PAN No.: </Text>
-                <Text>{companyData.PAN}</Text>
+                <Text>{companyData?.PAN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>HSN/SAC No.:</Text>
@@ -256,7 +256,7 @@ export const TransactionChallan = ({
                 }}
               >
                 <Text>For, </Text>
-                <Text>{companyData.companyName}</Text>
+                <Text>{companyData?.companyName}</Text>
               </View>
             </View>
           </View>
