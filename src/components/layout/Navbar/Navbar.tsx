@@ -27,7 +27,7 @@ const data: NavbarItemType[] = [
     path: RoutesEnum.Dashboard,
   },
   { label: "Parties ", icon: <Users />, path: RoutesEnum.PartiesList },
-  { label: "Companies", icon: <ApiApp />, path: RoutesEnum.CompaniesList },
+ 
   { label: "Areas ", icon: <AB2 />, path: RoutesEnum.AreasList },
   {
     label: "Transaction list",
@@ -53,7 +53,7 @@ const data: NavbarItemType[] = [
       },
     ],
   },
-  { icon: <ApiApp />, label: "Companies", path: RoutesEnum.CompaniesList },
+  { label: "Companies Profile", icon: <ApiApp />, path: RoutesEnum.CompaniesProfile },
 ];
 
 export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {

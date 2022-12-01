@@ -3,9 +3,9 @@ export * from "./Dashboard";
 export * from "./PartiesList";
 export * from "./TransactionList/Transaction";
 export * from "./AreasList";
-export * from "./CompaniesList";
 export * from "./Report";
 export * from "./Profile";
 export * from "./NotFoundPage";
 export * from "./Authentication";
 export * from "./TransactionList";
+export * from './CompanyProfile'

@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
 import {
-  CompaniesList,
   Dashboard,
   Profile,
   Report,
@@ -11,16 +10,17 @@ import {
   PartyDetails,
   PartiesList,
   AreasList,
-  CompanyDetails,
   TransactionList,
   DateWiseReports,
   PartyWiseReports,
+  CompanyProfile,
 } from "./module";
 
 export const enum RoutesEnum {
   Dashboard = "dashboard",
   PartiesList = "parties",
   CompaniesList = "companies",
+  CompaniesProfile = "company-profile",
   AreasList = "areas",
   Transaction = "transaction",
   Reports = "reports",
@@ -37,11 +37,11 @@ export const AppRoutes = () => {
       <Route path="/" element={<Dashboard />} />
       <Route path={RoutesEnum.Dashboard} element={<Dashboard />} />
       <Route path={RoutesEnum.PartiesList} element={<PartiesList />} />
-      <Route path={RoutesEnum.CompaniesList} element={<CompaniesList />} />
       <Route path={RoutesEnum.AreasList} element={<AreasList />} />
       <Route path={RoutesEnum.Reports} element={<Report />} />
       <Route path={RoutesEnum.Profile} element={<Profile />} />
       <Route path={RoutesEnum.TransactionList} element={<TransactionList />} />
+      <Route path={RoutesEnum.CompaniesProfile} element={<CompanyProfile />} />
       <Route path={RoutesEnum.DateWiseReports} element={<DateWiseReports />} />
       <Route
         path={RoutesEnum.PartyWiseReports}
@@ -49,7 +49,6 @@ export const AppRoutes = () => {
       />
       <Route path={"transaction/:id"} element={<Transaction />} />
       <Route path={"parties/:id"} element={<PartyDetails />} />
-      <Route path={"companies/:id"} element={<CompanyDetails />} />
     </Routes>
   );
 };
