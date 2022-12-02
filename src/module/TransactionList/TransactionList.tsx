@@ -91,8 +91,8 @@ export const TransactionList = () => {
                 <PDFDownloadLink
                   document={
                     <TransactionChallan
-                      parties={getParties.data}
-                      companies={getCompanies.data}
+                      parties={getParties.data ?? []}
+                      companies={getCompanies.data ?? []}
                       data={row.original ?? []}
                     />
                   }
