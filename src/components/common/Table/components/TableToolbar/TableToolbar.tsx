@@ -1,7 +1,7 @@
-import { Box, Divider, Group, Text, TextInput } from '@mantine/core';
-import { Fragment, memo, useContext } from 'react';
-import { TableContext } from '../../context/TableContext';
-import { TableToolbarProps } from '../../Table';
+import { Box, Divider, Group, Text, TextInput } from "@mantine/core";
+import { Fragment, memo, useContext } from "react";
+import { TableContext } from "../../context/TableContext";
+import { TableToolbarProps } from "../../Table";
 
 export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
   const { title, leftContent, rightContent, showSearch } = props;
@@ -13,14 +13,14 @@ export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
         <Fragment>
           <Box
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
             px="sm"
           >
             <Group>
-              <Text weight={500} py="md">
+              <Text weight={600} py="md">
                 {title}
               </Text>
               {leftContent}

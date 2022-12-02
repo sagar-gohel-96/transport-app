@@ -111,10 +111,7 @@ export function Table<T>({
         toolbarProps,
       }}
     >
-      <Paper
-        radius="sm"
-        sx={{ minHeight: "40rem", display: "flex", flexDirection: "column" }}
-      >
+      <Paper radius="sm" sx={{ display: "flex", flexDirection: "column" }}>
         <TableToolbar {...toolbarProps} />
         {isLoading ? (
           <LoadingIndicator
@@ -128,8 +125,9 @@ export function Table<T>({
               horizontalSpacing="sm"
               verticalSpacing="sm"
               className="table-body"
-              style={{ borderBottom: "1px", borderColor: "red" }}
+              style={{ borderBottom: "1px" }}
               ref={tableRef}
+              highlightOnHover
             >
               <TableHeader />
               {!isEmptyState && <TableBody />}

@@ -47,9 +47,27 @@ export const TransactionChallan = ({
 
   const transaformTransactionData: TransactionItem[] = transactions.map(
     (transaction) => {
+      const {
+        _id,
+        date,
+        CGNo,
+        amount,
+        freight,
+        fromPlace,
+        hamali,
+        noOfArts,
+        toPlace,
+      } = transaction;
+
       return {
-        ...transaction,
+        CGNo,
         date: moment.unix(transaction.date).format(format),
+        fromPlace,
+        toPlace,
+        noOfArts,
+        freight,
+        hamali,
+        amount,
       };
     }
   );
