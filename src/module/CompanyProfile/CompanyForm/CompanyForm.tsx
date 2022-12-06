@@ -11,10 +11,9 @@ import {
   Text,
   Textarea,
   TextInput,
-  UnstyledButton,
-} from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { useRef } from 'react';
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { useRef } from "react";
 import {
   Category,
   Mail,
@@ -24,10 +23,10 @@ import {
   PhotoUp,
   User,
   Users,
-} from 'tabler-icons-react';
-import { Dropzon } from '../../../components/common';
-import { AddCompanyData } from '../../../types';
-import { UserResponse } from '../../../types/userType';
+} from "tabler-icons-react";
+import { Dropzon } from "../../../components/common";
+import { AddCompanyData } from "../../../types";
+import { UserResponse } from "../../../types/userType";
 
 interface FileUploadProps {
   headerImageUrl: string;
@@ -71,7 +70,7 @@ export const CompanyForm = ({
             </Text>
           </Card.Section>
           <Card.Section withBorder inheritPadding py="xs">
-            <Box sx={{ display: 'flex', flex: 1, gap: 16 }}>
+            <Box sx={{ display: "flex", flex: 1, gap: 16 }}>
               <Stack>
                 {/* <Text align="left" weight={600} size="md">
                 Logo Image
@@ -81,14 +80,14 @@ export const CompanyForm = ({
                     openRef={openLogoImageRef}
                     folderName={`${user?._id}/company-logo-image`}
                     description={{
-                      title: 'Logo Image',
+                      title: "Logo Image",
                     }}
                     setImgUrl={setLogoImageUrl}
                     setProgresspercent={setProgresspercent}
                     sx={{ borderRadius: 100, width: 200 }}
                     children={
                       <Stack align="center">
-                        <Photo size={48} strokeWidth={2} color={'black'} />
+                        <Photo size={48} strokeWidth={2} color={"black"} />
                         <Text>Logo Image</Text>
                       </Stack>
                     }
@@ -99,10 +98,10 @@ export const CompanyForm = ({
                   <Group
                     position="center"
                     sx={(theme) => ({
-                      border: '1px solid',
+                      border: "1px solid",
                       borderColor: theme.colors.gray[4],
                       borderRadius: 4,
-                      position: 'relative',
+                      position: "relative",
                     })}
                   >
                     <Image
@@ -115,7 +114,7 @@ export const CompanyForm = ({
 
                     <ActionIcon
                       variant="filled"
-                      sx={{ position: 'absolute', top: 4, right: 4 }}
+                      sx={{ position: "absolute", top: 4, right: 4 }}
                       onClick={() => openLogoImageRef.current!()}
                     >
                       <PhotoUp />
@@ -124,7 +123,7 @@ export const CompanyForm = ({
                 )}
               </Stack>
 
-              <Stack sx={{ display: 'flex', flex: 1 }}>
+              <Stack sx={{ display: "flex", flex: 1 }}>
                 {/* <Text align="left" weight={600} size="md">
                 Header Image
               </Text> */}
@@ -133,15 +132,15 @@ export const CompanyForm = ({
                     openRef={openHeaderImageRef}
                     folderName={`${user?._id}/company-header-image`}
                     description={{
-                      title: 'Upload Company Header Image',
-                      aboutImage: 'File should not exceed 5mb',
+                      title: "Upload Company Header Image",
+                      aboutImage: "File should not exceed 5mb",
                     }}
                     setImgUrl={setHeaderImageUrl}
                     setProgresspercent={setProgresspercent}
                     radius="lg"
                     children={
                       <Group>
-                        <Photo size={48} strokeWidth={2} color={'black'} />
+                        <Photo size={48} strokeWidth={2} color={"black"} />
                         <Text>Upload Header Image</Text>
                       </Group>
                     }
@@ -151,10 +150,10 @@ export const CompanyForm = ({
                   <Group
                     position="center"
                     sx={(theme) => ({
-                      border: '1px solid',
+                      border: "1px solid",
                       borderColor: theme.colors.gray[4],
                       borderRadius: 4,
-                      position: 'relative',
+                      position: "relative",
                     })}
                   >
                     <Image
@@ -167,7 +166,7 @@ export const CompanyForm = ({
 
                     <ActionIcon
                       variant="filled"
-                      sx={{ position: 'absolute', top: 4, right: 4 }}
+                      sx={{ position: "absolute", top: 4, right: 4 }}
                       onClick={() => openHeaderImageRef.current!()}
                     >
                       <PhotoUp />
@@ -191,7 +190,7 @@ export const CompanyForm = ({
               label="Company Code"
               radius="md"
               placeholder="10001"
-              {...form.getInputProps('companyCode')}
+              {...form.getInputProps("companyCode")}
             />
             <TextInput
               icon={<Users />}
@@ -199,7 +198,7 @@ export const CompanyForm = ({
               label="Name"
               radius="md"
               placeholder="Comapny Name"
-              {...form.getInputProps('companyName')}
+              {...form.getInputProps("companyName")}
             />
             <TextInput
               icon={<Category />}
@@ -207,7 +206,7 @@ export const CompanyForm = ({
               label="Category"
               radius="md"
               placeholder="Category"
-              {...form.getInputProps('category')}
+              {...form.getInputProps("category")}
             />
           </SimpleGrid>
         </Card>
@@ -223,11 +222,11 @@ export const CompanyForm = ({
               label="Street / Area"
               radius="md"
               placeholder="Street / Area"
-              {...form.getInputProps('address')}
+              {...form.getInputProps("address")}
             />
             <SimpleGrid
               cols={2}
-              breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
+              breakpoints={[{ maxWidth: 600, cols: 1, spacing: "sm" }]}
             >
               <TextInput
                 icon={<MapPin />}
@@ -235,7 +234,7 @@ export const CompanyForm = ({
                 label="City"
                 radius="md"
                 placeholder="City"
-                {...form.getInputProps('city')}
+                {...form.getInputProps("city")}
               />
               <NumberInput
                 icon={<MapPin />}
@@ -247,7 +246,7 @@ export const CompanyForm = ({
                 radius="md"
                 placeholder="Pin Code"
                 hideControls
-                {...form.getInputProps('pincode')}
+                {...form.getInputProps("pincode")}
               />
 
               <TextInput
@@ -256,7 +255,7 @@ export const CompanyForm = ({
                 label="District"
                 radius="md"
                 placeholder="District"
-                {...form.getInputProps('district')}
+                {...form.getInputProps("district")}
               />
               <TextInput
                 icon={<MapPin />}
@@ -264,7 +263,7 @@ export const CompanyForm = ({
                 label="State"
                 radius="md"
                 placeholder="State"
-                {...form.getInputProps('state')}
+                {...form.getInputProps("state")}
               />
             </SimpleGrid>
           </SimpleGrid>
@@ -278,7 +277,7 @@ export const CompanyForm = ({
           <SimpleGrid py="sm">
             <SimpleGrid
               cols={2}
-              breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
+              breakpoints={[{ maxWidth: 600, cols: 1, spacing: "sm" }]}
             >
               <TextInput
                 icon={<User />}
@@ -286,7 +285,7 @@ export const CompanyForm = ({
                 label="Contact Person"
                 radius="md"
                 placeholder="Conatct Person"
-                {...form.getInputProps('contactPerson')}
+                {...form.getInputProps("contactPerson")}
               />
               <TextInput
                 icon={<Phone />}
@@ -294,7 +293,7 @@ export const CompanyForm = ({
                 label="Phone Number"
                 radius="md"
                 placeholder="Phone Number"
-                {...form.getInputProps('phoneNumber')}
+                {...form.getInputProps("phoneNumber")}
               />
             </SimpleGrid>
 
@@ -304,7 +303,7 @@ export const CompanyForm = ({
               label="Your Email"
               radius="md"
               placeholder="Your Email"
-              {...form.getInputProps('email')}
+              {...form.getInputProps("email")}
             />
           </SimpleGrid>
         </Card>
@@ -316,7 +315,7 @@ export const CompanyForm = ({
             </Text>
           </Card.Section>
           <SimpleGrid
-            breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
+            breakpoints={[{ maxWidth: 600, cols: 1, spacing: "sm" }]}
             py="sm"
           >
             <SimpleGrid cols={2}>
@@ -325,18 +324,18 @@ export const CompanyForm = ({
                 label="GSTIN"
                 radius="md"
                 placeholder="GSTIN"
-                {...form.getInputProps('GSTIN')}
+                {...form.getInputProps("GSTIN")}
               />
               <TextInput
                 label="PAN"
                 radius="md"
                 placeholder="PAN"
-                {...form.getInputProps('PAN')}
+                {...form.getInputProps("PAN")}
               />
             </SimpleGrid>
             <SimpleGrid
               cols={3}
-              breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
+              breakpoints={[{ maxWidth: 600, cols: 1, spacing: "sm" }]}
             >
               <NumberInput
                 required
@@ -344,7 +343,7 @@ export const CompanyForm = ({
                 radius="md"
                 placeholder="Credit Limit"
                 hideControls
-                {...form.getInputProps('creditLimit')}
+                {...form.getInputProps("creditLimit")}
               />
               <NumberInput
                 required
@@ -352,7 +351,7 @@ export const CompanyForm = ({
                 radius="md"
                 placeholder="Credit Period"
                 hideControls
-                {...form.getInputProps('creditPeriod')}
+                {...form.getInputProps("creditPeriod")}
               />
               <NumberInput
                 required
@@ -360,7 +359,7 @@ export const CompanyForm = ({
                 radius="md"
                 placeholder="Credit Invoices"
                 hideControls
-                {...form.getInputProps('creditInvoice')}
+                {...form.getInputProps("creditInvoice")}
               />
             </SimpleGrid>
           </SimpleGrid>
@@ -369,9 +368,9 @@ export const CompanyForm = ({
             variant="outline"
             color="primaryBlue"
             sx={(theme) => ({
-              marginTop: '18px',
-              display: 'flex',
-              flex: '1',
+              marginTop: "18px",
+              display: "flex",
+              flex: "1",
             })}
           >
             Submit

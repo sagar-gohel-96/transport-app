@@ -1,16 +1,23 @@
-import { Button, Group, Text, UnstyledButton } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Select,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Plus, Trash } from "tabler-icons-react";
+import { Download, Edit, FileExport, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../hooks";
 import { FetchTransaction } from "../../types";
-import { format } from "../../utils";
+import { format, openExportCSV, openExportPDF } from "../../utils";
 import { TransactionChallan } from "./TransactionChallan";
 
 export const TransactionList = () => {
@@ -18,6 +25,7 @@ export const TransactionList = () => {
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
   const navigate = useNavigate();
+  const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
   useEffect(() => {
@@ -77,72 +85,92 @@ export const TransactionList = () => {
       {
         header: "Action",
         cell: ({ row }) => (
-          <div
-            style={
-              {
-                // display: "flex",
-                // justifyContent: "center",
-                // alignItems: "center",
-              }
-            }
-          >
-            <Group spacing={8}>
-              <UnstyledButton>
-                <PDFDownloadLink
-                  document={
-                    <TransactionChallan
-                      parties={getParties.data ?? []}
-                      companies={getCompanies.data ?? []}
-                      data={row.original ?? []}
-                    />
-                  }
-                  fileName="Transaction-Challan.pdf"
-                  style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
-                  }}
-                >
-                  {/* {({ blob, url, loading, error }) =>
-                    loading ? "Loading document..." : "Download Pdf"
-                  } */}
-                  <Download />
-                </PDFDownloadLink>
-              </UnstyledButton>
-              <UnstyledButton
-                onClick={() => navigate(`/transaction/${row.original._id}`)}
-              >
-                <Edit />
-              </UnstyledButton>
-              <UnstyledButton
-                onClick={() =>
-                  openConfirmModal({
-                    title: "Delete your Tranaction ",
-                    centered: true,
-                    children: (
-                      <Text size="sm">
-                        Are you sure you want to delete your ?
-                      </Text>
-                    ),
-                    labels: {
-                      confirm: "Delete Transaction",
-                      cancel: "No don't delete it",
-                    },
-                    confirmProps: { color: "red" },
-                    onCancel: () => console.log("Cancel"),
-                    onConfirm: () => handleTransactionDelete(row.original._id),
-                  })
+          <Group spacing={8}>
+            <UnstyledButton>
+              <PDFDownloadLink
+                document={
+                  <TransactionChallan
+                    parties={getParties.data ?? []}
+                    companies={getCompanies.data ?? []}
+                    data={row.original ?? []}
+                  />
                 }
+                fileName="Transaction-Challan.pdf"
+                style={{
+                  textDecoration: "none",
+                  color: "gray",
+                }}
               >
-                <Trash color="red" />
-              </UnstyledButton>
-            </Group>
-          </div>
+                <Download />
+              </PDFDownloadLink>
+            </UnstyledButton>
+            <UnstyledButton
+              onClick={() => navigate(`/transaction/${row.original._id}`)}
+            >
+              <Edit />
+            </UnstyledButton>
+            <UnstyledButton
+              onClick={() =>
+                openConfirmModal({
+                  title: "Delete your Tranaction ",
+                  centered: true,
+                  children: (
+                    <Text size="sm">
+                      Are you sure you want to delete your ?
+                    </Text>
+                  ),
+                  labels: {
+                    confirm: "Delete Transaction",
+                    cancel: "No don't delete it",
+                  },
+                  confirmProps: { color: "red" },
+                  onCancel: () => console.log("Cancel"),
+                  onConfirm: () => handleTransactionDelete(row.original._id),
+                })
+              }
+            >
+              <Trash color="red" />
+            </UnstyledButton>
+          </Group>
         ),
       },
     ],
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
+
+  const handleAllPrint = (data: FetchTransaction[]) => {
+    openExportPDF({
+      items: data,
+      title: "Transactions-Data",
+      includeFields: [
+        "invoiceNo",
+        "invoiceDate",
+        "partyName",
+        "totalAmount",
+        "GSTAmount",
+        "netAmount",
+        "comments",
+      ],
+    });
+  };
+
+  const handleJSONToCSV = (data: FetchTransaction) => {
+    openExportCSV({
+      items: data,
+      filename: "Transaction-Data",
+      excludeFields: ["_id", "__v", "transactions"],
+    });
+  };
+
+  const handleExport = () => {
+    if (exportOption === "pdf") {
+      handleAllPrint(getTransactions.data ? getTransactions.data : []);
+    }
+
+    if (exportOption === "csv") {
+      handleJSONToCSV(getTransactions.data ? getTransactions.data : []);
+    }
+  };
 
   const tabletoolbarRightContent = (
     <Group>
@@ -153,6 +181,19 @@ export const TransactionList = () => {
       >
         Transaction
       </Button>
+      <Select
+        data={[
+          { value: "pdf", label: "PDF" },
+          { value: "csv", label: "CSV" },
+        ]}
+        value={exportOption}
+        placeholder="Export"
+        sx={{ maxWidth: "100px" }}
+        onChange={setExportOption}
+      />
+      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
+        <FileExport />
+      </ActionIcon>
     </Group>
   );
 

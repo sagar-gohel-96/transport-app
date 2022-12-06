@@ -1,4 +1,4 @@
-import { Box, Card, Group, SimpleGrid, Stack } from "@mantine/core";
+import { Card, Group, SimpleGrid, Stack } from "@mantine/core";
 
 import {
   Chart as ChartJS,

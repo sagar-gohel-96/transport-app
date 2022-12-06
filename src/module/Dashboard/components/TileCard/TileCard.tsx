@@ -1,14 +1,11 @@
 import {
   Box,
   Card as MantineCard,
-  Group,
   Stack,
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { duration } from "moment";
 import { ReactNode } from "react";
-import { User } from "tabler-icons-react";
 
 interface CardItemType {
   label: string;

@@ -12,7 +12,7 @@ import {
   User,
   Users,
 } from "tabler-icons-react";
-import { RoutesEnum } from "../../../Routes";
+import { RoutesMapping } from "../../../Routes";
 import { NavbarItem, NavbarItemType, ProfileTab } from "../../common";
 
 interface NavbarProps {
@@ -24,36 +24,40 @@ const data: NavbarItemType[] = [
   {
     label: "Dashboard",
     icon: <LayoutDashboard />,
-    path: RoutesEnum.Dashboard,
+    path: RoutesMapping.Dashboard,
   },
-  { label: "Parties ", icon: <Users />, path: RoutesEnum.PartiesList },
- 
-  { label: "Areas ", icon: <AB2 />, path: RoutesEnum.AreasList },
+  { label: "Parties ", icon: <Users />, path: RoutesMapping.PartiesList },
+
+  { label: "Areas ", icon: <AB2 />, path: RoutesMapping.AreasList },
   {
     label: "Transaction list",
     icon: <Book2 />,
-    path: RoutesEnum.TransactionList,
+    path: RoutesMapping.TransactionList,
   },
 
   {
     icon: <FileReport />,
     label: "Report",
     rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
-    path: RoutesEnum.TransactionList,
+    path: RoutesMapping.TransactionList,
     subItems: [
       {
         icon: <Calendar />,
         label: "Date Wise Report",
-        path: RoutesEnum.DateWiseReports,
+        path: RoutesMapping.DateWiseReports,
       },
       {
         icon: <User />,
         label: "Party Wise Report",
-        path: RoutesEnum.PartyWiseReports,
+        path: RoutesMapping.PartyWiseReports,
       },
     ],
   },
-  { label: "Companies Profile", icon: <ApiApp />, path: RoutesEnum.CompaniesProfile },
+  {
+    label: "Companies Profile",
+    icon: <ApiApp />,
+    path: RoutesMapping.CompaniesProfile,
+  },
 ];
 
 export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
@@ -100,7 +104,7 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
       </MantineNavbar.Section>
 
       <MantineNavbar.Section mt="md">
-        <ProfileTab navigationPath={RoutesEnum.Profile} />
+        <ProfileTab navigationPath={RoutesMapping.Profile} />
       </MantineNavbar.Section>
     </MantineNavbar>
   );

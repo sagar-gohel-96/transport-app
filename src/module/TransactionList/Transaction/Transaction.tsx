@@ -10,31 +10,31 @@ import {
   Text,
   Textarea,
   UnstyledButton,
-} from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
-import { useForm } from '@mantine/form';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import { Fragment, useEffect, useMemo, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Check, CirclePlus } from 'tabler-icons-react';
-import { LoadingIndicator } from '../../../components/common';
-import { useAreas, useParties, useTransaction } from '../../../hooks';
+} from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { useForm } from "@mantine/form";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { Fragment, useEffect, useMemo, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Check, CirclePlus } from "tabler-icons-react";
+import { LoadingIndicator } from "../../../components/common";
+import { useAreas, useParties, useTransaction } from "../../../hooks";
 import {
   FetchAreaData,
   FetchPartiesData,
   FetchTransaction,
   TransactionData,
   TransactionItemPayload,
-} from '../../../types';
-import moment from 'moment';
-import { RoutesEnum } from '../../../Routes';
-import { Pricing, TranactionTable, TransactionCardView } from './components';
-import { format } from '../../../utils';
+} from "../../../types";
+import moment from "moment";
+import { RoutesMapping } from "../../../Routes";
+import { Pricing, TranactionTable, TransactionCardView } from "./components";
+import { format } from "../../../utils";
 
 export const Transaction = () => {
   const param = useParams();
   const navigate = useNavigate();
-  const { getParties } = useParties('');
+  const { getParties } = useParties("");
   const {
     addTransaction,
     addTransactionLoading,
@@ -47,17 +47,17 @@ export const Transaction = () => {
 
   const transactionInitialValues = {
     invoiceDate: new Date(),
-    partyName: '',
+    partyName: "",
     totalAmount: 0,
     GSTAmount: 0,
     netAmount: 0,
-    comments: '',
+    comments: "",
     transactions: [
       {
         CGNo: 0,
         date: new Date(),
-        fromPlace: '',
-        toPlace: '',
+        fromPlace: "",
+        toPlace: "",
         noOfArts: 0,
         freight: 0,
         hamali: 0,
@@ -98,7 +98,7 @@ export const Transaction = () => {
 
     validate: {
       partyName: (value) =>
-        value.length < 0 ? 'Please Select Party Name' : null,
+        value.length < 0 ? "Please Select Party Name" : null,
     },
   });
 
@@ -177,18 +177,18 @@ export const Transaction = () => {
         });
         if (updateData.data.success) {
           showNotification({
-            id: 'load-data',
+            id: "load-data",
             loading: updateTransactionLoading,
-            title: 'Transaction',
-            message: 'Transaction Updating...',
+            title: "Transaction",
+            message: "Transaction Updating...",
             autoClose: false,
             disallowClose: true,
           });
 
           updateNotification({
-            id: 'load-data',
-            color: 'teal',
-            title: 'Transaction',
+            id: "load-data",
+            color: "teal",
+            title: "Transaction",
             message: updateData.data.message,
             icon: <Check size={16} />,
             autoClose: 2000,
@@ -202,18 +202,18 @@ export const Transaction = () => {
         });
         if (addData.data.success) {
           showNotification({
-            id: 'load-data',
+            id: "load-data",
             loading: addTransactionLoading,
-            title: 'Transaction',
-            message: 'Transaction Creating...',
+            title: "Transaction",
+            message: "Transaction Creating...",
             autoClose: false,
             disallowClose: true,
           });
 
           updateNotification({
-            id: 'load-data',
-            color: 'teal',
-            title: 'Transaction',
+            id: "load-data",
+            color: "teal",
+            title: "Transaction",
             message: addData.data.message,
             icon: <Check size={16} />,
             autoClose: 2000,
@@ -222,19 +222,19 @@ export const Transaction = () => {
         }
       }
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     } finally {
       getTransactions.refetch();
-      navigate(`/${RoutesEnum.TransactionList}`);
+      navigate(`/${RoutesMapping.TransactionList}`);
     }
   };
 
   const handleAddTransaction = () => {
-    form.insertListItem('transactions', {
+    form.insertListItem("transactions", {
       CGNo: 0,
-      date: '',
-      fromPlace: '',
-      toPlace: '',
+      date: "",
+      fromPlace: "",
+      toPlace: "",
       noOfArts: 0,
       freight: 0,
       hamali: 0,
@@ -269,7 +269,7 @@ export const Transaction = () => {
       )}
       {parties && (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Stack sx={{ overflowY: 'hidden' }}>
+          <Stack sx={{ overflowY: "hidden" }}>
             <Group position="apart">
               <Text weight={600} size={24}>
                 Transaction
@@ -287,7 +287,7 @@ export const Transaction = () => {
                   nothingFound="No Area Found"
                   data={parties}
                   searchable
-                  {...form.getInputProps('partyName')}
+                  {...form.getInputProps("partyName")}
                 />
 
                 <DatePicker
@@ -296,21 +296,21 @@ export const Transaction = () => {
                   label="Invoice Date"
                   withAsterisk
                   inputFormat={format}
-                  {...form.getInputProps('invoiceDate')}
+                  {...form.getInputProps("invoiceDate")}
                 />
               </SimpleGrid>
             </Paper>
             <Paper
               radius="sm"
               sx={{
-                minHeight: '24rem',
-                display: 'flex',
-                flexDirection: 'column',
+                minHeight: "24rem",
+                display: "flex",
+                flexDirection: "column",
                 flex: 1,
               }}
               p="sm"
             >
-              <Stack justify="space-between" sx={{ display: 'flex', flex: 1 }}>
+              <Stack justify="space-between" sx={{ display: "flex", flex: 1 }}>
                 <Box>
                   <TranactionTable
                     areas={areas}
@@ -341,14 +341,14 @@ export const Transaction = () => {
                 <Box>
                   <Textarea
                     placeholder="Comments"
-                    {...form.getInputProps('comments')}
+                    {...form.getInputProps("comments")}
                   />
                 </Box>
 
                 <Group
                   position="apart"
                   sx={(theme) => ({
-                    borderTop: '1px solid',
+                    borderTop: "1px solid",
                     borderColor: theme.colors.gray[4],
                   })}
                 >

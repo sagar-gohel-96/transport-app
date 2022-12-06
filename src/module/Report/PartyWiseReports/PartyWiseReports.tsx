@@ -1,4 +1,11 @@
-import { Group, MultiSelect, Text, UnstyledButton } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  MultiSelect,
+  Select,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -6,11 +13,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Trash } from "tabler-icons-react";
+import { Download, Edit, FileExport, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchPartiesData, FetchTransaction } from "../../../types";
-import { format } from "../../../utils";
+import { format, openExportCSV, openExportPDF } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
 import { FilterTransactionByParties } from "../utils";
 
@@ -19,6 +26,7 @@ export const PartyWiseReports = () => {
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
   const [filterParties, setFilterParties] = useState<string[]>();
+  const [exportOption, setExportOption] = useState<string | null>("pdf");
 
   const navigate = useNavigate();
 
@@ -147,6 +155,42 @@ export const PartyWiseReports = () => {
     filterParties ?? []
   );
 
+  const handleAllPrint = (data: FetchTransaction[]) => {
+    openExportPDF({
+      items: data,
+      title: `Transaction-Report ${filterParties ? `(${filterParties})` : ""}`,
+      includeFields: [
+        "invoiceNo",
+        "invoiceDate",
+        "partyName",
+        "totalAmount",
+        "GSTAmount",
+        "netAmount",
+        "comments",
+      ],
+    });
+  };
+
+  const handleJSONToCSV = (data: FetchTransaction[]) => {
+    openExportCSV({
+      items: data,
+      filename: `Transaction-Report ${
+        filterParties ? `(${filterParties})` : ""
+      }`,
+      excludeFields: ["_id", "__v", "transactions"],
+    });
+  };
+
+  const handleExport = () => {
+    if (exportOption === "pdf") {
+      handleAllPrint(FilteredData ? FilteredData : []);
+    }
+
+    if (exportOption === "csv") {
+      handleJSONToCSV(FilteredData ? FilteredData : []);
+    }
+  };
+
   const tabletoolbarRightContent = (
     <Group>
       <MultiSelect
@@ -156,6 +200,19 @@ export const PartyWiseReports = () => {
         onChange={setFilterParties}
         sx={{ maxWidth: "18rem" }}
       />
+      <Select
+        data={[
+          { value: "pdf", label: "PDF" },
+          { value: "csv", label: "CSV" },
+        ]}
+        value={exportOption}
+        placeholder="Export"
+        sx={{ maxWidth: "100px" }}
+        onChange={setExportOption}
+      />
+      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
+        <FileExport />
+      </ActionIcon>
     </Group>
   );
 

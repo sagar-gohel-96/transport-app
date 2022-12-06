@@ -3,23 +3,26 @@ import {
   Button,
   // Checkbox,
   Group,
-  Menu,
+  Select,
   Text,
+  UnstyledButton,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Dots, Edit, Plus, Trash } from "tabler-icons-react";
+import { Edit, FileExport, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../components/common";
 import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
+import { openExportCSV, openExportPDF } from "../../utils";
 
 export const PartiesList = () => {
   const param = useParams();
   const { getParties, deleteParty } = useParties(param.id!);
   const navigate = useNavigate();
+  const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
   const handlePartyDelete = useCallback(
@@ -93,60 +96,79 @@ export const PartiesList = () => {
       {
         header: "Action",
         cell: ({ row }) => (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Menu withinPortal position="bottom-end" shadow="sm">
-              <Menu.Target>
-                <ActionIcon>
-                  <Dots size={16} />
-                </ActionIcon>
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Item
-                  icon={<Edit size={20} strokeWidth={1.5} />}
-                  // onClick={() => handleEditPartty(row.original)}
-                  onClick={() => navigate(`/parties/${row.original._id}`)}
-                >
-                  Edit Party
-                </Menu.Item>
-                <Menu.Item
-                  icon={<Trash size={20} strokeWidth={1.5} />}
-                  color="red"
-                  onClick={() =>
-                    openConfirmModal({
-                      title: "Delete your Party",
-                      centered: true,
-                      children: (
-                        <Text size="sm">
-                          Are you sure you want to delete your Party?
-                        </Text>
-                      ),
-                      labels: {
-                        confirm: "Delete Party",
-                        cancel: "No don't delete it",
-                      },
-                      confirmProps: { color: "red" },
-                      onCancel: () => console.log("Cancel"),
-                      onConfirm: () => handlePartyDelete(row.original._id),
-                    })
-                  }
-                >
-                  Delete
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
+          <Group spacing={4}>
+            <UnstyledButton
+              onClick={() => navigate(`/parties/${row.original._id}`)}
+            >
+              <Edit />
+            </UnstyledButton>
+            <UnstyledButton
+              onClick={() =>
+                openConfirmModal({
+                  title: "Delete your Tranaction ",
+                  centered: true,
+                  children: (
+                    <Text size="sm">
+                      Are you sure you want to delete your ?
+                    </Text>
+                  ),
+                  labels: {
+                    confirm: "Delete Transaction",
+                    cancel: "No don't delete it",
+                  },
+                  confirmProps: { color: "red" },
+                  onCancel: () => console.log("Cancel"),
+                  onConfirm: () => handlePartyDelete(row.original._id),
+                })
+              }
+            >
+              <Trash color="red" />
+            </UnstyledButton>
+          </Group>
         ),
       },
     ],
     [handlePartyDelete, navigate]
   );
+
+  const handleAllPrint = (data: FetchPartiesData[]) => {
+    openExportPDF({
+      items: data,
+      title: "Parties-Data",
+      includeFields: [
+        "name",
+        "category",
+        "address",
+        "city",
+        "pincode",
+        "district",
+        "state",
+        "contactPerson",
+        "phoneNumber",
+        "email",
+        "GSTIN",
+        "PAN",
+      ],
+    });
+  };
+
+  const handleJSONToCSV = (data: FetchPartiesData) => {
+    openExportCSV({
+      items: data,
+      filename: "Parties-Data",
+      excludeFields: ["_id", "__v"],
+    });
+  };
+
+  const handleExport = () => {
+    if (exportOption === "pdf") {
+      handleAllPrint(getParties.data ? getParties.data : []);
+    }
+
+    if (exportOption === "csv") {
+      handleJSONToCSV(getParties.data ? getParties.data : []);
+    }
+  };
 
   const tabletoolbarRightContent = (
     <Group>
@@ -157,6 +179,20 @@ export const PartiesList = () => {
       >
         Party
       </Button>
+
+      <Select
+        data={[
+          { value: "pdf", label: "PDF" },
+          { value: "csv", label: "CSV" },
+        ]}
+        value={exportOption}
+        placeholder="Export"
+        sx={{ maxWidth: "100px" }}
+        onChange={setExportOption}
+      />
+      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
+        <FileExport />
+      </ActionIcon>
     </Group>
   );
 

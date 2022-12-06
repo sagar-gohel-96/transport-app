@@ -16,7 +16,7 @@ import {
   CompanyProfile,
 } from "./module";
 
-export const enum RoutesEnum {
+export const enum RoutesMapping {
   Dashboard = "dashboard",
   PartiesList = "parties",
   CompaniesList = "companies",
@@ -35,16 +35,25 @@ export const AppRoutes = () => {
     <Routes>
       <Route path="*" element={<Dashboard />} />
       <Route path="/" element={<Dashboard />} />
-      <Route path={RoutesEnum.Dashboard} element={<Dashboard />} />
-      <Route path={RoutesEnum.PartiesList} element={<PartiesList />} />
-      <Route path={RoutesEnum.AreasList} element={<AreasList />} />
-      <Route path={RoutesEnum.Reports} element={<Report />} />
-      <Route path={RoutesEnum.Profile} element={<Profile />} />
-      <Route path={RoutesEnum.TransactionList} element={<TransactionList />} />
-      <Route path={RoutesEnum.CompaniesProfile} element={<CompanyProfile />} />
-      <Route path={RoutesEnum.DateWiseReports} element={<DateWiseReports />} />
+      <Route path={RoutesMapping.Dashboard} element={<Dashboard />} />
+      <Route path={RoutesMapping.PartiesList} element={<PartiesList />} />
+      <Route path={RoutesMapping.AreasList} element={<AreasList />} />
+      <Route path={RoutesMapping.Reports} element={<Report />} />
+      <Route path={RoutesMapping.Profile} element={<Profile />} />
       <Route
-        path={RoutesEnum.PartyWiseReports}
+        path={RoutesMapping.TransactionList}
+        element={<TransactionList />}
+      />
+      <Route
+        path={RoutesMapping.CompaniesProfile}
+        element={<CompanyProfile />}
+      />
+      <Route
+        path={RoutesMapping.DateWiseReports}
+        element={<DateWiseReports />}
+      />
+      <Route
+        path={RoutesMapping.PartyWiseReports}
         element={<PartyWiseReports />}
       />
       <Route path={"transaction/:id"} element={<Transaction />} />
