@@ -1,6 +1,4 @@
-import { Card, Group, SimpleGrid, Stack, UnstyledButton } from "@mantine/core";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ColumnDef } from "@tanstack/react-table";
+import { Box, Card, Group, SimpleGrid, Stack } from "@mantine/core";
 
 import {
   Chart as ChartJS,
@@ -13,16 +11,17 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+import { Bar } from "react-chartjs-2";
 import moment from "moment";
 import { useMemo } from "react";
-import { CurrencyRupee, Download, TrendingUp } from "tabler-icons-react";
-import { Table } from "../../components/common";
-import { useCompanies, useParties, useTransaction } from "../../hooks";
+import { CurrencyRupee, TrendingUp } from "tabler-icons-react";
+import { useTransaction } from "../../hooks";
 import { FetchTransaction } from "../../types";
-import { format } from "../../utils";
 import { Formatter } from "../../utils/formatter";
-import { TransactionChallan } from "../TransactionList";
-import { TileCard } from "./components/TileCard";
+import { TileCard } from "./components";
+import { LastTransaction } from "./LastTransaction";
+import { MostRecentTransaction } from "./MostRecentTransaction";
+import { BarChart } from "./utils/barChart";
 
 ChartJS.register(
   CategoryScale,
@@ -38,8 +37,6 @@ ChartJS.register(
 export const Dashboard = () => {
   const { getTransactions } = useTransaction("");
   const { data } = getTransactions;
-  const { getCompanies } = useCompanies("");
-  const { getParties } = useParties("");
 
   const currentMonth = new Date().getMonth() + 1;
   const currentMonthName = new Date().toLocaleString("default", {
@@ -141,74 +138,6 @@ export const Dashboard = () => {
     },
   ];
 
-  const columns = useMemo<ColumnDef<FetchTransaction>[]>(
-    () => [
-      {
-        header: "#",
-        cell: (info) => parseInt(info.row.id) + 1,
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Invoice No",
-        accessorKey: "invoiceNo",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Invoice Date",
-        accessorKey: "invoiceDate",
-        cell: (info) => moment.unix(info.getValue() as number).format(format),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Party Name",
-        accessorKey: "partyName",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Net Amount",
-        accessorKey: "netAmount",
-        cell: (info) =>
-          Formatter.formatCurrency(
-            parseInt(info.getValue() as string, 10),
-            "INR",
-            2
-          ),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Action",
-        cell: ({ row }) => (
-          <div>
-            <Group spacing={8}>
-              <UnstyledButton>
-                <PDFDownloadLink
-                  document={
-                    <TransactionChallan
-                      parties={getParties.data ?? []}
-                      companies={getCompanies.data ?? []}
-                      data={row.original ?? []}
-                    />
-                  }
-                  fileName="Transaction-Challan.pdf"
-                  style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
-                  }}
-                >
-                  <Download />
-                </PDFDownloadLink>
-              </UnstyledButton>
-            </Group>
-          </div>
-        ),
-      },
-    ],
-    [getCompanies.data, getParties.data]
-  );
-
   return (
     <Stack>
       <SimpleGrid
@@ -224,7 +153,11 @@ export const Dashboard = () => {
           <TileCard key={i} item={item} />
         ))}
       </SimpleGrid>
-
+      <Card>
+        <Group>
+          <Bar options={BarChart.options} data={BarChart.data} />
+        </Group>
+      </Card>
       <SimpleGrid
         breakpoints={[
           { minWidth: 1500, cols: 2, spacing: "md" },
@@ -233,28 +166,10 @@ export const Dashboard = () => {
         ]}
       >
         <Card>
-          <Table
-            columns={columns}
-            data={getTransactions.data ? getTransactions.data : []}
-            pagination
-            toolbarProps={{
-              title: "Last Transaction",
-            }}
-            isLoading={getTransactions.isLoading}
-            LoadingType="relative"
-          />
+          <MostRecentTransaction />
         </Card>
         <Card>
-          <Table
-            columns={columns}
-            data={getTransactions.data ? getTransactions.data : []}
-            pagination
-            toolbarProps={{
-              title: "Most Recent Transaction",
-            }}
-            isLoading={getTransactions.isLoading}
-            LoadingType="relative"
-          />
+          <LastTransaction />
         </Card>
       </SimpleGrid>
     </Stack>

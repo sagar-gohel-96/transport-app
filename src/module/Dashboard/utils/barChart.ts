@@ -8,9 +8,22 @@ const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Bar Chart",
+      text: "Transactions",
     },
   },
+  scales: {
+    x: {
+      grid: {
+        display: false,
+      }
+    },
+    y: {
+      grid: {
+        display: false,
+      },
+
+    }
+  }
 };
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -19,16 +32,14 @@ const data = {
   labels,
   datasets: [
     {
-      label: "Dataset 1",
+      label: "Per Week",
       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      backgroundColor: "rgba(53, 162, 235, 0.8)",
     },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
+
+  ], grid: {
+    display: false,
+  }
 };
 
 export const BarChart = { options, labels, data };
