@@ -153,11 +153,7 @@ export const Dashboard = () => {
           <TileCard key={i} item={item} />
         ))}
       </SimpleGrid>
-      <Card>
-        <Group>
-          <Bar options={BarChart.options} data={BarChart.data} />
-        </Group>
-      </Card>
+
       <SimpleGrid
         breakpoints={[
           { minWidth: 1500, cols: 2, spacing: "md" },
@@ -172,6 +168,11 @@ export const Dashboard = () => {
           <LastTransaction />
         </Card>
       </SimpleGrid>
+      <Card>
+        <Group>
+          <Bar options={BarChart.options} data={BarChart.data} />
+        </Group>
+      </Card>
     </Stack>
   );
 };
