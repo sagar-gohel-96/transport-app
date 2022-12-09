@@ -40,8 +40,8 @@ export const TransactionChallan = ({
     "From",
     "To",
     "No of Arts",
-    "Freint",
-    "Humali",
+    "Freight",
+    "Hamali",
     "Amount",
   ];
 

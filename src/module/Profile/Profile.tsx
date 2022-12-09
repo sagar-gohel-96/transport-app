@@ -60,6 +60,7 @@ export const Profile = () => {
           user: data,
         })
       );
+
       setUser(data);
     }
   };

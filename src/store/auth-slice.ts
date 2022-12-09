@@ -2,18 +2,23 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserResponse } from "../types/userType";
 
 interface UserStore {
-  user: UserResponse;
+  user: UserResponse | null;
   token?: string;
 }
 
 interface AuthState {
   initialized: boolean;
   user: UserStore | null;
+
 }
 
 const initialState: AuthState = {
   initialized: false,
-  user: null,
+  user: {
+    user: null,
+    token: ''
+  },
+
 };
 
 export const authSlice = createSlice({

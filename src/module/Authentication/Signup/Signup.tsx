@@ -86,9 +86,9 @@ export const Signup = () => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Stack spacing={12}>
             <Text align="center" weight={600} size="xl">
-              Sign up With
+              Sign up
             </Text>
-            <Group>
+            {/* <Group>
               <Button
                 sx={{ flex: 1 }}
                 leftIcon={<BrandFacebook />}
@@ -103,7 +103,7 @@ export const Signup = () => {
               >
                 Google
               </Button>
-            </Group>
+            </Group> */}
             {/* <TextInput
               placeholder="Your Role"
               label="Role"

@@ -17,7 +17,6 @@ import { useLocalStorage } from "../../../hooks";
 
 import { useAppDispatch } from "../../../store";
 import { authAction } from "../../../store/auth-slice";
-import { UserResponse } from "../../../types/userType";
 import { config } from "../../../utils";
 
 export const Signin = () => {
@@ -25,8 +24,9 @@ export const Signin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { setLocalStorageItem: setUserData } =
-    useLocalStorage<UserResponse | null>(config.userLocalStorageKey as string);
+  const { setLocalStorageItem: setUserData } = useLocalStorage(
+    config.userLocalStorageKey as string
+  );
 
   const form = useForm({
     initialValues: {
@@ -43,19 +43,19 @@ export const Signin = () => {
     try {
       const SigninData: any = await signin(values);
       if (SigninData.data.success) {
+        const userAuth = {
+          user: SigninData.data.user,
+          token: SigninData.data.token,
+        };
+
+        dispatch(authAction.setUser(userAuth));
+
+        setUserData(JSON.stringify(userAuth));
+
         showNotification({
           title: "Sign in",
           message: SigninData.data.message,
         });
-
-        dispatch(
-          authAction.setUser({
-            user: SigninData.data.user,
-            token: SigninData.data.token,
-          })
-        );
-
-        setUserData(SigninData.data.user);
         navigate("/");
       }
     } catch (error) {
@@ -78,13 +78,13 @@ export const Signin = () => {
         height: "100%",
       }}
     >
-      <Paper shadow="xs" p="md" sx={{}} withBorder>
+      <Paper shadow="xs" p="md" withBorder>
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Stack spacing={12}>
             <Text align="center" weight={600} size="xl">
-              Sign In With
+              Sign In
             </Text>
-            <Group>
+            {/* <Group>
               <Button
                 sx={{ flex: 1 }}
                 leftIcon={<BrandFacebook />}
@@ -99,7 +99,7 @@ export const Signin = () => {
               >
                 Google
               </Button>
-            </Group>
+            </Group> */}
             <TextInput
               placeholder="Your Email"
               label="Email"
@@ -117,9 +117,9 @@ export const Signin = () => {
             <Button color="primaryBlue" type="submit">
               Submit
             </Button>
-            <Text size="xs" align="center">
+            {/* <Text size="xs" align="center">
               Not a Member Signup? <Link to="/Signup">Sign up now</Link>
-            </Text>
+            </Text> */}
           </Stack>
         </form>
       </Paper>
