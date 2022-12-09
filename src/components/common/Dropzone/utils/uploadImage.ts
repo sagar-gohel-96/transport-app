@@ -15,7 +15,7 @@ export const uploadImage = (
   setProgresspercent: (value: number) => void
 ) => {
   if (!file) return;
-  const storageRef = ref(storage, `${folderName}/${file[0].path}`);
+  const storageRef = ref(storage, `/transport/${folderName}/${file[0].path}`);
   const uploadTask = uploadBytesResumable(storageRef, file[0]);
 
   uploadTask.on(
