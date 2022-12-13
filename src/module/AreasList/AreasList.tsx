@@ -3,32 +3,29 @@ import {
   Button,
   // Checkbox,
   Group,
-  Modal,
-  Select,
+  // Select,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { Fragment, useCallback, useMemo, useState } from "react";
-import { Edit, FileExport, Plus, Trash } from "tabler-icons-react";
+import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Edit, FileSpreadsheet, Plus, Trash } from "tabler-icons-react";
+import { PdfIcon } from "../../assets/icons";
 import { Table } from "../../components/common";
 import { useAreas } from "../../hooks";
+import { RoutesMapping } from "../../Routes";
 import { FetchAreaData } from "../../types";
 import { openExportCSV, openExportPDF } from "../../utils";
-import { AddArea } from "./components";
 
 export const AreasList = () => {
-  const [opened, setOpened] = useState<boolean>(false);
-  const [AreaRecord, setAreaRecord] = useState<FetchAreaData>();
-  const { getAreas, addArea, updateArea, deleteArea } = useAreas();
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
+  const navgate = useNavigate();
+  const { getAreas, deleteArea } = useAreas("");
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
-  const handleEditArea = (data: FetchAreaData) => {
-    setAreaRecord(data);
-    setOpened(true);
-  };
+  const id = "00000000000000000000000";
 
   const handleAreaDelete = useCallback(
     async (id: string) => {
@@ -86,7 +83,11 @@ export const AreasList = () => {
             }}
           >
             <Group spacing={8}>
-              <UnstyledButton onClick={() => handleEditArea(row.original)}>
+              <UnstyledButton
+                onClick={() =>
+                  navgate(`/${RoutesMapping.AreasList}/${row.original._id}`)
+                }
+              >
                 <Edit />
               </UnstyledButton>
               <UnstyledButton
@@ -116,16 +117,8 @@ export const AreasList = () => {
         ),
       },
     ],
-    [handleAreaDelete]
+    [handleAreaDelete, navgate]
   );
-
-  const handleModalClose = () => {
-    setOpened(false);
-  };
-
-  const handleOpenModal = () => {
-    setOpened(true);
-  };
 
   const handleAllPrint = (data: FetchAreaData[]) => {
     openExportPDF({
@@ -143,22 +136,26 @@ export const AreasList = () => {
     });
   };
 
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(getAreas.data ? getAreas.data : []);
-    }
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(getAreas.data ? getAreas.data : []);
+  //   }
 
-    if (exportOption === "csv") {
-      handleJSONToCSV(getAreas.data ? getAreas.data : []);
-    }
-  };
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(getAreas.data ? getAreas.data : []);
+  //   }
+  // };
 
   const tabletoolbarRightContent = (
     <Group>
-      <Button onClick={handleOpenModal} leftIcon={<Plus />} variant="outline">
+      <Button
+        onClick={() => navgate(`/${RoutesMapping.AreasList}/${id}`)}
+        leftIcon={<Plus />}
+        variant="outline"
+      >
         Area
       </Button>
-      <Select
+      {/* <Select
         data={[
           { value: "pdf", label: "PDF" },
           { value: "csv", label: "CSV" },
@@ -167,36 +164,36 @@ export const AreasList = () => {
         placeholder="Export"
         sx={{ maxWidth: "100px" }}
         onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(getAreas.data ? getAreas.data : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(getAreas.data ? getAreas.data : [])}
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );
 
   return (
-    <Fragment>
-      <Table
-        columns={columns}
-        data={getAreas.data ? getAreas.data : []}
-        pagination
-        toolbarProps={{
-          title: "Area Details",
-          showSearch: true,
-          rightContent: tabletoolbarRightContent,
-        }}
-        isLoading={getAreas.isLoading}
-        LoadingType="relative"
-      />
-      <Modal opened={opened} onClose={handleModalClose} size="xl">
-        <AddArea
-          handleCloseModal={handleModalClose}
-          data={AreaRecord}
-          addArea={addArea}
-          updateArea={updateArea}
-          refetch={getAreas.refetch}
-        />
-      </Modal>
-    </Fragment>
+    <Table
+      columns={columns}
+      data={getAreas.data ? getAreas.data : []}
+      pagination
+      toolbarProps={{
+        title: "Area Details",
+        showSearch: true,
+        rightContent: tabletoolbarRightContent,
+      }}
+      isLoading={getAreas.isLoading}
+      LoadingType="relative"
+    />
   );
 };

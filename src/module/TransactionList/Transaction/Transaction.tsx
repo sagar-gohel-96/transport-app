@@ -16,7 +16,7 @@ import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Check, CirclePlus } from "tabler-icons-react";
+import { Check, CirclePlus, Plus } from "tabler-icons-react";
 import { LoadingIndicator } from "../../../components/common";
 import { useAreas, useParties, useTransaction } from "../../../hooks";
 import {
@@ -42,8 +42,9 @@ export const Transaction = () => {
     updateTransaction,
     updateTransactionLoading,
   } = useTransaction(param.id!);
-  const { getAreas } = useAreas();
+  const { getAreas } = useAreas("");
   const isUpdate = parseInt(param.id!);
+  const id = "00000000000000000000000";
 
   const transactionInitialValues = {
     invoiceDate: new Date(),
@@ -55,7 +56,7 @@ export const Transaction = () => {
     transactions: [
       {
         CGNo: 0,
-        date: new Date(),
+        date: "",
         fromPlace: "",
         toPlace: "",
         noOfArts: 0,
@@ -280,15 +281,29 @@ export const Transaction = () => {
             </Group>
             <Paper radius="sm" sx={{}}>
               <SimpleGrid cols={2} px="sm" py="sm">
-                <Select
-                  required
-                  label="Parties"
-                  placeholder="Parties"
-                  nothingFound="No Area Found"
-                  data={parties}
-                  searchable
-                  {...form.getInputProps("partyName")}
-                />
+                <div style={{ display: "flex", gap: "16px" }}>
+                  <Select
+                    required
+                    label="Parties"
+                    placeholder="Parties"
+                    nothingFound={<Button>Add Party</Button>}
+                    data={parties}
+                    searchable
+                    {...form.getInputProps("partyName")}
+                    sx={{ flex: 1 }}
+                  />
+                  <Stack justify="flex-end">
+                    <Button
+                      variant="outline"
+                      leftIcon={<Plus />}
+                      onClick={() =>
+                        navigate(`/${RoutesMapping.PartiesList}/${id} `)
+                      }
+                    >
+                      Party
+                    </Button>
+                  </Stack>
+                </div>
 
                 <DatePicker
                   dropdownType="modal"

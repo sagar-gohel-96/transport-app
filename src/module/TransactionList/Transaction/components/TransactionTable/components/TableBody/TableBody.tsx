@@ -47,6 +47,7 @@ export const TableBody = ({ form, index, areas }: TableBodyProps) => {
           placeholder="Date"
           withAsterisk
           inputFormat={format}
+          defaultValue={new Date()}
           {...form.getInputProps(`transactions.${index}.date`)}
         />
       </td>

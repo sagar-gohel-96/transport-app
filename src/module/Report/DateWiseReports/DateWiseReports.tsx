@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Select, Text, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Group, Text, UnstyledButton } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
@@ -7,7 +7,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, FileExport, Trash } from "tabler-icons-react";
+import { Download, Edit, FileSpreadsheet, Trash } from "tabler-icons-react";
+import { PdfIcon } from "../../../assets/icons";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
@@ -19,7 +20,7 @@ export const DateWiseReports = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
   const toDayDate = new Date();
   const currentMonthFirstDate = new Date(
@@ -181,15 +182,15 @@ export const DateWiseReports = () => {
       excludeFields: ["_id", "__v", "transactions"],
     });
   };
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(FilteredData ? FilteredData : []);
-    }
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(FilteredData ? FilteredData : []);
+  //   }
 
-    if (exportOption === "csv") {
-      handleJSONToCSV(FilteredData ? FilteredData : []);
-    }
-  };
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(FilteredData ? FilteredData : []);
+  //   }
+  // };
 
   const tabletoolbarRightContent = (
     <Group>
@@ -208,7 +209,7 @@ export const DateWiseReports = () => {
         onChange={setPickToDate}
         inputFormat={format}
       />
-      <Select
+      {/* <Select
         data={[
           { value: "pdf", label: "PDF" },
           { value: "csv", label: "CSV" },
@@ -217,9 +218,20 @@ export const DateWiseReports = () => {
         placeholder="Export"
         sx={{ maxWidth: "100px" }}
         onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(FilteredData ? FilteredData : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(FilteredData ? FilteredData : [])}
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );

@@ -3,16 +3,17 @@ import {
   Button,
   // Checkbox,
   Group,
-  Select,
+  // Select,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Edit, FileExport, Plus, Trash } from "tabler-icons-react";
+import { Edit, FileSpreadsheet, Plus, Trash } from "tabler-icons-react";
+import { PdfIcon } from "../../assets/icons";
 import { Table } from "../../components/common";
 import { useParties } from "../../hooks";
 import { FetchPartiesData } from "../../types";
@@ -22,7 +23,7 @@ export const PartiesList = () => {
   const param = useParams();
   const { getParties, deleteParty } = useParties(param.id!);
   const navigate = useNavigate();
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
   const handlePartyDelete = useCallback(
@@ -160,15 +161,15 @@ export const PartiesList = () => {
     });
   };
 
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(getParties.data ? getParties.data : []);
-    }
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(getParties.data ? getParties.data : []);
+  //   }
 
-    if (exportOption === "csv") {
-      handleJSONToCSV(getParties.data ? getParties.data : []);
-    }
-  };
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(getParties.data ? getParties.data : []);
+  //   }
+  // };
 
   const tabletoolbarRightContent = (
     <Group>
@@ -180,7 +181,7 @@ export const PartiesList = () => {
         Party
       </Button>
 
-      <Select
+      {/* <Select
         data={[
           { value: "pdf", label: "PDF" },
           { value: "csv", label: "CSV" },
@@ -189,9 +190,20 @@ export const PartiesList = () => {
         placeholder="Export"
         sx={{ maxWidth: "100px" }}
         onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(getParties.data ? getParties.data : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(getParties.data ? getParties.data : [])}
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );

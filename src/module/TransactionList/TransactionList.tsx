@@ -2,7 +2,7 @@ import {
   ActionIcon,
   Button,
   Group,
-  Select,
+  // Select,
   Text,
   UnstyledButton,
 } from "@mantine/core";
@@ -11,11 +11,19 @@ import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, FileExport, Plus, Trash } from "tabler-icons-react";
+import {
+  Download,
+  Edit,
+  FileSpreadsheet,
+  Plus,
+  Trash,
+} from "tabler-icons-react";
+import { PdfIcon } from "../../assets/icons/PdfIcon";
 import { Table } from "../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../hooks";
+import { RoutesMapping } from "../../Routes";
 import { FetchTransaction } from "../../types";
 import { format, openExportCSV, openExportPDF } from "../../utils";
 import { TransactionChallan } from "./TransactionChallan";
@@ -25,7 +33,7 @@ export const TransactionList = () => {
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
   const navigate = useNavigate();
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
   useEffect(() => {
@@ -162,26 +170,26 @@ export const TransactionList = () => {
     });
   };
 
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(getTransactions.data ? getTransactions.data : []);
-    }
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(getTransactions.data ? getTransactions.data : []);
+  //   }
 
-    if (exportOption === "csv") {
-      handleJSONToCSV(getTransactions.data ? getTransactions.data : []);
-    }
-  };
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(getTransactions.data ? getTransactions.data : []);
+  //   }
+  // };
 
   const tabletoolbarRightContent = (
     <Group>
       <Button
-        onClick={() => navigate(`/transaction/${id}`)}
+        onClick={() => navigate(`/${RoutesMapping.Transaction}/${id}`)}
         leftIcon={<Plus />}
         variant="outline"
       >
         Transaction
       </Button>
-      <Select
+      {/* <Select
         data={[
           { value: "pdf", label: "PDF" },
           { value: "csv", label: "CSV" },
@@ -190,9 +198,24 @@ export const TransactionList = () => {
         placeholder="Export"
         sx={{ maxWidth: "100px" }}
         onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() =>
+          handleAllPrint(getTransactions.data ? getTransactions.data : [])
+        }
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() =>
+          handleJSONToCSV(getTransactions.data ? getTransactions.data : [])
+        }
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );

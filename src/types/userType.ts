@@ -20,4 +20,5 @@ export interface UserResponse {
   city: string;
   state: string;
   _id: string;
+  companyId: string;
 }

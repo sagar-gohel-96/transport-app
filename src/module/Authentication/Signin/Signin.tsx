@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Group,
+  Loader,
   Paper,
   PasswordInput,
   Stack,
@@ -10,8 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { Link, useNavigate } from "react-router-dom";
-import { BrandFacebook, BrandGoogle } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
 import { useSigninMutation } from "../../../api";
 import { useLocalStorage } from "../../../hooks";
 
@@ -20,7 +19,7 @@ import { authAction } from "../../../store/auth-slice";
 import { config } from "../../../utils";
 
 export const Signin = () => {
-  const [signin] = useSigninMutation();
+  const [signin, { isLoading }] = useSigninMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -115,7 +114,7 @@ export const Signin = () => {
               {...form.getInputProps("password")}
             />
             <Button color="primaryBlue" type="submit">
-              Submit
+              {isLoading ? <Loader size="sm" color="white" /> : "Submit"}
             </Button>
             {/* <Text size="xs" align="center">
               Not a Member Signup? <Link to="/Signup">Sign up now</Link>

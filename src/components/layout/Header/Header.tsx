@@ -1,13 +1,21 @@
 import {
+  Avatar,
   Burger,
   Group,
   Header as MantineHeader,
   MediaQuery,
+  Menu,
   Text,
   useMantineTheme,
-} from '@mantine/core';
-import { ThemeAction } from '../../common';
-import { Activity } from 'tabler-icons-react';
+} from "@mantine/core";
+import { ThemeAction } from "../../common";
+import { Lock, Logout, User } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../store";
+import { useAuth, useCompanies, useLocalStorage } from "../../../hooks";
+import { config } from "../../../utils";
+import { authAction } from "../../../store/auth-slice";
+import { RoutesMapping } from "../../../Routes";
 
 interface HeaderProps {
   opened: boolean;
@@ -21,19 +29,41 @@ export const Header = ({
   opened,
 }: HeaderProps) => {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { setLocalStorageItem: setUser } = useLocalStorage(
+    config.userLocalStorageKey as string
+  );
+
+  const { user } = useAuth();
+  const { getCompanies } = useCompanies(user!.companyId);
+
+  const { data } = getCompanies;
+
+  const companyData = data ? data : {};
+
+  console.log("companyData", companyData.companyName);
+
+  const onLogout = () => {
+    if (user) {
+      setUser("");
+      dispatch(authAction.setUser(null));
+      navigate("/");
+    }
+  };
 
   return (
     <MantineHeader height={70} p="md">
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '100%',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          justifyContent: "space-between",
         }}
       >
         <Group>
-          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
             <Burger
               opened={opened}
               onClick={opened ? onCloseNavbar : onOpenNavbar}
@@ -42,17 +72,39 @@ export const Header = ({
             />
           </MediaQuery>
           <Text
-            sx={(theme) => ({
-              color: theme.colorScheme === 'dark' ? 'white' : 'black',
-              fontWeight: 'bolder',
-            })}
+            // sx={(theme) => ({
+            //   color: theme.colorScheme === "dark" ? "white" : "black",
+            //   fontWeight: "bolder",
+            // })}
+            weight={700}
+            size="xl"
           >
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <Activity /> Transport System
-            </div>
+            {companyData.companyName}
           </Text>
         </Group>
-        <ThemeAction />
+        <Group>
+          <ThemeAction />
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Avatar color="blue" radius="xl">
+                MK
+              </Avatar>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>{user?.name}</Menu.Label>
+              <Menu.Item
+                icon={<User size={14} />}
+                onClick={() => navigate(RoutesMapping.Profile)}
+              >
+                Profile
+              </Menu.Item>
+              <Menu.Item icon={<Lock size={14} />}>Change Password</Menu.Item>
+              <Menu.Item icon={<Logout size={14} />} onClick={onLogout}>
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
       </div>
     </MantineHeader>
   );

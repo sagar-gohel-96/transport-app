@@ -87,6 +87,7 @@ export const TransactionCardView = ({
               placeholder="Date"
               withAsterisk
               inputFormat={format}
+              defaultValue={new Date()}
               {...form.getInputProps(`transactions.${index}.date`)}
             />
             <Autocomplete

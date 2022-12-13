@@ -1,9 +1,12 @@
-import { Group, UnstyledButton } from "@mantine/core";
+import { Group, Text, UnstyledButton } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
+import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useMemo } from "react";
-import { Download } from "tabler-icons-react";
+import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Download, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
@@ -12,15 +15,35 @@ import { Formatter } from "../../../utils/formatter";
 import { TransactionChallan } from "../../TransactionList";
 
 export const MostRecentTransaction = () => {
+  const navigate = useNavigate();
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const { getTransactions } = useTransaction("");
+  const { getTransactions, deleteTransaction } = useTransaction("");
 
   const { data } = getTransactions;
 
   const getMostRecentRecord = useMemo(
     () => data && data.slice(Math.max(data.length - 5, 0)).reverse(),
     [data]
+  );
+
+  const handleTransactionDelete = useCallback(
+    async (id: string) => {
+      const response: any = await deleteTransaction(id);
+      if (response.data.success) {
+        getTransactions.refetch();
+        showNotification({
+          title: "Transaction",
+          message: response.data.message,
+        });
+      } else {
+        showNotification({
+          title: "Transaction",
+          message: response.data.message,
+        });
+      }
+    },
+    [deleteTransaction, getTransactions]
   );
 
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
@@ -76,19 +99,50 @@ export const MostRecentTransaction = () => {
                   fileName="Transaction-Challan.pdf"
                   style={{
                     textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
+                    color: "gray",
                   }}
                 >
                   <Download />
                 </PDFDownloadLink>
+              </UnstyledButton>
+              <UnstyledButton
+                onClick={() => navigate(`/transaction/${row.original._id}`)}
+              >
+                <Plus />
+              </UnstyledButton>
+              <UnstyledButton
+                onClick={() => navigate(`/transaction/${row.original._id}`)}
+              >
+                <Edit />
+              </UnstyledButton>
+              <UnstyledButton
+                onClick={() =>
+                  openConfirmModal({
+                    title: "Delete your Tranaction ",
+                    centered: true,
+                    children: (
+                      <Text size="sm">
+                        Are you sure you want to delete your ?
+                      </Text>
+                    ),
+                    labels: {
+                      confirm: "Delete Transaction",
+                      cancel: "No don't delete it",
+                    },
+                    confirmProps: { color: "red" },
+                    onCancel: () => console.log("Cancel"),
+                    onConfirm: () => handleTransactionDelete(row.original._id),
+                  })
+                }
+              >
+                <Trash color="red" />
               </UnstyledButton>
             </Group>
           </div>
         ),
       },
     ],
-    [getCompanies.data, getParties.data]
+    [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
   return (
     <Table

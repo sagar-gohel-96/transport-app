@@ -107,32 +107,32 @@ export const Dashboard = () => {
     {
       icon: <TrendingUp size={38} />,
       iconColor: "#FF922B",
-      label: "Total Transaction",
+      label: "Transaction",
       duration: `In ${currentMonthName}`,
       value: currMonthTotalTransaction,
     },
     {
       icon: <CurrencyRupee size={38} />,
       iconColor: "#51CF66",
-      label: "Total Transaction Amount",
+      label: "Amount",
       duration: `In ${currentMonthName}`,
-      value: Formatter.formatCurrency(
+      value: `${Formatter.formatCurrency(
         currMonthTotalTransactionAmount,
         "INR",
         2
-      ),
+      )}`,
     },
     {
       icon: <TrendingUp size={38} />,
       iconColor: "#FF922B",
-      label: "Total Transaction",
+      label: "Transaction",
       duration: `In ${currentYear}`,
       value: currYearTotalTransction,
     },
     {
       icon: <CurrencyRupee size={38} />,
       iconColor: "#51CF66",
-      label: "Total Transaction Amount",
+      label: "Amount",
       duration: `In ${currentYear}`,
       value: Formatter.formatCurrency(currMonthTransactonAmount, "INR", 2),
     },
@@ -144,9 +144,10 @@ export const Dashboard = () => {
         cols={4}
         spacing="lg"
         breakpoints={[
-          { maxWidth: 1500, cols: 2, spacing: "md" },
-          { maxWidth: 980, cols: 2, spacing: "md" },
-          { maxWidth: 600, cols: 1, spacing: "sm" },
+          { maxWidth: 1500, cols: 4, spacing: "md" },
+          { maxWidth: 1280, cols: 3, spacing: "md" },
+          { maxWidth: 1080, cols: 2, spacing: "md" },
+          { maxWidth: 600, cols: 1, spacing: "md" },
         ]}
       >
         {DashboardCard.map((item, i) => (

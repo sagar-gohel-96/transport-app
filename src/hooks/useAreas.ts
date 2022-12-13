@@ -6,8 +6,9 @@ import {
   useDeleteAreaMutation,
 } from "../api";
 
-export const useAreas = () => {
-  const { data, isLoading, refetch } = useGetAreasQuery("");
+export const useAreas = (id: string) => {
+  const isUpdateId = parseInt(id);
+  const { data, isLoading, refetch } = useGetAreasQuery(!!isUpdateId ? id : "");
   const [addArea] = useAddAreaMutation();
   const [updateArea] = useUpdateAreaMutation();
   const [deleteArea] = useDeleteAreaMutation();

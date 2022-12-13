@@ -1,6 +1,7 @@
 import {
   Box,
   Card as MantineCard,
+  Group,
   Stack,
   Text,
   ThemeIcon,
@@ -32,12 +33,14 @@ export const TileCard = ({ item }: CardProps) => {
 
         <Stack spacing={0}>
           <Text weight={600}>{label}</Text>
-          <Text size={32} weight={700}>
-            {value}
-          </Text>
-          <Text size="sm" color="dimmed">
-            {duration}
-          </Text>
+          <Group spacing={4}>
+            <Text size={20} weight={700}>
+              {value}
+            </Text>
+            <Text size="sm" color="dimmed">
+              {duration}
+            </Text>
+          </Group>
         </Stack>
       </div>
     </MantineCard>

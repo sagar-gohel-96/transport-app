@@ -19,7 +19,7 @@ interface NavbarProps {
   opened: boolean;
   onCloseNavbar: () => void;
 }
-
+const id = "00000000000000000000000";
 const data: NavbarItemType[] = [
   {
     label: "Dashboard",
@@ -30,14 +30,19 @@ const data: NavbarItemType[] = [
 
   { label: "Areas ", icon: <AB2 />, path: RoutesMapping.AreasList },
   {
-    label: "Transaction list",
+    label: "Add Transaction",
+    icon: <Book2 />,
+    path: `${RoutesMapping.Transaction}/${id}`,
+  },
+  {
+    label: "Transactions",
     icon: <Book2 />,
     path: RoutesMapping.TransactionList,
   },
 
   {
     icon: <FileReport />,
-    label: "Report",
+    label: "Reports",
     rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
     path: RoutesMapping.TransactionList,
     subItems: [
@@ -69,7 +74,7 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
   }, [location.pathname]);
 
   const handleNavbarClick = (item: NavbarItemType, index: number) => {
-    navigate(item.path!);
+    navigate(`/${item.path!}`);
     onCloseNavbar();
   };
 
