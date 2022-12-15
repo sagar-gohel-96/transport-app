@@ -1,4 +1,4 @@
-import { Group, Text, UnstyledButton } from "@mantine/core";
+import { Button, Group, Text, UnstyledButton } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -110,7 +110,7 @@ export const LastTransaction = () => {
               <UnstyledButton
                 onClick={() =>
                   navigate(
-                    `/${RoutesMapping.TransactionList}/${row.original._id}`
+                    `/${RoutesMapping.Transaction}/duplicate/${row.original._id}`
                   )
                 }
               >
@@ -154,6 +154,19 @@ export const LastTransaction = () => {
     ],
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
+
+  const tabletoolbarRightContent = (
+    <Group>
+      <Button
+        variant="outline"
+        color="primaryBlue"
+        onClick={() => navigate(`/${RoutesMapping.TransactionList}`)}
+      >
+        View Details
+      </Button>
+    </Group>
+  );
+
   return (
     <Table
       columns={columns}
@@ -161,6 +174,7 @@ export const LastTransaction = () => {
       pagination
       toolbarProps={{
         title: "Last Transaction",
+        rightContent: tabletoolbarRightContent,
       }}
       isLoading={getTransactions.isLoading}
       LoadingType="relative"

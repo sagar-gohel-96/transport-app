@@ -15,7 +15,7 @@ import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Check, CirclePlus, Plus } from "tabler-icons-react";
 import { LoadingIndicator } from "../../../components/common";
 import { useAreas, useParties, useTransaction } from "../../../hooks";
@@ -33,6 +33,7 @@ import { format } from "../../../utils";
 
 export const Transaction = () => {
   const param = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { getParties } = useParties("");
   const {
@@ -45,6 +46,8 @@ export const Transaction = () => {
   const { getAreas } = useAreas("");
   const isUpdate = parseInt(param.id!);
   const id = "00000000000000000000000";
+
+  const isDuplicate = location.pathname.split("/").includes("duplicate");
 
   const transactionInitialValues = {
     invoiceDate: new Date(),
@@ -65,6 +68,39 @@ export const Transaction = () => {
         amount: 0,
       },
     ],
+  };
+
+  const getDuplicateData = (
+    data: Omit<
+      FetchTransaction,
+      "_id,__v,createdAt,updatedAt,netAmount,GSTAmount"
+    >
+  ) => {
+    const {
+      _id,
+      invoiceDate,
+      partyName,
+      totalAmount,
+      GSTAmount,
+      netAmount,
+      comments,
+      transactions,
+    } = data;
+
+    const transformTransaction = transactions.map((transaction) => {
+      return { ...transaction, date: moment.unix(transaction.date).toDate() };
+    });
+
+    return {
+      _id,
+      invoiceDate: moment.unix(invoiceDate).toDate(),
+      partyName,
+      totalAmount,
+      GSTAmount,
+      netAmount,
+      comments,
+      transactions: transformTransaction,
+    };
   };
 
   const getTransactionData = (data: FetchTransaction): TransactionData => {
@@ -136,7 +172,7 @@ export const Transaction = () => {
         transaction.freight + transaction.hamali;
       formRef.current.setFieldValue(
         `transactions.${i}.amount`,
-        calculateTransactionAmount || 0
+        calculateTransactionAmount ?? 0
       );
     });
   }, []);
@@ -146,14 +182,22 @@ export const Transaction = () => {
       return;
     }
 
-    if (!!isUpdate) {
+    if (isDuplicate) {
+      formRef.current.setValues(
+        getDuplicateData({
+          ...TransactionData,
+        })
+      );
+    }
+
+    if (!!isUpdate && !isDuplicate) {
       formRef.current.setValues(
         getTransactionData({
           ...TransactionData,
         })
       );
     }
-  }, [TransactionData, isUpdate]);
+  }, [TransactionData, isDuplicate, isUpdate]);
 
   const handleSubmit = async (values: TransactionData) => {
     const { _id, invoiceDate, transactions, ...rest } = values;
@@ -169,7 +213,7 @@ export const Transaction = () => {
     );
 
     try {
-      if (!!isUpdate) {
+      if (!!isUpdate && !isDuplicate) {
         const updateData: any = await updateTransaction({
           _id,
           invoiceDate: getInvoiceDate,

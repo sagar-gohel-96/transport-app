@@ -74,6 +74,10 @@ export const AppRoutes = () => {
         path={`${RoutesMapping.Transaction}/:id`}
         element={<Transaction />}
       />
+      <Route
+        path={`${RoutesMapping.Transaction}/duplicate/:id`}
+        element={<Transaction />}
+      />
       <Route path={"parties/:id"} element={<PartyDetails />} />
       <Route
         path={`${RoutesMapping.AreasList}/:id`}
