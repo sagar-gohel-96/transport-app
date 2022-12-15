@@ -67,12 +67,6 @@ export const AreasList = () => {
         footer: (props) => props.column.id,
       },
       {
-        header: "Contact Person",
-        accessorKey: "name",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
         header: "Action",
         cell: ({ row }) => (
           <div
@@ -136,16 +130,6 @@ export const AreasList = () => {
     });
   };
 
-  // const handleExport = () => {
-  //   if (exportOption === "pdf") {
-  //     handleAllPrint(getAreas.data ? getAreas.data : []);
-  //   }
-
-  //   if (exportOption === "csv") {
-  //     handleJSONToCSV(getAreas.data ? getAreas.data : []);
-  //   }
-  // };
-
   const tabletoolbarRightContent = (
     <Group>
       <Button
@@ -155,16 +139,7 @@ export const AreasList = () => {
       >
         Area
       </Button>
-      {/* <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      /> */}
+
       <ActionIcon
         variant="outline"
         size="lg"

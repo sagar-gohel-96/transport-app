@@ -3,6 +3,7 @@ import lodash from "lodash";
 import { Formatter } from "../../utils/formatter";
 import { PageOrientation } from "pdfmake/interfaces";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { useMemo } from "react";
 
 interface FieldNames {
   key: string;
@@ -43,6 +44,7 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
     currencyCode,
     fieldNames,
   } = props;
+
   const keys =
     includeFields && !includeFields?.includes("all")
       ? includeFields
@@ -53,9 +55,9 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
         );
   const getValue = (item: { [x: string]: any }, key: string): string => {
     if (dateFields?.includes(key)) {
-      return item[key];
+      return Formatter.formatDate(item[key]);
     } else if (currencyFields?.includes(key)) {
-      return Formatter.formatCurrency(item[key], currencyCode ?? "USD", 2);
+      return Formatter.formatCurrency(item[key], currencyCode ?? "INR", 2);
     } else if (percentFields?.includes(key)) {
       return Formatter.formatPercent(item[key], 2);
     } else if (decimalFields?.includes(key)) {
@@ -108,13 +110,16 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
     });
     tableData.push(row);
   });
+
+  const grandTotalAmount = 2000;
+
   const docDefinition = {
     content: [
       { text: title, style: "header" },
       {
         style: "table",
         table: {
-          body: tableData,
+          body: [...tableData],
         },
         layout: {
           fillColor: function (rowIndex: number) {
@@ -122,6 +127,8 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
           },
         },
       },
+      { text: `Total Amount : ${2000}`, style: "totalAmount" },
+      { text: `Total Transaction : ${2000}`, style: "totalAmount" },
     ],
     styles: {
       header: {
@@ -131,8 +138,12 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
       table: {
         fontSize: 8,
       },
+      totalAmount: {
+        fontSize: 12,
+        marginTop: 12,
+      },
     },
-    pageOrientation: "landscape" as PageOrientation,
+    pageOrientation: "portrait" as PageOrientation,
   };
   pdfMake.createPdf(docDefinition).open();
 }

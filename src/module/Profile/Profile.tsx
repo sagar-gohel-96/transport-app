@@ -23,7 +23,9 @@ export const Profile = () => {
   const onLogout = () => {
     if (user) {
       setUser("");
-      dispatch(authAction.setUser(null));
+      dispatch(
+        authAction.setUser({ initialized: false, user: null, token: null })
+      );
       navigate("/");
     }
   };
@@ -56,9 +58,7 @@ export const Profile = () => {
       const data = { ...user, ...updateData.data.data };
 
       dispatch(
-        authAction.setUser({
-          user: data,
-        })
+        authAction.setUser({ initialized: true, user: data, token: null })
       );
 
       setUser(data);

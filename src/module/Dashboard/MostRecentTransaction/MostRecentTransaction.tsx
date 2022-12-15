@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Download, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
+import { RoutesMapping } from "../../../Routes";
 import { FetchTransaction } from "../../../types";
 import { format } from "../../../utils";
 import { Formatter } from "../../../utils/formatter";
@@ -106,12 +107,20 @@ export const MostRecentTransaction = () => {
                 </PDFDownloadLink>
               </UnstyledButton>
               <UnstyledButton
-                onClick={() => navigate(`/transaction/${row.original._id}`)}
+                onClick={() =>
+                  navigate(
+                    `/${RoutesMapping.TransactionList}/${row.original._id}`
+                  )
+                }
               >
                 <Plus />
               </UnstyledButton>
               <UnstyledButton
-                onClick={() => navigate(`/transaction/${row.original._id}`)}
+                onClick={() =>
+                  navigate(
+                    `/${RoutesMapping.TransactionList}/${row.original._id}`
+                  )
+                }
               >
                 <Edit />
               </UnstyledButton>

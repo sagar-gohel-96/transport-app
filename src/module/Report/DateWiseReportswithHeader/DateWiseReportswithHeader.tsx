@@ -1,32 +1,44 @@
-import { Group, Text, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Group, Text, UnstyledButton } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Plus, Trash } from "tabler-icons-react";
+import { Download, Edit, FileSpreadsheet, Trash } from "tabler-icons-react";
+import { PdfIcon } from "../../../assets/icons";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
-import { RoutesMapping } from "../../../Routes";
 import { FetchTransaction } from "../../../types";
-import { format } from "../../../utils";
-import { Formatter } from "../../../utils/formatter";
+import { format, openExportCSV, openExportPDF } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
+import { FilterTransactionByDates } from "../utils";
 
-export const LastTransaction = () => {
-  const navigate = useNavigate();
+export const DateWiseReportswithHeader = () => {
+  const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const { getTransactions, deleteTransaction } = useTransaction("");
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
-  const { data } = getTransactions;
-
-  const getLastAddedRecord = useMemo(
-    () => data && data.slice(Math.max(data.length - 5, 0)).reverse(),
-    [data]
+  const toDayDate = new Date();
+  const currentMonthFirstDate = new Date(
+    toDayDate.getFullYear(),
+    toDayDate.getMonth(),
+    1
   );
+
+  const [pickFromDate, setPickFromDate] = useState<Date | null>(
+    currentMonthFirstDate
+  );
+  const [pickToDate, setPickToDate] = useState<Date | null>(toDayDate);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getTransactions.refetch();
+  }, [getTransactions]);
 
   const handleTransactionDelete = useCallback(
     async (id: string) => {
@@ -75,12 +87,7 @@ export const LastTransaction = () => {
       {
         header: "Net Amount",
         accessorKey: "netAmount",
-        cell: (info) =>
-          Formatter.formatCurrency(
-            parseInt(info.getValue() as string, 10),
-            "INR",
-            2
-          ),
+        cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
@@ -92,8 +99,8 @@ export const LastTransaction = () => {
                 <PDFDownloadLink
                   document={
                     <TransactionChallan
-                      parties={getParties.data ?? []}
-                      companies={getCompanies.data ?? []}
+                      parties={getParties.data}
+                      companies={getCompanies.data}
                       data={row.original ?? []}
                       withHeader
                     />
@@ -101,27 +108,15 @@ export const LastTransaction = () => {
                   fileName="Transaction-Challan.pdf"
                   style={{
                     textDecoration: "none",
-                    color: "gray",
+                    padding: "10px",
+                    color: "#4a4a4a",
                   }}
                 >
                   <Download />
                 </PDFDownloadLink>
               </UnstyledButton>
               <UnstyledButton
-                onClick={() =>
-                  navigate(
-                    `/${RoutesMapping.TransactionList}/${row.original._id}`
-                  )
-                }
-              >
-                <Plus />
-              </UnstyledButton>
-              <UnstyledButton
-                onClick={() =>
-                  navigate(
-                    `/${RoutesMapping.TransactionList}/${row.original._id}`
-                  )
-                }
+                onClick={() => navigate(`/transaction/${row.original._id}`)}
               >
                 <Edit />
               </UnstyledButton>
@@ -154,13 +149,104 @@ export const LastTransaction = () => {
     ],
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
+
+  const FilteredData = FilterTransactionByDates(
+    pickFromDate ? moment(pickFromDate) : undefined,
+    pickToDate ? moment(pickToDate) : undefined,
+    getTransactions.data ? getTransactions.data : []
+  );
+
+  const handleAllPrint = (data: FetchTransaction[]) => {
+    openExportPDF({
+      items: data,
+      title: `Transaction-Report (${moment(pickFromDate).format(
+        format
+      )} - ${moment(pickToDate).format(format)} )`,
+      includeFields: [
+        "invoiceNo",
+        "invoiceDate",
+        "partyName",
+        "totalAmount",
+        "GSTAmount",
+        "netAmount",
+        "comments",
+      ],
+    });
+  };
+
+  const handleJSONToCSV = (data: FetchTransaction[]) => {
+    openExportCSV({
+      items: data,
+      filename: `Transaction-Report (${moment(pickFromDate).format(
+        format
+      )} - ${moment(pickToDate).format(format)} )`,
+      excludeFields: ["_id", "__v", "transactions"],
+    });
+  };
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(FilteredData ? FilteredData : []);
+  //   }
+
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(FilteredData ? FilteredData : []);
+  //   }
+  // };
+
+  const tabletoolbarRightContent = (
+    <Group>
+      <DatePicker
+        placeholder="From Date"
+        withAsterisk
+        value={pickFromDate}
+        onChange={setPickFromDate}
+        inputFormat={format}
+      />
+      <Text>To</Text>
+      <DatePicker
+        placeholder="To Date"
+        withAsterisk
+        value={pickToDate}
+        onChange={setPickToDate}
+        inputFormat={format}
+      />
+      {/* <Select
+        data={[
+          { value: "pdf", label: "PDF" },
+          { value: "csv", label: "CSV" },
+        ]}
+        value={exportOption}
+        placeholder="Export"
+        sx={{ maxWidth: "100px" }}
+        onChange={setExportOption}
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(FilteredData ? FilteredData : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(FilteredData ? FilteredData : [])}
+      >
+        <FileSpreadsheet />
+      </ActionIcon>
+    </Group>
+  );
+
   return (
     <Table
       columns={columns}
-      data={getLastAddedRecord ? getLastAddedRecord : []}
+      // data={getTransactions.data ? getTransactions.data : []}
+      data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
-        title: "Last Transaction",
+        title: "Date Wise Reports",
+        showSearch: true,
+        rightContent: tabletoolbarRightContent,
       }}
       isLoading={getTransactions.isLoading}
       LoadingType="relative"

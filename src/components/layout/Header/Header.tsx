@@ -36,18 +36,20 @@ export const Header = ({
   );
 
   const { user } = useAuth();
-  const { getCompanies } = useCompanies(user!.companyId);
+  const { getCompanies } = useCompanies(user! && user.companyId);
 
   const { data } = getCompanies;
 
   const companyData = data ? data : {};
 
-  console.log("companyData", companyData.companyName);
+  // console.log("companyData", user, companyData.companyName);
 
   const onLogout = () => {
     if (user) {
       setUser("");
-      dispatch(authAction.setUser(null));
+      dispatch(
+        authAction.setUser({ initialized: false, user: null, token: null })
+      );
       navigate("/");
     }
   };

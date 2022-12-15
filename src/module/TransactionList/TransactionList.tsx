@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Button,
+  Checkbox,
   Group,
   // Select,
   Text,
@@ -33,6 +34,7 @@ export const TransactionList = () => {
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
   const navigate = useNavigate();
+
   // const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
@@ -61,6 +63,23 @@ export const TransactionList = () => {
 
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
     () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+            indeterminate={table.getIsSomeRowsSelected()}
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onChange={row.getToggleSelectedHandler()}
+            indeterminate={row.getIsSomeSelected()}
+          />
+        ),
+      },
       {
         header: "#",
         cell: (info) => parseInt(info.row.id) + 1,
@@ -101,6 +120,7 @@ export const TransactionList = () => {
                     parties={getParties.data ?? []}
                     companies={getCompanies.data ?? []}
                     data={row.original ?? []}
+                    withHeader
                   />
                 }
                 fileName="Transaction-Challan.pdf"
@@ -113,7 +133,11 @@ export const TransactionList = () => {
               </PDFDownloadLink>
             </UnstyledButton>
             <UnstyledButton
-              onClick={() => navigate(`/transaction/${row.original._id}`)}
+              onClick={() =>
+                navigate(
+                  `/${RoutesMapping.TransactionList}/${row.original._id}`
+                )
+              }
             >
               <Edit />
             </UnstyledButton>
@@ -146,7 +170,7 @@ export const TransactionList = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
-  const handleAllPrint = (data: FetchTransaction[]) => {
+  const handleAllPrint = async (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
       title: "Transactions-Data",
@@ -155,10 +179,11 @@ export const TransactionList = () => {
         "invoiceDate",
         "partyName",
         "totalAmount",
-        "GSTAmount",
         "netAmount",
         "comments",
       ],
+      currencyFields: ["totalAmount", "netAmount"],
+      dateFields: ["invoiceDate"],
     });
   };
 

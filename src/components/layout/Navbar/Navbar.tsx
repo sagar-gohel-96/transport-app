@@ -48,13 +48,23 @@ const data: NavbarItemType[] = [
     subItems: [
       {
         icon: <Calendar />,
-        label: "Date Wise Report",
+        label: "Date Filter",
         path: RoutesMapping.DateWiseReports,
       },
       {
         icon: <User />,
-        label: "Party Wise Report",
+        label: "Party Filter",
         path: RoutesMapping.PartyWiseReports,
+      },
+      {
+        icon: <User />,
+        label: "Date Filter - Header",
+        path: RoutesMapping.DateWiseReportsWithHeader,
+      },
+      {
+        icon: <User />,
+        label: "Party Filter - Header",
+        path: RoutesMapping.PartyWiseReportsWithHeader,
       },
     ],
   },

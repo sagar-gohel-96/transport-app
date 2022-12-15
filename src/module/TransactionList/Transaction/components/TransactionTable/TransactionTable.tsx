@@ -34,7 +34,7 @@ export const TranactionTable = ({
             <th>Freight</th>
             <th>Hamali</th>
             <th>Amount</th>
-            <th>Action</th>
+            <th>#</th>
           </tr>
         </thead>
         <tbody>

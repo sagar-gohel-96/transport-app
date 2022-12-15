@@ -4,16 +4,14 @@ import { showNotification, updateNotification } from "@mantine/notifications";
 import { useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Check } from "tabler-icons-react";
-import { useAreas, useAuth } from "../../../hooks";
+import { useAreas } from "../../../hooks";
 import { AreaPayload, FetchAreaData } from "../../../types";
 import { AreaForm } from "./AreaForm";
 
 const setAreaData = (data: FetchAreaData): FetchAreaData => {
   return {
     _id: data?._id ?? "",
-    name: data?.name ?? "",
     city: data?.city ?? "",
-    email: data?.email ?? "",
     areaName: data?.areaName ?? "",
   };
 };
@@ -22,7 +20,6 @@ export const AreaDetails = () => {
   const param = useParams();
   const navigate = useNavigate();
   const { addArea, getAreas, updateArea } = useAreas(param.id!);
-  const { user } = useAuth();
 
   const { data, isLoading, refetch } = getAreas;
   const isUpdate = parseInt(param.id!);
@@ -30,14 +27,12 @@ export const AreaDetails = () => {
 
   const form = useForm<AreaPayload>({
     initialValues: {
-      name: user?.name ?? "",
       areaName: "",
       city: "",
-      email: "",
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
   });
 
@@ -51,17 +46,20 @@ export const AreaDetails = () => {
     if (!data) {
       return;
     }
-
+    console.log("isUpdate", isUpdate);
     if (!!isUpdate) {
       formRef.current.setValues(setAreaData(AreasData));
     }
   }, [AreasData, data, isUpdate]);
 
-  const handleSubmit = async (values: AreaPayload) => {
+  const handleSubmit = async (values: Partial<AreaPayload>) => {
     const _id = values._id as string;
     try {
       if (values?._id) {
-        const updateData: any = await updateArea({ _id, ...values });
+        const updateData: any = await updateArea({
+          _id,
+          ...values,
+        });
         if (updateData.data.success) {
           showNotification({
             id: "load-data",
@@ -82,8 +80,9 @@ export const AreaDetails = () => {
           });
         }
       } else {
-        const addData: any = await addArea(values);
-        console.log("dada");
+        const addData: any = await addArea({
+          ...values,
+        });
         if (addData.data.success) {
           showNotification({
             title: "Area",

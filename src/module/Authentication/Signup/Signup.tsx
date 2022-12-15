@@ -21,8 +21,8 @@ import { config } from "../../../utils";
 
 export const Signup = () => {
   const dispatch = useAppDispatch();
-  const [addUser] = useAddUserMutation();
-  const { setLocalStorageItem } = useLocalStorage<UserResponse>(
+  const [addUser, { isLoading }] = useAddUserMutation();
+  const { setLocalStorageItem: setUserData } = useLocalStorage(
     config.userLocalStorageKey as string
   );
   const navigate = useNavigate();
@@ -47,19 +47,19 @@ export const Signup = () => {
   ) => {
     try {
       const addUserResponce: any = await addUser(values);
+      const userAuth = {
+        initialized: true,
+        user: addUserResponce.data.user,
+        token: addUserResponce.data.token,
+      };
       if (addUserResponce.data.success) {
         showNotification({
           title: "Register",
           message: addUserResponce.data.message,
         });
 
-        dispatch(
-          authAction.setUser({
-            user: addUserResponce.data.user,
-            token: addUserResponce.data.token,
-          })
-        );
-        setLocalStorageItem(addUserResponce.data.user);
+        dispatch(authAction.setUser(userAuth));
+        setUserData(JSON.stringify(userAuth));
         navigate("/");
         form.reset();
       }

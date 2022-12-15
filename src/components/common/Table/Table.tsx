@@ -78,6 +78,8 @@ export function Table<T>({
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
 
+  data = useMemo(() => data, [data]);
+
   const tableRef = useRef(null);
   const table = useReactTable({
     data,
@@ -97,6 +99,11 @@ export function Table<T>({
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   });
+  const selectedValues = table
+    .getSelectedRowModel()
+    .flatRows.map((item) => item.original);
+
+  // console.log("rowSelected", selectedValues);
 
   const isEmptyState = table.getRowModel().rows.length === 0;
   // const isEmptyState = false;

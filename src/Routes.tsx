@@ -9,11 +9,13 @@ import {
   Signup,
   PartyDetails,
   PartiesList,
-  AreasList,
   TransactionList,
   DateWiseReports,
   PartyWiseReports,
   CompanyProfile,
+  DateWiseReportswithHeader,
+  PartyWiseReportswithHeader,
+  AreasList,
 } from "./module";
 import { AreaDetails } from "./module/AreasList/AreaDetails";
 
@@ -29,6 +31,9 @@ export const enum RoutesMapping {
   TransactionList = "transactions",
   DateWiseReports = "date-wise-reports",
   PartyWiseReports = "party-wise-reports",
+  DateWiseReportsWithHeader = "date-wise-reports-with-header",
+  PartyWiseReportsWithHeader = "party-wise-reports-with-header",
+  AreasDemo = "areas-demo",
 }
 
 export const AppRoutes = () => {
@@ -56,6 +61,14 @@ export const AppRoutes = () => {
       <Route
         path={RoutesMapping.PartyWiseReports}
         element={<PartyWiseReports />}
+      />
+      <Route
+        path={`${RoutesMapping.DateWiseReportsWithHeader}`}
+        element={<DateWiseReportswithHeader />}
+      />
+      <Route
+        path={`${RoutesMapping.PartyWiseReportsWithHeader}`}
+        element={<PartyWiseReportswithHeader />}
       />
       <Route
         path={`${RoutesMapping.Transaction}/:id`}

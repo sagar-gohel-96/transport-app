@@ -4,7 +4,6 @@ import {
   ColorSchemeProvider,
   ColorScheme,
   Box,
-  BackgroundImage,
 } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
 import { Colors, ThemeColor } from "./theme";
@@ -12,12 +11,11 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { AuthRoutes } from "./Routes";
 import { useAuth, useLocalStorage } from "./hooks";
 import { ModalsProvider } from "@mantine/modals";
-import { LoadingIndicator } from "./components/common";
 
 function App() {
   const { getLocalStorageItem: colorScheme, setLocalStorageItem } =
     useLocalStorage<ColorScheme>("color-scheme");
-  const { user, isInitialised } = useAuth();
+  const { user } = useAuth();
 
   const toggleColorScheme = (value: ColorScheme) => {
     setLocalStorageItem(value || colorScheme === "dark" ? "light" : "dark");

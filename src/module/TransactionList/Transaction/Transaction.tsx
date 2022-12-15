@@ -56,7 +56,7 @@ export const Transaction = () => {
     transactions: [
       {
         CGNo: 0,
-        date: "",
+        date: new Date(),
         fromPlace: "",
         toPlace: "",
         noOfArts: 0,
@@ -311,6 +311,7 @@ export const Transaction = () => {
                   label="Invoice Date"
                   withAsterisk
                   inputFormat={format}
+                  defaultValue={new Date()}
                   {...form.getInputProps("invoiceDate")}
                 />
               </SimpleGrid>

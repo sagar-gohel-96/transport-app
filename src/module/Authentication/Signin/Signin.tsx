@@ -41,15 +41,22 @@ export const Signin = () => {
   const handleSubmit = async (values: any) => {
     try {
       const SigninData: any = await signin(values);
+
       if (SigninData.data.success) {
         const userAuth = {
+          initialized: true,
+          user: SigninData.data.user,
+          token: SigninData.data.token,
+        };
+
+        const addLocalStorage = {
           user: SigninData.data.user,
           token: SigninData.data.token,
         };
 
         dispatch(authAction.setUser(userAuth));
 
-        setUserData(JSON.stringify(userAuth));
+        setUserData(JSON.stringify(addLocalStorage));
 
         showNotification({
           title: "Sign in",

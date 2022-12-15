@@ -12,12 +12,12 @@ import { AreaPayload } from "../../../../types";
 
 interface AreaFormProps {
   form: UseFormReturnType<AreaPayload>;
-  handleSubmit: (values: AreaPayload) => void;
+  handleSubmit: (values: Partial<AreaPayload>) => void;
 }
 
 export const AreaForm = ({ form, handleSubmit }: AreaFormProps) => {
   return (
-    <form onSubmit={form.onSubmit((values) => console.log("val", values))}>
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <Stack spacing="md">
         <Card withBorder radius="sm">
           <Card.Section withBorder inheritPadding py="xs">
@@ -37,12 +37,6 @@ export const AreaForm = ({ form, handleSubmit }: AreaFormProps) => {
               label="City"
               placeholder="City"
               {...form.getInputProps("city")}
-            />
-            <TextInput
-              required
-              label="Contact Person"
-              placeholder="Contact Person"
-              {...form.getInputProps("name")}
             />
           </SimpleGrid>
           <Button

@@ -34,7 +34,7 @@ export const Pricing = ({ form }: PricingProps) => {
           sx={{ maxWidth: 130 }}
         />
       </Group> */}
-      <Group position="apart">
+      {/* <Group position="apart">
         <Text weight={600}>Net Amount</Text>
 
         <Input
@@ -45,7 +45,7 @@ export const Pricing = ({ form }: PricingProps) => {
           {...form.getInputProps("netAmount")}
           sx={{ maxWidth: 130 }}
         />
-      </Group>
+      </Group> */}
     </SimpleGrid>
   );
 };

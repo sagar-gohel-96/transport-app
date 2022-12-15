@@ -1,32 +1,38 @@
-import { Group, Text, UnstyledButton } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  MultiSelect,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Edit, Plus, Trash } from "tabler-icons-react";
+import { Download, Edit, FileSpreadsheet, Trash } from "tabler-icons-react";
+import { PdfIcon } from "../../../assets/icons";
 import { Table } from "../../../components/common";
 import { useCompanies, useParties, useTransaction } from "../../../hooks";
-import { RoutesMapping } from "../../../Routes";
-import { FetchTransaction } from "../../../types";
-import { format } from "../../../utils";
-import { Formatter } from "../../../utils/formatter";
+import { FetchPartiesData, FetchTransaction } from "../../../types";
+import { format, openExportCSV, openExportPDF } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
+import { FilterTransactionByParties } from "../utils";
 
-export const LastTransaction = () => {
-  const navigate = useNavigate();
+export const PartyWiseReportswithHeader = () => {
+  const { getTransactions, deleteTransaction } = useTransaction("");
   const { getCompanies } = useCompanies("");
   const { getParties } = useParties("");
-  const { getTransactions, deleteTransaction } = useTransaction("");
+  const [filterParties, setFilterParties] = useState<string[]>();
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
-  const { data } = getTransactions;
+  const navigate = useNavigate();
 
-  const getLastAddedRecord = useMemo(
-    () => data && data.slice(Math.max(data.length - 5, 0)).reverse(),
-    [data]
-  );
+  useEffect(() => {
+    getTransactions.refetch();
+  }, [getTransactions]);
 
   const handleTransactionDelete = useCallback(
     async (id: string) => {
@@ -75,12 +81,7 @@ export const LastTransaction = () => {
       {
         header: "Net Amount",
         accessorKey: "netAmount",
-        cell: (info) =>
-          Formatter.formatCurrency(
-            parseInt(info.getValue() as string, 10),
-            "INR",
-            2
-          ),
+        cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
@@ -101,27 +102,15 @@ export const LastTransaction = () => {
                   fileName="Transaction-Challan.pdf"
                   style={{
                     textDecoration: "none",
-                    color: "gray",
+                    padding: "10px",
+                    color: "#4a4a4a",
                   }}
                 >
                   <Download />
                 </PDFDownloadLink>
               </UnstyledButton>
               <UnstyledButton
-                onClick={() =>
-                  navigate(
-                    `/${RoutesMapping.TransactionList}/${row.original._id}`
-                  )
-                }
-              >
-                <Plus />
-              </UnstyledButton>
-              <UnstyledButton
-                onClick={() =>
-                  navigate(
-                    `/${RoutesMapping.TransactionList}/${row.original._id}`
-                  )
-                }
+                onClick={() => navigate(`/transaction/${row.original._id}`)}
               >
                 <Edit />
               </UnstyledButton>
@@ -154,13 +143,101 @@ export const LastTransaction = () => {
     ],
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
+
+  const parties = useMemo(
+    () =>
+      !getParties.isLoading &&
+      getParties.data.map((val: FetchPartiesData) => val.name),
+    [getParties]
+  );
+
+  const FilteredData = FilterTransactionByParties(
+    getTransactions.data,
+    filterParties ?? []
+  );
+
+  const handleAllPrint = (data: FetchTransaction[]) => {
+    openExportPDF({
+      items: data,
+      title: `Transaction-Report ${filterParties ? `(${filterParties})` : ""}`,
+      includeFields: [
+        "invoiceNo",
+        "invoiceDate",
+        "partyName",
+        "totalAmount",
+        "GSTAmount",
+        "netAmount",
+        "comments",
+      ],
+    });
+  };
+
+  const handleJSONToCSV = (data: FetchTransaction[]) => {
+    openExportCSV({
+      items: data,
+      filename: `Transaction-Report ${
+        filterParties ? `(${filterParties})` : ""
+      }`,
+      excludeFields: ["_id", "__v", "transactions"],
+    });
+  };
+
+  // const handleExport = () => {
+  //   if (exportOption === "pdf") {
+  //     handleAllPrint(FilteredData ? FilteredData : []);
+  //   }
+
+  //   if (exportOption === "csv") {
+  //     handleJSONToCSV(FilteredData ? FilteredData : []);
+  //   }
+  // };
+
+  const tabletoolbarRightContent = (
+    <Group>
+      <MultiSelect
+        data={parties ? parties : []}
+        placeholder="Select Parties"
+        value={filterParties}
+        onChange={setFilterParties}
+        sx={{ maxWidth: "18rem" }}
+      />
+      {/* <Select
+        data={[
+          { value: "pdf", label: "PDF" },
+          { value: "csv", label: "CSV" },
+        ]}
+        value={exportOption}
+        placeholder="Export"
+        sx={{ maxWidth: "100px" }}
+        onChange={setExportOption}
+      /> */}
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(FilteredData ? FilteredData : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(FilteredData ? FilteredData : [])}
+      >
+        <FileSpreadsheet />
+      </ActionIcon>
+    </Group>
+  );
+
   return (
     <Table
       columns={columns}
-      data={getLastAddedRecord ? getLastAddedRecord : []}
+      // data={getTransactions.data ? getTransactions.data : []}
+      data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
-        title: "Last Transaction",
+        title: "Party Wise Reports",
+        showSearch: true,
+        rightContent: tabletoolbarRightContent,
       }}
       isLoading={getTransactions.isLoading}
       LoadingType="relative"

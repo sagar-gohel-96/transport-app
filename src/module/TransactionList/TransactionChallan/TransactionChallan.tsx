@@ -10,18 +10,21 @@ import {
   TransactionItem,
 } from "../../../types";
 import { format } from "../../../utils";
+import { Formatter } from "../../../utils/formatter";
 import { Styles } from "./components/Styles";
 
 interface TransactionChallanProps {
   data: FetchTransaction;
   companies: FetchCompanyData[];
   parties: FetchPartiesData[];
+  withHeader?: boolean;
 }
 
 export const TransactionChallan = ({
   data,
   companies,
   parties,
+  withHeader,
 }: TransactionChallanProps) => {
   const {
     transactions,
@@ -48,8 +51,8 @@ export const TransactionChallan = ({
   const transaformTransactionData: TransactionItem[] = transactions.map(
     (transaction) => {
       const {
-        _id,
-        date,
+        // _id,
+        // date,
         CGNo,
         amount,
         freight,
@@ -84,18 +87,22 @@ export const TransactionChallan = ({
     <Document>
       <Page size="A4" style={Styles.page} orientation="portrait">
         <View style={Styles.section}>
-          <View style={Styles.headerSection}>
-            <View style={Styles.logoSection}>
-              <Image
-                cache={false}
-                src={companyData?.logoImage}
-                style={{ borderRadius: "30px" }}
-              />
+          {withHeader ? (
+            <View style={Styles.headerSection}>
+              <View style={Styles.logoSection}>
+                <Image
+                  cache={false}
+                  src={companyData?.logoImage}
+                  style={{ borderRadius: "30px" }}
+                />
+              </View>
+              <View style={Styles.headerImageSection}>
+                <Image src={companyData?.headerImage} />
+              </View>
             </View>
-            <View style={Styles.headerImageSection}>
-              <Image src={companyData?.headerImage} />
-            </View>
-          </View>
+          ) : (
+            <View style={{ marginTop: "72px" }}></View>
+          )}
         </View>
         <View style={Styles.section}>
           <View style={Styles.transactionSection}>
@@ -118,7 +125,7 @@ export const TransactionChallan = ({
                       flexDirection: "row",
                     }}
                   >
-                    <Text style={{ fontWeight: "extrabold" }}>To, </Text>
+                    <Text style={{ fontWeight: "bold" }}>To, </Text>
                     <Text>{partyName}</Text>
                   </View>
                   <View
@@ -134,7 +141,7 @@ export const TransactionChallan = ({
                 </View>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <View style={{ display: "flex", flexDirection: "row" }}>
-                    <Text>GST No.: </Text>
+                    <Text style={{ fontWeight: 800 }}>GST No.: </Text>
                     <Text>{partyData.GSTIN}</Text>
                   </View>
                   <View
@@ -161,7 +168,7 @@ export const TransactionChallan = ({
                     marginTop: "8px",
                   }}
                 >
-                  <Text>Invoice Date: </Text>
+                  <Text style={{ fontWeight: "bold" }}>Invoice Date: </Text>
                   <Text>{moment.unix(invoiceDate).format(format)}</Text>
                 </View>
               </View>
@@ -206,7 +213,7 @@ export const TransactionChallan = ({
               <View style={Styles.remarkItem}>
                 <Text>Rs, </Text>
                 <Text style={{ textTransform: "uppercase" }}>
-                  Ruppes Thousand /five Hundred Only
+                  {Formatter.formatNumberToWord(totalAmount)}
                 </Text>
               </View>
             </View>
@@ -215,14 +222,14 @@ export const TransactionChallan = ({
                 <Text>Total Amount : </Text>
                 <Text>{totalAmount}</Text>
               </View>
-              <View style={Styles.pricingItem}>
+              {/* <View style={Styles.pricingItem}>
                 <Text>GST Amount : </Text>
                 <Text>{GSTAmount}</Text>
-              </View>
-              <View style={Styles.pricingItem}>
+              </View> */}
+              {/* <View style={Styles.pricingItem}>
                 <Text>Net Amount : </Text>
                 <Text>{netAmount}</Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
