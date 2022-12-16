@@ -23,7 +23,7 @@ import {
 } from "tabler-icons-react";
 import { PdfIcon } from "../../assets/icons/PdfIcon";
 import { Table } from "../../components/common";
-import { useCompanies, useParties, useTransaction } from "../../hooks";
+import { useAuth, useCompanies, useParties, useTransaction } from "../../hooks";
 import { RoutesMapping } from "../../Routes";
 import { FetchTransaction } from "../../types";
 import { format, openExportCSV, openExportPDF } from "../../utils";
@@ -31,11 +31,10 @@ import { TransactionChallan } from "./TransactionChallan";
 
 export const TransactionList = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
-  const { getCompanies } = useCompanies("");
+  const { user } = useAuth();
+  const { getCompanies } = useCompanies(user?.companyId!);
   const { getParties } = useParties("");
   const navigate = useNavigate();
-
-  // const [exportOption, setExportOption] = useState<string | null>("pdf");
   const id = "00000000000000000000000";
 
   useEffect(() => {
@@ -170,16 +169,28 @@ export const TransactionList = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
+  const tableItemData = (item: FetchTransaction[]): any => {
+    const tableRow = {
+      invoiceNo: 0,
+      invoiceDate: new Date(),
+      partyName: "",
+      totalAmount: 0,
+      comments: "",
+    };
+
+    item.forEach((i) => (tableRow.totalAmount += i.totalAmount));
+    return [...item, tableRow];
+  };
+
   const handleAllPrint = async (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
-      title: "Transactions-Data",
+      title: getCompanies.data.companyName,
       includeFields: [
         "invoiceNo",
         "invoiceDate",
         "partyName",
         "totalAmount",
-        "netAmount",
         "comments",
       ],
       currencyFields: ["totalAmount", "netAmount"],
@@ -195,16 +206,6 @@ export const TransactionList = () => {
     });
   };
 
-  // const handleExport = () => {
-  //   if (exportOption === "pdf") {
-  //     handleAllPrint(getTransactions.data ? getTransactions.data : []);
-  //   }
-
-  //   if (exportOption === "csv") {
-  //     handleJSONToCSV(getTransactions.data ? getTransactions.data : []);
-  //   }
-  // };
-
   const tabletoolbarRightContent = (
     <Group>
       <Button
@@ -214,21 +215,14 @@ export const TransactionList = () => {
       >
         Transaction
       </Button>
-      {/* <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      /> */}
+
       <ActionIcon
         variant="outline"
         size="lg"
         onClick={() =>
-          handleAllPrint(getTransactions.data ? getTransactions.data : [])
+          handleAllPrint(
+            tableItemData(getTransactions.data ? getTransactions.data : [])
+          )
         }
       >
         <PdfIcon height={20} stroke="2" />

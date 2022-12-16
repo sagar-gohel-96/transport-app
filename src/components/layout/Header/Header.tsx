@@ -16,6 +16,7 @@ import { useAuth, useCompanies, useLocalStorage } from "../../../hooks";
 import { config } from "../../../utils";
 import { authAction } from "../../../store/auth-slice";
 import { RoutesMapping } from "../../../Routes";
+import { TrukIcon } from "../../../assets/icons";
 
 interface HeaderProps {
   opened: boolean;
@@ -73,16 +74,19 @@ export const Header = ({
               color={theme.colors.gray[6]}
             />
           </MediaQuery>
-          <Text
-            // sx={(theme) => ({
-            //   color: theme.colorScheme === "dark" ? "white" : "black",
-            //   fontWeight: "bolder",
-            // })}
-            weight={700}
-            size="xl"
-          >
-            {companyData.companyName}
-          </Text>
+          <Group>
+            <TrukIcon height={40} width={40} />
+            <Text
+              // sx={(theme) => ({
+              //   color: theme.colorScheme === "dark" ? "white" : "black",
+              //   fontWeight: "bolder",
+              // })}
+              weight={700}
+              size="xl"
+            >
+              {companyData.companyName}
+            </Text>
+          </Group>
         </Group>
         <Group>
           <ThemeAction />

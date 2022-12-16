@@ -114,10 +114,7 @@ export function formatEmail(email: string, name?: string | null) {
 }
 
 export function formatDate(date: number | string) {
-  console.log("date", date);
-
   date = moment.unix(date as number).format(format)
-  console.log("date1", date);
   return date
 }
 

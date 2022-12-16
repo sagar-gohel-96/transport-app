@@ -116,6 +116,7 @@ export function Table<T>({
         setValue,
         table,
         toolbarProps,
+        selectedValues,
       }}
     >
       <Paper radius="sm" sx={{ display: "flex", flexDirection: "column" }}>
