@@ -145,7 +145,7 @@ export const Dashboard = () => {
         spacing="lg"
         breakpoints={[
           { maxWidth: 1500, cols: 4, spacing: "md" },
-          { maxWidth: 1280, cols: 3, spacing: "md" },
+          { maxWidth: 1280, cols: 2, spacing: "md" },
           { maxWidth: 1080, cols: 2, spacing: "md" },
           { maxWidth: 600, cols: 1, spacing: "md" },
         ]}
@@ -157,7 +157,7 @@ export const Dashboard = () => {
 
       <SimpleGrid
         breakpoints={[
-          { minWidth: 1500, cols: 2, spacing: "md" },
+          { minWidth: 1500, cols: 1, spacing: "md" },
           { maxWidth: 980, cols: 1, spacing: "md" },
           { maxWidth: 600, cols: 1, spacing: "sm" },
         ]}

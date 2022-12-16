@@ -17,6 +17,7 @@ import { config } from "../../../utils";
 import { authAction } from "../../../store/auth-slice";
 import { RoutesMapping } from "../../../Routes";
 import { TrukIcon } from "../../../assets/icons";
+import { useEffect } from "react";
 
 interface HeaderProps {
   opened: boolean;
@@ -39,11 +40,14 @@ export const Header = ({
   const { user } = useAuth();
   const { getCompanies } = useCompanies(user! && user.companyId);
 
-  const { data } = getCompanies;
+  const { data , refetch } = getCompanies;
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, user]);
+
 
   const companyData = data ? data : {};
-
-  // console.log("companyData", user, companyData.companyName);
 
   const onLogout = () => {
     if (user) {

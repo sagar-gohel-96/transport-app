@@ -132,6 +132,15 @@ export const TransactionList = () => {
               </PDFDownloadLink>
             </UnstyledButton>
             <UnstyledButton
+                onClick={() =>
+                  navigate(
+                    `/${RoutesMapping.Transaction}/duplicate/${row.original._id}`
+                  )
+                }
+              >
+                <Plus />
+              </UnstyledButton>
+            <UnstyledButton
               onClick={() =>
                 navigate(
                   `/${RoutesMapping.TransactionList}/${row.original._id}`
