@@ -10,7 +10,7 @@ import {
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Edit, FileSpreadsheet, Plus, Trash } from "tabler-icons-react";
 import { PdfIcon } from "../../assets/icons";
@@ -24,6 +24,10 @@ export const AreasList = () => {
   const navgate = useNavigate();
   const { getAreas, deleteArea } = useAreas("");
   // const [exportOption, setExportOption] = useState<string | null>("pdf");
+
+  useEffect(() => {
+    getAreas.refetch();
+  }, [getAreas]);
 
   const id = "00000000000000000000000";
 

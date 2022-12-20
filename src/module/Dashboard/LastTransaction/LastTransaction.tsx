@@ -4,7 +4,7 @@ import { showNotification } from "@mantine/notifications";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, Edit, Plus, Trash } from "tabler-icons-react";
 import { Table } from "../../../components/common";
@@ -22,6 +22,12 @@ export const LastTransaction = () => {
   const { getTransactions, deleteTransaction } = useTransaction("");
 
   const { data } = getTransactions;
+
+  useEffect(() => {
+    getCompanies.refetch();
+    getParties.refetch();
+    getTransactions.refetch();
+  }, [getCompanies, getParties, getTransactions]);
 
   const getLastAddedRecord = useMemo(
     () => data && data.slice(Math.max(data.length - 5, 0)).reverse(),

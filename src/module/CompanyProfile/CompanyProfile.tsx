@@ -22,6 +22,10 @@ export const CompanyProfile = () => {
   const [progresspercent, setProgresspercent] = useState(0);
   const { user } = useAuth();
 
+  useEffect(() => {
+    getCompanies.refetch();
+  }, [getCompanies]);
+
   const CompaniesData = useMemo(() => data, [data]);
   const isUpdate = useMemo(
     () => CompaniesData && !!CompaniesData.length,

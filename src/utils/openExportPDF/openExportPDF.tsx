@@ -3,7 +3,6 @@ import lodash from "lodash";
 import { Formatter } from "../../utils/formatter";
 import { PageOrientation } from "pdfmake/interfaces";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { useMemo } from "react";
 
 interface FieldNames {
   key: string;
@@ -111,8 +110,6 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
     tableData.push(row);
   });
 
-  const grandTotalAmount = 2000;
-
   const docDefinition = {
     content: [
       { text: title, style: "header" },
@@ -127,8 +124,6 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
           },
         },
       },
-      { text: `Total Amount : ${2000}`, style: "totalAmount" },
-      { text: `Total Transaction : ${2000}`, style: "totalAmount" },
     ],
     styles: {
       header: {

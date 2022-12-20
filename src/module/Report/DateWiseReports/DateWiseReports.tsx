@@ -10,15 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { Download, Edit, FileSpreadsheet, Trash } from "tabler-icons-react";
 import { PdfIcon } from "../../../assets/icons";
 import { Table } from "../../../components/common";
-import { useCompanies, useParties, useTransaction } from "../../../hooks";
+import { useAuth, useCompanies, useParties, useTransaction } from "../../../hooks";
 import { FetchTransaction } from "../../../types";
 import { format, openExportCSV, openExportPDF } from "../../../utils";
 import { TransactionChallan } from "../../TransactionList";
 import { FilterTransactionByDates } from "../utils";
 
 export const DateWiseReports = () => {
+  const {user} = useAuth();
   const { getTransactions, deleteTransaction } = useTransaction("");
-  const { getCompanies } = useCompanies("");
+  const { getCompanies } = useCompanies(user?.companyId!);
   const { getParties } = useParties("");
   // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
@@ -158,7 +159,7 @@ export const DateWiseReports = () => {
   const handleAllPrint = (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
-      title: `Transaction-Report (${moment(pickFromDate).format(
+      title: `${getCompanies.data.companyName} (${moment(pickFromDate).format(
         format
       )} - ${moment(pickToDate).format(format)} )`,
       includeFields: [
@@ -176,21 +177,12 @@ export const DateWiseReports = () => {
   const handleJSONToCSV = (data: FetchTransaction[]) => {
     openExportCSV({
       items: data,
-      filename: `Transaction-Report (${moment(pickFromDate).format(
+      filename: `${getCompanies.data.companyName} (${moment(pickFromDate).format(
         format
       )} - ${moment(pickToDate).format(format)} )`,
       excludeFields: ["_id", "__v", "transactions"],
     });
   };
-  // const handleExport = () => {
-  //   if (exportOption === "pdf") {
-  //     handleAllPrint(FilteredData ? FilteredData : []);
-  //   }
-
-  //   if (exportOption === "csv") {
-  //     handleJSONToCSV(FilteredData ? FilteredData : []);
-  //   }
-  // };
 
   const tabletoolbarRightContent = (
     <Group>
@@ -209,16 +201,7 @@ export const DateWiseReports = () => {
         onChange={setPickToDate}
         inputFormat={format}
       />
-      {/* <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      /> */}
+   
       <ActionIcon
         variant="outline"
         size="lg"
