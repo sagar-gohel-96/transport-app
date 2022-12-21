@@ -22,6 +22,7 @@ import { TileCard } from "./components";
 import { LastTransaction } from "./LastTransaction";
 import { MostRecentTransaction } from "./MostRecentTransaction";
 import { BarChart } from "./utils/barChart";
+import { GrowUp, RupeeGrow } from "../../assets/icons";
 
 ChartJS.register(
   CategoryScale,
@@ -123,14 +124,14 @@ export const Dashboard = () => {
       )}`,
     },
     {
-      icon: <TrendingUp size={38} />,
+      icon: <GrowUp fill="currentColor" height={24} width={24} />,
       iconColor: "#FF922B",
       label: "Transaction",
       duration: `In ${currentYear}`,
       value: currYearTotalTransction,
     },
     {
-      icon: <CurrencyRupee size={38} />,
+      icon: <RupeeGrow height="80px" width={80} strokeWidth={2} />,
       iconColor: "#51CF66",
       label: "Amount",
       duration: `In ${currentYear}`,

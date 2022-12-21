@@ -6,36 +6,36 @@ import {
   // Select,
   Text,
   UnstyledButton,
-} from "@mantine/core";
-import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ColumnDef } from "@tanstack/react-table";
-import moment from "moment";
-import { useCallback, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+} from '@mantine/core';
+import { openConfirmModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ColumnDef } from '@tanstack/react-table';
+import moment from 'moment';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Download,
   Edit,
   FileSpreadsheet,
   Plus,
   Trash,
-} from "tabler-icons-react";
-import { PdfIcon } from "../../assets/icons/PdfIcon";
-import { Table } from "../../components/common";
-import { useAuth, useCompanies, useParties, useTransaction } from "../../hooks";
-import { RoutesMapping } from "../../Routes";
-import { FetchTransaction } from "../../types";
-import { format, openExportCSV, openExportPDF } from "../../utils";
-import { TransactionChallan } from "./TransactionChallan";
+} from 'tabler-icons-react';
+import { PdfIcon } from '../../assets/icons/PdfIcon';
+import { Table } from '../../components/common';
+import { useAuth, useCompanies, useParties, useTransaction } from '../../hooks';
+import { RoutesMapping } from '../../Routes';
+import { FetchTransaction } from '../../types';
+import { format, openExportCSV, openExportPDF } from '../../utils';
+import { TransactionChallan } from './TransactionChallan';
 
 export const TransactionList = () => {
-  const { getTransactions, deleteTransaction } = useTransaction("");
+  const { getTransactions, deleteTransaction } = useTransaction('');
   const { user } = useAuth();
   const { getCompanies } = useCompanies(user?.companyId!);
-  const { getParties } = useParties("");
+  const { getParties } = useParties('');
   const navigate = useNavigate();
-  const id = "00000000000000000000000";
+  const id = '00000000000000000000000';
 
   useEffect(() => {
     getTransactions.refetch();
@@ -47,12 +47,12 @@ export const TransactionList = () => {
       if (response.data.success) {
         getTransactions.refetch();
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       }
@@ -63,7 +63,7 @@ export const TransactionList = () => {
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
     () => [
       {
-        id: "select",
+        id: 'select',
         header: ({ table }) => (
           <Checkbox
             checked={table.getIsAllRowsSelected()}
@@ -80,36 +80,36 @@ export const TransactionList = () => {
         ),
       },
       {
-        header: "#",
+        header: '#',
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice No",
-        accessorKey: "invoiceNo",
+        header: 'Invoice No',
+        accessorKey: 'invoiceNo',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice Date",
-        accessorKey: "invoiceDate",
+        header: 'Invoice Date',
+        accessorKey: 'invoiceDate',
         cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
-        header: "Party Name",
-        accessorKey: "partyName",
+        header: 'Party Name',
+        accessorKey: 'partyName',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Net Amount",
-        accessorKey: "netAmount",
+        header: 'Net Amount',
+        accessorKey: 'netAmount',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Action",
+        header: 'Action',
         cell: ({ row }) => (
           <Group spacing={8}>
             <UnstyledButton>
@@ -124,22 +124,22 @@ export const TransactionList = () => {
                 }
                 fileName="Transaction-Challan.pdf"
                 style={{
-                  textDecoration: "none",
-                  color: "gray",
+                  textDecoration: 'none',
+                  color: 'gray',
                 }}
               >
                 <Download />
               </PDFDownloadLink>
             </UnstyledButton>
             <UnstyledButton
-                onClick={() =>
-                  navigate(
-                    `/${RoutesMapping.Transaction}/duplicate/${row.original._id}`
-                  )
-                }
-              >
-                <Plus />
-              </UnstyledButton>
+              onClick={() =>
+                navigate(
+                  `/${RoutesMapping.Transaction}/duplicate/${row.original._id}`
+                )
+              }
+            >
+              <Plus />
+            </UnstyledButton>
             <UnstyledButton
               onClick={() =>
                 navigate(
@@ -152,7 +152,7 @@ export const TransactionList = () => {
             <UnstyledButton
               onClick={() =>
                 openConfirmModal({
-                  title: "Delete your Tranaction ",
+                  title: 'Delete your Tranaction ',
                   centered: true,
                   children: (
                     <Text size="sm">
@@ -160,11 +160,11 @@ export const TransactionList = () => {
                     </Text>
                   ),
                   labels: {
-                    confirm: "Delete Transaction",
+                    confirm: 'Delete Transaction',
                     cancel: "No don't delete it",
                   },
-                  confirmProps: { color: "red" },
-                  onCancel: () => console.log("Cancel"),
+                  confirmProps: { color: 'red' },
+                  onCancel: () => console.log('Cancel'),
                   onConfirm: () => handleTransactionDelete(row.original._id),
                 })
               }
@@ -182,9 +182,9 @@ export const TransactionList = () => {
     const tableRow = {
       invoiceNo: 0,
       invoiceDate: new Date(),
-      partyName: "",
+      partyName: '',
       totalAmount: 0,
-      comments: "",
+      comments: '',
     };
 
     item.forEach((i) => (tableRow.totalAmount += i.totalAmount));
@@ -196,22 +196,25 @@ export const TransactionList = () => {
       items: data,
       title: getCompanies.data.companyName,
       includeFields: [
-        "invoiceNo",
-        "invoiceDate",
-        "partyName",
-        "totalAmount",
-        "comments",
+        'invoiceNo',
+        'invoiceDate',
+        'partyName',
+        'totalAmount',
+        'comments',
       ],
-      currencyFields: ["totalAmount", "netAmount"],
-      dateFields: ["invoiceDate"],
+      currencyFields: ['totalAmount', 'netAmount'],
+      dateFields: ['invoiceDate'],
+      headerImage:
+        getCompanies.data.headerImage && getCompanies.data.headerImage,
+      partyDetails: getParties.data ?? [],
     });
   };
 
   const handleJSONToCSV = (data: FetchTransaction) => {
     openExportCSV({
       items: data,
-      filename: "Transaction-Data",
-      excludeFields: ["_id", "__v", "transactions"],
+      filename: 'Transaction-Data',
+      excludeFields: ['_id', '__v', 'transactions'],
     });
   };
 
@@ -254,7 +257,7 @@ export const TransactionList = () => {
       data={getTransactions.data ? getTransactions.data : []}
       pagination
       toolbarProps={{
-        title: "Transaction Details",
+        title: 'Transaction Details',
         showSearch: true,
         rightContent: tabletoolbarRightContent,
       }}

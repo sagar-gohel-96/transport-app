@@ -73,7 +73,8 @@ export const Dropzon = ({
             {description.aboutImage}
           </Text>
       </div> */}
-        {children}
+        {children && children}
+
       </Group>
     </MantineDropzone>
   );

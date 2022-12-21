@@ -1,51 +1,53 @@
-import { Stack, Text } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification, updateNotification } from "@mantine/notifications";
-import { useEffect, useMemo, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Check } from "tabler-icons-react";
-import { useParties } from "../../../hooks";
-import { AddPartyData, FetchPartiesData } from "../../../types";
-import { PartyForm } from "./PartyForm";
+import { Stack, Text } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { useEffect, useMemo, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Check, User } from 'tabler-icons-react';
+import { useAuth, useParties } from '../../../hooks';
+import { AddPartyData, FetchPartiesData } from '../../../types';
+import { PartyForm } from './PartyForm';
 
 const formInitialValue: AddPartyData = {
-  partyCode: "",
-  name: "",
-  category: "",
-  address: "",
-  city: "",
+  partyCode: '',
+  name: '',
+  category: '',
+  address: '',
+  city: '',
   pincode: 0,
-  district: "",
-  state: "",
-  contactPerson: "",
-  phoneNumber: "",
-  email: "",
-  GSTIN: "",
-  PAN: "",
+  district: '',
+  state: '',
+  contactPerson: '',
+  phoneNumber: '',
+  email: '',
+  GSTIN: '',
+  PAN: '',
   creditLimit: 0,
   creditPeriod: 0,
   creditInvoice: 0,
+  companyId: '',
 };
 
 const getPartyData = (data: FetchPartiesData): FetchPartiesData => {
   return {
     _id: data._id,
-    partyCode: "12345",
-    name: data?.name ?? "",
-    category: data?.category ?? "",
-    address: data?.address ?? "",
-    city: data?.city ?? "",
+    partyCode: '12345',
+    name: data?.name ?? '',
+    category: data?.category ?? '',
+    address: data?.address ?? '',
+    city: data?.city ?? '',
     pincode: data?.pincode ?? 0,
-    district: data?.district ?? "",
-    state: data?.state ?? "",
-    contactPerson: data?.contactPerson ?? "",
-    phoneNumber: data?.phoneNumber ?? "",
-    email: data?.email ?? "",
-    GSTIN: data?.GSTIN ?? "",
-    PAN: data?.PAN ?? "",
+    district: data?.district ?? '',
+    state: data?.state ?? '',
+    contactPerson: data?.contactPerson ?? '',
+    phoneNumber: data?.phoneNumber ?? '',
+    email: data?.email ?? '',
+    GSTIN: data?.GSTIN ?? '',
+    PAN: data?.PAN ?? '',
     creditLimit: data?.creditLimit ?? 0,
     creditPeriod: data?.creditPeriod ?? 0,
     creditInvoice: data?.creditInvoice ?? 0,
+    companyId: data?.companyId ?? '',
   };
 };
 
@@ -57,12 +59,13 @@ export const PartyDetails = () => {
   const { data, isLoading, refetch } = getParties;
   const isUpdate = parseInt(param.id!);
   const PartiesData = useMemo(() => data, [data]);
+  const { user } = useAuth();
 
   const form = useForm<AddPartyData>({
     initialValues: formInitialValue,
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
   });
 
@@ -89,36 +92,41 @@ export const PartyDetails = () => {
         const updateData: any = await updateParty({ _id, ...values });
         if (updateData.data.success) {
           showNotification({
-            id: "load-data",
+            id: 'load-data',
             loading: isLoading,
-            title: "Party",
-            message: "Party Updating...",
+            title: 'Party',
+            message: 'Party Updating...',
             autoClose: false,
             disallowClose: true,
           });
 
           updateNotification({
-            id: "load-data",
-            color: "teal",
-            title: "Party",
+            id: 'load-data',
+            color: 'teal',
+            title: 'Party',
             message: updateData.data.message,
             icon: <Check size={16} />,
             autoClose: 2000,
           });
+          navigate('/parties');
         }
       } else {
-        const addData: any = await addParty(values);
+        const addData: any = await addParty({
+          ...values,
+          companyId: user?.companyId,
+        });
+
         if (addData.data.success) {
           showNotification({
-            title: "Party",
+            title: 'Party',
             message: addData.data.message,
           });
+          navigate('/parties');
         }
       }
     } catch (err) {
-      console.log("Error");
+      console.log('Error');
     } finally {
-      navigate("/parties");
       refetch();
     }
   };

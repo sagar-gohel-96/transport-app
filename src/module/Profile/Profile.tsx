@@ -18,7 +18,7 @@ export const Profile = () => {
     config.userLocalStorageKey as string
   );
 
-  const { user } = useAuth();
+  const { user,token } = useAuth();
 
   const onLogout = () => {
     if (user) {
@@ -57,11 +57,18 @@ export const Profile = () => {
 
       const data = { ...user, ...updateData.data.data };
 
+      const addLocalStorage = {
+        user: updateData.data.data,
+        token:token,
+      };
+
+      console.log('after update',updateData.data.data)
+
       dispatch(
-        authAction.setUser({ initialized: true, user: data, token: null })
+        authAction.setUser({ initialized: true, user: data, token: token })
       );
 
-      setUser(data);
+      setUser(JSON.stringify(addLocalStorage));
     }
   };
 

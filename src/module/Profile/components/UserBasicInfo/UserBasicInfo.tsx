@@ -15,7 +15,7 @@ import { UserResponse } from "../../../../types/userType";
 export interface UserBasicInfoData {
   name: string;
   email: string;
-  dob: string;
+  birthDate: string;
 }
 
 interface UserBasicInfoProps {
@@ -30,7 +30,7 @@ export const UserBasicInfo = (props: UserBasicInfoProps) => {
     initialValues: {
       name: user.name ?? "",
       email: user.email ?? "",
-      dob: user.birthDate ?? "",
+      birthDate: user.birthDate ?? "",
     },
 
     validate: {
@@ -88,7 +88,7 @@ export const UserBasicInfo = (props: UserBasicInfoProps) => {
                 // type="email"
                 placeholder=""
                 label="Birth Date"
-                {...form.getInputProps("dob")}
+                {...form.getInputProps("birthDate")}
               />
             </div>
 
