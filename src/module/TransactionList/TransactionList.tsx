@@ -96,13 +96,7 @@ export const TransactionList = () => {
       {
         header: 'Invoice Date',
         accessorKey: 'invoiceDate',
-        cell: (info) => {
-          return (
-            <Text align="right">
-              {moment.unix(info.getValue() as number).format(format)}
-            </Text>
-          );
-        },
+        cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
@@ -114,12 +108,18 @@ export const TransactionList = () => {
       {
         header: 'Net Amount',
         accessorKey: 'netAmount',
-        cell: (info) =>
-          Formatter.formatCurrency(
-            parseInt(info.getValue() as string, 10),
-            'INR',
-            2
-          ),
+        cell: (info) => {
+          return (
+            <Text align="center">
+              {Formatter.formatCurrency(
+                parseInt(info.getValue() as string, 10),
+                'INR',
+                2
+              )}
+            </Text>
+          );
+        },
+
         footer: (props) => props.column.id,
       },
       {

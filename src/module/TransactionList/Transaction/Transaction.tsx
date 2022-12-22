@@ -58,6 +58,7 @@ export const Transaction = () => {
     netAmount: 0,
     comments: '',
     companyId: '',
+    partyId: '',
     transactions: [
       {
         CGNo: 0,
@@ -81,7 +82,6 @@ export const Transaction = () => {
     const {
       _id,
       invoiceDate,
-      partyName,
       totalAmount,
       GSTAmount,
       netAmount,
@@ -96,7 +96,6 @@ export const Transaction = () => {
     return {
       _id,
       invoiceDate: moment.unix(invoiceDate).toDate(),
-      partyName,
       totalAmount,
       GSTAmount,
       netAmount,
@@ -109,13 +108,13 @@ export const Transaction = () => {
     const {
       _id,
       invoiceDate,
-      partyName,
       totalAmount,
       GSTAmount,
       netAmount,
       comments,
       transactions,
       companyId,
+      partyId,
     } = data;
 
     const transformTransaction = transactions.map((transaction) => {
@@ -125,12 +124,12 @@ export const Transaction = () => {
     return {
       _id,
       invoiceDate: moment.unix(invoiceDate).toDate(),
-      partyName,
       totalAmount,
       GSTAmount,
       netAmount,
       comments,
       companyId,
+      partyId,
       transactions: transformTransaction,
     };
   };
@@ -138,7 +137,7 @@ export const Transaction = () => {
     initialValues: transactionInitialValues,
 
     validate: {
-      partyName: (value) =>
+      partyId: (value) =>
         value.length < 0 ? 'Please Select Party Name' : null,
       invoiceDate: (value) => {
         // const todayDate = moment(new Date());
@@ -157,14 +156,6 @@ export const Transaction = () => {
         const dateDiffInFuture = moment(new Date(value)).diff(
           moment(new Date()),
           'days'
-        );
-
-        console.log(
-          'future date',
-          dateDiffInFuture,
-          dateDiffInPast,
-          moment(new Date()),
-          moment(value)
         );
 
         if (dateDiffInPast > 30) return 'Please Select Invoice Date';
@@ -338,7 +329,12 @@ export const Transaction = () => {
   const parties = useMemo(
     () =>
       !getParties.isLoading &&
-      getParties.data.map((val: FetchPartiesData) => val.name),
+      getParties.data.map((val: FetchPartiesData) => {
+        return {
+          value: val._id,
+          label: val.name,
+        };
+      }),
     [getParties.data, getParties.isLoading]
   );
 
@@ -376,12 +372,12 @@ export const Transaction = () => {
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Select
                     required
-                    label="Parties"
+                    label="Party"
                     placeholder="Parties"
                     nothingFound="No Parties Found"
                     data={parties}
                     searchable
-                    {...form.getInputProps('partyName')}
+                    {...form.getInputProps('partyId')}
                     sx={{ flex: 1 }}
                   />
                   <Stack justify="flex-end">

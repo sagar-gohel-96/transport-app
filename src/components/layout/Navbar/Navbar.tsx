@@ -1,6 +1,6 @@
-import { Box, Navbar as MantineNavbar } from "@mantine/core";
-import { useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Box, Navbar as MantineNavbar } from '@mantine/core';
+import { useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   AB2,
   ApiApp,
@@ -11,65 +11,65 @@ import {
   LayoutDashboard,
   User,
   Users,
-} from "tabler-icons-react";
-import { RoutesMapping } from "../../../Routes";
-import { NavbarItem, NavbarItemType, ProfileTab } from "../../common";
+} from 'tabler-icons-react';
+import { RoutesMapping } from '../../../Routes';
+import { NavbarItem, NavbarItemType, ProfileTab } from '../../common';
 
 interface NavbarProps {
   opened: boolean;
   onCloseNavbar: () => void;
 }
-const id = "00000000000000000000000";
+const id = '00000000000000000000000';
 const data: NavbarItemType[] = [
   {
-    label: "Dashboard",
+    label: 'Dashboard',
     icon: <LayoutDashboard />,
     path: RoutesMapping.Dashboard,
   },
-  { label: "Parties ", icon: <Users />, path: RoutesMapping.PartiesList },
+  { label: 'Parties ', icon: <Users />, path: RoutesMapping.PartiesList },
 
-  { label: "Areas ", icon: <AB2 />, path: RoutesMapping.AreasList },
+  { label: 'Areas ', icon: <AB2 />, path: RoutesMapping.AreasList },
   {
-    label: "Add Transaction",
+    label: 'Add Transaction',
     icon: <Book2 />,
     path: `${RoutesMapping.Transaction}/${id}`,
   },
   {
-    label: "Transactions",
+    label: 'Transactions',
     icon: <Book2 />,
     path: RoutesMapping.TransactionList,
   },
 
   {
     icon: <FileReport />,
-    label: "Reports",
+    label: 'Reports',
     rightSection: <ChevronRight size={14} strokeWidth={1.5} />,
     path: RoutesMapping.TransactionList,
     subItems: [
       {
         icon: <Calendar />,
-        label: "Date Filter",
+        label: 'Date Wise',
         path: RoutesMapping.DateWiseReports,
       },
       {
         icon: <User />,
-        label: "Party Filter",
+        label: 'Party Wise',
         path: RoutesMapping.PartyWiseReports,
       },
       {
         icon: <User />,
-        label: "Date Filter - Header",
+        label: 'Date Wise with Header',
         path: RoutesMapping.DateWiseReportsWithHeader,
       },
       {
         icon: <User />,
-        label: "Party Filter - Header",
+        label: 'Party Wise with Header',
         path: RoutesMapping.PartyWiseReportsWithHeader,
       },
     ],
   },
   {
-    label: "Companies Profile",
+    label: 'Companies Profile',
     icon: <ApiApp />,
     path: RoutesMapping.CompaniesProfile,
   },
@@ -101,8 +101,8 @@ export const Navbar = ({ opened, onCloseNavbar }: NavbarProps) => {
       <MantineNavbar.Section grow mt="md">
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
+            display: 'flex',
+            flexDirection: 'column',
             gap: 6,
           }}
         >

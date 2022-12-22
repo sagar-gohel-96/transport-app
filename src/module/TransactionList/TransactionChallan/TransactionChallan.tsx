@@ -28,7 +28,7 @@ export const TransactionChallan = ({
 }: TransactionChallanProps) => {
   const {
     transactions,
-    partyName,
+    partyId,
     invoiceNo,
     invoiceDate,
     totalAmount,
@@ -76,8 +76,8 @@ export const TransactionChallan = ({
   );
 
   const filterPartyData = useMemo(
-    () => parties && parties.filter((val) => val.name === partyName),
-    [parties, partyName]
+    () => parties && parties.filter((val) => val._id === partyId),
+    [parties, partyId]
   );
 
   const partyData = filterPartyData[0] ?? {};
@@ -128,7 +128,7 @@ export const TransactionChallan = ({
                     }}
                   >
                     <Text style={{ fontWeight: 'bold' }}>To, </Text>
-                    <Text>{partyName}</Text>
+                    <Text>{partyData.name}</Text>
                   </View>
                   <View
                     style={{

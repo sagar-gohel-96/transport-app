@@ -29,7 +29,6 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
           </Card.Section>
           <SimpleGrid cols={1} py="sm">
             <TextInput
-              required
               type="number"
               label="Party Code"
               radius="md"
@@ -44,7 +43,6 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
               {...form.getInputProps('name')}
             />
             <TextInput
-              required
               label="Category"
               radius="md"
               placeholder="Category"
@@ -78,7 +76,6 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
                 {...form.getInputProps('city')}
               />
               <NumberInput
-                required
                 type="number"
                 maxLength={6}
                 minLength={6}
@@ -89,14 +86,12 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
               />
 
               <TextInput
-                required
                 label="District"
                 radius="md"
                 placeholder="District"
                 {...form.getInputProps('district')}
               />
               <TextInput
-                required
                 label="State"
                 radius="md"
                 placeholder="State"
@@ -117,7 +112,6 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
               breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
             >
               <TextInput
-                required
                 label="Contact Person"
                 radius="md"
                 placeholder="Conatct Person"
@@ -133,7 +127,6 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
             </SimpleGrid>
 
             <TextInput
-              required
               label="Your Email"
               radius="md"
               placeholder="Your Email"
@@ -172,21 +165,18 @@ export const PartyForm = ({ form, handleSubmit }: PartyFormProps) => {
               breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
             >
               <NumberInput
-                required
                 label="Credit Limit"
                 radius="md"
                 placeholder="Credit Limit"
                 {...form.getInputProps('creditLimit')}
               />
               <NumberInput
-                required
                 label="Credit Period"
                 radius="md"
                 placeholder="Credit Period"
                 {...form.getInputProps('creditPeriod')}
               />
               <NumberInput
-                required
                 label="Credit Invoices"
                 radius="md"
                 placeholder="Credit Invoices"

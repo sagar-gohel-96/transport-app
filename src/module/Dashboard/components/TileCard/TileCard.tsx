@@ -5,8 +5,8 @@ import {
   Stack,
   Text,
   ThemeIcon,
-} from "@mantine/core";
-import { ReactNode } from "react";
+} from '@mantine/core';
+import { ReactNode } from 'react';
 
 interface CardItemType {
   label: string;
@@ -24,8 +24,8 @@ export const TileCard = ({ item }: CardProps) => {
   const { icon, label, value, duration, iconColor } = item;
   return (
     <MantineCard shadow="sm" p="lg" radius="md">
-      <div style={{ display: "flex", gap: "12px" }}>
-        <Box sx={{ display: "flex" }}>
+      <div style={{ display: 'flex', gap: '12px' }}>
+        <Box sx={{ display: 'flex' }}>
           <ThemeIcon radius="xl" size="xl" p={4} color={iconColor}>
             {icon}
           </ThemeIcon>

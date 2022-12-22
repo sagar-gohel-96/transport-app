@@ -4,8 +4,6 @@ import { Formatter } from '../../utils/formatter';
 import { PageOrientation } from 'pdfmake/interfaces';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { FetchPartiesData } from '../../types';
-import { getBlob, ref } from 'firebase/storage';
-import { storage } from '../../firebase';
 
 interface FieldNames {
   key: string;

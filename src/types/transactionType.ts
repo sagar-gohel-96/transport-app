@@ -19,32 +19,31 @@ export interface TransactionItemPayload extends Transaction {
 export interface TransactionData {
   _id?: string;
   invoiceDate: Date;
-  partyName: string;
   totalAmount: number;
   GSTAmount: number;
   netAmount: number;
   comments: string;
   transactions: TransactionItem[];
   companyId: string;
+  partyId: string;
 }
 
 export interface TransactionPayload {
   _id?: string;
   invoiceDate: number;
-  partyName: string;
   totalAmount: number;
   GSTAmount: number;
   netAmount: number;
   comments: string;
   transactions: TransactionItemPayload[];
   companyId: string;
+  partyId: string;
 }
 
 export interface FetchTransaction {
   _id: string;
   invoiceNo: number;
   invoiceDate: number;
-  partyName: string;
   totalAmount: number;
   GSTAmount: number;
   netAmount: number;
@@ -53,4 +52,6 @@ export interface FetchTransaction {
   updatedAt: Date;
   transactions: TransactionItemPayload[];
   companyId: string;
+  partyId: string;
+  partyName: string;
 }

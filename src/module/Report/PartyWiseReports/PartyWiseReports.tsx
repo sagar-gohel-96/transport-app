@@ -4,28 +4,33 @@ import {
   MultiSelect,
   Text,
   UnstyledButton,
-} from "@mantine/core";
-import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ColumnDef } from "@tanstack/react-table";
-import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Download, Edit, FileSpreadsheet, Trash } from "tabler-icons-react";
-import { PdfIcon } from "../../../assets/icons";
-import { Table } from "../../../components/common";
-import { useAuth, useCompanies, useParties, useTransaction } from "../../../hooks";
-import { FetchPartiesData, FetchTransaction } from "../../../types";
-import { format, openExportCSV, openExportPDF } from "../../../utils";
-import { TransactionChallan } from "../../TransactionList";
-import { FilterTransactionByParties } from "../utils";
+} from '@mantine/core';
+import { openConfirmModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ColumnDef } from '@tanstack/react-table';
+import moment from 'moment';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Download, Edit, FileSpreadsheet, Trash } from 'tabler-icons-react';
+import { PdfIcon } from '../../../assets/icons';
+import { Table } from '../../../components/common';
+import {
+  useAuth,
+  useCompanies,
+  useParties,
+  useTransaction,
+} from '../../../hooks';
+import { FetchPartiesData, FetchTransaction } from '../../../types';
+import { format, openExportCSV, openExportPDF } from '../../../utils';
+import { TransactionChallan } from '../../TransactionList';
+import { FilterTransactionByParties } from '../utils';
 
 export const PartyWiseReports = () => {
-  const {user} = useAuth();
-  const { getTransactions, deleteTransaction } = useTransaction("");
+  const { user } = useAuth();
+  const { getTransactions, deleteTransaction } = useTransaction('');
   const { getCompanies } = useCompanies(user?.companyId!);
-  const { getParties } = useParties("");
+  const { getParties } = useParties('');
   const [filterParties, setFilterParties] = useState<string[]>();
   // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
@@ -41,12 +46,12 @@ export const PartyWiseReports = () => {
       if (response.data.success) {
         getTransactions.refetch();
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       }
@@ -57,36 +62,36 @@ export const PartyWiseReports = () => {
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
     () => [
       {
-        header: "#",
+        header: '#',
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice No",
-        accessorKey: "invoiceNo",
+        header: 'Invoice No',
+        accessorKey: 'invoiceNo',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice Date",
-        accessorKey: "invoiceDate",
+        header: 'Invoice Date',
+        accessorKey: 'invoiceDate',
         cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
-        header: "Party Name",
-        accessorKey: "partyName",
+        header: 'Party Name',
+        accessorKey: 'partyName',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Net Amount",
-        accessorKey: "netAmount",
+        header: 'Net Amount',
+        accessorKey: 'netAmount',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Action",
+        header: 'Action',
         cell: ({ row }) => (
           <div>
             <Group spacing={8}>
@@ -101,9 +106,9 @@ export const PartyWiseReports = () => {
                   }
                   fileName="Transaction-Challan.pdf"
                   style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
+                    textDecoration: 'none',
+                    padding: '10px',
+                    color: '#4a4a4a',
                   }}
                 >
                   <Download />
@@ -117,7 +122,7 @@ export const PartyWiseReports = () => {
               <UnstyledButton
                 onClick={() =>
                   openConfirmModal({
-                    title: "Delete your Tranaction ",
+                    title: 'Delete your Tranaction ',
                     centered: true,
                     children: (
                       <Text size="sm">
@@ -125,11 +130,11 @@ export const PartyWiseReports = () => {
                       </Text>
                     ),
                     labels: {
-                      confirm: "Delete Transaction",
+                      confirm: 'Delete Transaction',
                       cancel: "No don't delete it",
                     },
-                    confirmProps: { color: "red" },
-                    onCancel: () => console.log("Cancel"),
+                    confirmProps: { color: 'red' },
+                    onCancel: () => console.log('Cancel'),
                     onConfirm: () => handleTransactionDelete(row.original._id),
                   })
                 }
@@ -159,15 +164,17 @@ export const PartyWiseReports = () => {
   const handleAllPrint = (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
-      title: `${getCompanies.data.companyName} ${filterParties ? `(${filterParties})` : ""}`,
+      title: `${getCompanies.data.companyName} ${
+        filterParties ? `(${filterParties})` : ''
+      }`,
       includeFields: [
-        "invoiceNo",
-        "invoiceDate",
-        "partyName",
-        "totalAmount",
-        "GSTAmount",
-        "netAmount",
-        "comments",
+        'invoiceNo',
+        'invoiceDate',
+        'partyName',
+        'totalAmount',
+        'GSTAmount',
+        'netAmount',
+        'comments',
       ],
     });
   };
@@ -176,9 +183,9 @@ export const PartyWiseReports = () => {
     openExportCSV({
       items: data,
       filename: `${getCompanies.data.companyName} ${
-        filterParties ? `(${filterParties})` : ""
+        filterParties ? `(${filterParties})` : ''
       }`,
-      excludeFields: ["_id", "__v", "transactions"],
+      excludeFields: ['_id', '__v', 'transactions'],
     });
   };
 
@@ -189,9 +196,9 @@ export const PartyWiseReports = () => {
         placeholder="Select Parties"
         value={filterParties}
         onChange={setFilterParties}
-        sx={{ maxWidth: "18rem" }}
+        sx={{ maxWidth: '18rem' }}
       />
-    
+
       <ActionIcon
         variant="outline"
         size="lg"
@@ -216,7 +223,7 @@ export const PartyWiseReports = () => {
       data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
-        title: "Party Wise Reports",
+        title: 'Party Wise Reports',
         showSearch: true,
         rightContent: tabletoolbarRightContent,
       }}

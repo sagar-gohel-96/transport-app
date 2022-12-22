@@ -49,7 +49,7 @@ export const Header = ({
     if (user) {
       setUser('');
       dispatch(
-        authAction.setUser({ initialized: false, user: null, token: null })
+        authAction.setUser({ initialized: true, user: null, token: null })
       );
       navigate('/');
     }
@@ -83,13 +83,12 @@ export const Header = ({
               color={theme.colors.gray[6]}
             />
           </MediaQuery>
-          <UnstyledButton onClick={() => navigate(`/${RoutesMapping.Dashboard}`)}>
+          <UnstyledButton
+            onClick={() => navigate(`/${RoutesMapping.Dashboard}`)}
+          >
             <Group>
               <TrukIcon height={40} width={40} />
-              <Text
-                weight={700}
-                size="xl"
-              >
+              <Text weight={700} size="xl">
                 {getCompanies.data && getCompanies.data.companyName}
               </Text>
             </Group>

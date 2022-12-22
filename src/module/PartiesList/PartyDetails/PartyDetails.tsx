@@ -65,7 +65,7 @@ export const PartyDetails = () => {
     initialValues: formInitialValue,
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
   });
 

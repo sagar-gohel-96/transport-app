@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserResponse } from "../types/userType";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserResponse } from '../types/userType';
 
 interface AuthState {
   initialized: boolean;
@@ -10,11 +10,11 @@ interface AuthState {
 const initialState: AuthState = {
   initialized: false,
   user: null,
-  token: null
+  token: null,
 };
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     updateState: (state, action: PayloadAction<Partial<AuthState>>) => {
@@ -24,12 +24,11 @@ export const authSlice = createSlice({
       };
     },
     setUser: (state, action: PayloadAction<AuthState>) => {
-
       return {
         ...state,
         initialized: action.payload.initialized,
         user: action.payload.user,
-        token: action.payload.token
+        token: action.payload.token,
       };
     },
   },

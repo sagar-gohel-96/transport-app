@@ -5,21 +5,27 @@ import {
   Text,
   TextInput,
   UnstyledButton,
-} from "@mantine/core";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Fragment, memo, useContext } from "react";
-import { Download } from "tabler-icons-react";
-import { useCompanies, useParties } from "../../../../../hooks";
-import { TransactionChallan } from "../../../../../module";
-import { FetchTransaction } from "../../../../../types";
-import { TableContext } from "../../context/TableContext";
-import { TableToolbarProps } from "../../Table";
+} from '@mantine/core';
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  View,
+  Text as PdfText,
+} from '@react-pdf/renderer';
+import { Fragment, memo, useContext } from 'react';
+import { Download } from 'tabler-icons-react';
+import { useCompanies, useParties } from '../../../../../hooks';
+import { TransactionChallan } from '../../../../../module';
+import { FetchTransaction } from '../../../../../types';
+import { TableContext } from '../../context/TableContext';
+import { TableToolbarProps } from '../../Table';
 
 export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
   const { title, leftContent, rightContent, showSearch } = props;
   const { value, setValue, selectedValues } = useContext(TableContext);
-  const { getCompanies } = useCompanies("");
-  const { getParties } = useParties("");
+  const { getCompanies } = useCompanies('');
+  const { getParties } = useParties('');
 
   return (
     <Box>
@@ -27,9 +33,9 @@ export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
         <Fragment>
           <Box
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
             px="sm"
           >
@@ -44,21 +50,35 @@ export const TableToolbar: React.FC<TableToolbarProps> = memo((props) => {
               {selectedValues.length && (
                 <UnstyledButton>
                   <PDFDownloadLink
-                    document={selectedValues.map(
-                      (transaction: FetchTransaction, index: number) => (
-                        <TransactionChallan
-                          key={index}
-                          parties={getParties.data ?? []}
-                          companies={getCompanies.data ?? []}
-                          data={transaction ?? []}
-                          withHeader
-                        />
-                      )
-                    )}
-                    fileName="Transaction-Challan.pdf"
+                    // document={selectedValues.map(
+                    //   (transaction: FetchTransaction, index: number) => (
+                    //     <TransactionChallan
+                    //       key={index}
+                    //       parties={getParties.data ?? []}
+                    //       companies={getCompanies.data ?? []}
+                    //       data={transaction ?? []}
+                    //       withHeader
+                    //     />
+                    //   )
+                    // )}
+                    document={
+                      <Document>
+                        <Page size="A4">
+                          <View>
+                            <PdfText>test</PdfText>
+                          </View>
+                        </Page>
+                        <Page size="A4">
+                          <View>
+                            <PdfText>test2</PdfText>
+                          </View>
+                        </Page>
+                      </Document>
+                    }
+                    fileName="Transaction-Challan-Test.pdf"
                     style={{
-                      textDecoration: "none",
-                      color: "gray",
+                      textDecoration: 'none',
+                      color: 'gray',
                     }}
                   >
                     <Download />

@@ -1,4 +1,4 @@
-import { Card, Group, SimpleGrid, Stack } from "@mantine/core";
+import { Card, Group, SimpleGrid, Stack } from '@mantine/core';
 
 import {
   Chart as ChartJS,
@@ -10,19 +10,19 @@ import {
   Legend,
   PointElement,
   LineElement,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-import moment from "moment";
-import { useMemo } from "react";
-import { CurrencyRupee, TrendingUp } from "tabler-icons-react";
-import { useTransaction } from "../../hooks";
-import { FetchTransaction } from "../../types";
-import { Formatter } from "../../utils/formatter";
-import { TileCard } from "./components";
-import { LastTransaction } from "./LastTransaction";
-import { MostRecentTransaction } from "./MostRecentTransaction";
-import { BarChart } from "./utils/barChart";
-import { GrowUp, RupeeGrow } from "../../assets/icons";
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import moment from 'moment';
+import { useMemo } from 'react';
+import { CurrencyRupee, TrendingUp } from 'tabler-icons-react';
+import { useTransaction } from '../../hooks';
+import { FetchTransaction } from '../../types';
+import { Formatter } from '../../utils/formatter';
+import { TileCard } from './components';
+import { LastTransaction } from './LastTransaction';
+import { MostRecentTransaction } from './MostRecentTransaction';
+import { BarChart } from './utils/barChart';
+import { GrowUp, RupeeGrow } from '../../assets/icons';
 
 ChartJS.register(
   CategoryScale,
@@ -36,14 +36,14 @@ ChartJS.register(
 );
 
 export const Dashboard = () => {
-  const { getTransactions } = useTransaction("");
+  const { getTransactions } = useTransaction('');
   const { data } = getTransactions;
 
   const currentMonth = new Date().getMonth() + 1;
-  const currentMonthName = new Date().toLocaleString("default", {
-    month: "long",
+  const currentMonthName = new Date().toLocaleString('default', {
+    month: 'long',
   });
-  const currentYearStartDate = moment().startOf("year").format("l");
+  const currentYearStartDate = moment().startOf('year').format('l');
   const currentYear = moment().year().toString();
 
   const filterCurrentMonthData = useMemo(
@@ -52,7 +52,7 @@ export const Dashboard = () => {
       data.filter((transaction: FetchTransaction) => {
         const transactionDate =
           new Date(
-            moment.unix(transaction.invoiceDate).format("l")
+            moment.unix(transaction.invoiceDate).format('l')
           ).getMonth() + 1;
         return transactionDate === currentMonth;
       }),
@@ -65,7 +65,7 @@ export const Dashboard = () => {
       data.filter((transaction: FetchTransaction) => {
         const transactionDate = moment
           .unix(transaction.invoiceDate)
-          .format("l");
+          .format('l');
         return moment(transactionDate).isBetween(
           currentYearStartDate,
           new Date()
@@ -106,36 +106,36 @@ export const Dashboard = () => {
 
   const DashboardCard = [
     {
-      icon: <TrendingUp size={38} />,
-      iconColor: "#FF922B",
-      label: "Transaction",
+      icon: <TrendingUp size={24} />,
+      iconColor: '#FF922B',
+      label: 'Transaction',
       duration: `In ${currentMonthName}`,
       value: currMonthTotalTransaction,
     },
     {
-      icon: <CurrencyRupee size={38} />,
-      iconColor: "#51CF66",
-      label: "Amount",
+      icon: <CurrencyRupee size={24} />,
+      iconColor: '#51CF66',
+      label: 'Amount',
       duration: `In ${currentMonthName}`,
       value: `${Formatter.formatCurrency(
         currMonthTotalTransactionAmount,
-        "INR",
+        'INR',
         2
       )}`,
     },
     {
       icon: <GrowUp fill="currentColor" height={24} width={24} />,
-      iconColor: "#FF922B",
-      label: "Transaction",
+      iconColor: '#FF922B',
+      label: 'Transaction',
       duration: `In ${currentYear}`,
       value: currYearTotalTransction,
     },
     {
-      icon: <RupeeGrow height="80px" width={80} strokeWidth={2} />,
-      iconColor: "#51CF66",
-      label: "Amount",
+      icon: <RupeeGrow fill="currentColor" height={20} width={20} />,
+      iconColor: '#51CF66',
+      label: 'Amount',
       duration: `In ${currentYear}`,
-      value: Formatter.formatCurrency(currMonthTransactonAmount, "INR", 2),
+      value: Formatter.formatCurrency(currMonthTransactonAmount, 'INR', 2),
     },
   ];
 
@@ -145,10 +145,10 @@ export const Dashboard = () => {
         cols={4}
         spacing="lg"
         breakpoints={[
-          { maxWidth: 1500, cols: 4, spacing: "md" },
-          { maxWidth: 1280, cols: 2, spacing: "md" },
-          { maxWidth: 1080, cols: 2, spacing: "md" },
-          { maxWidth: 600, cols: 1, spacing: "md" },
+          { maxWidth: 1500, cols: 4, spacing: 'md' },
+          { maxWidth: 1280, cols: 2, spacing: 'md' },
+          { maxWidth: 1080, cols: 2, spacing: 'md' },
+          { maxWidth: 600, cols: 1, spacing: 'md' },
         ]}
       >
         {DashboardCard.map((item, i) => (
@@ -158,9 +158,9 @@ export const Dashboard = () => {
 
       <SimpleGrid
         breakpoints={[
-          { minWidth: 1500, cols: 1, spacing: "md" },
-          { maxWidth: 980, cols: 1, spacing: "md" },
-          { maxWidth: 600, cols: 1, spacing: "sm" },
+          { minWidth: 1500, cols: 1, spacing: 'md' },
+          { maxWidth: 980, cols: 1, spacing: 'md' },
+          { maxWidth: 600, cols: 1, spacing: 'sm' },
         ]}
       >
         <Card>
