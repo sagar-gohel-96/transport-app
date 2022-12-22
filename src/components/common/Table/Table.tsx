@@ -5,7 +5,7 @@ import {
   getPaginationRowModel,
   ColumnDef,
   FilterFn,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
 import {
   Box,
@@ -13,21 +13,21 @@ import {
   Paper,
   Stack,
   Table as MantineTable,
-} from "@mantine/core";
-import { useDebouncedState } from "@mantine/hooks";
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
-import { ReactNode, useMemo, useRef, useState } from "react";
-import { TableContext } from "./context/TableContext";
+} from '@mantine/core';
+import { useDebouncedState } from '@mantine/hooks';
+import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
+import { ReactNode, useMemo, useRef, useState } from 'react';
+import { TableContext } from './context/TableContext';
 import {
   TableHeader,
   TableBody,
   TableFooter,
   TableToolbar,
-} from "./components";
-import { EmptyState } from "../EmptyState";
-import { LoadingIndicator, LoadingType } from "../LoadingIndicator";
+} from './components';
+import { EmptyState } from '../EmptyState';
+import { LoadingIndicator, LoadingType } from '../LoadingIndicator';
 
-declare module "@tanstack/table-core" {
+declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
   }
@@ -73,10 +73,12 @@ export function Table<T>({
   isLoading,
   LoadingType,
 }: TableProps<T>) {
-  const [value, setValue] = useDebouncedState("", 50);
+  const [value, setValue] = useDebouncedState('', 50);
   const [rowSelection, setRowSelection] = useState({});
 
   const isApiDataFound = useMemo(() => !!data.length, [data.length]);
+
+  data = useMemo(() => data, [data]);
 
   const tableRef = useRef(null);
   const table = useReactTable({
@@ -97,6 +99,11 @@ export function Table<T>({
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   });
+  const selectedValues = table
+    .getSelectedRowModel()
+    .flatRows.map((item) => item.original);
+
+  // console.log("rowSelected", selectedValues);
 
   const isEmptyState = table.getRowModel().rows.length === 0;
   // const isEmptyState = false;
@@ -109,9 +116,10 @@ export function Table<T>({
         setValue,
         table,
         toolbarProps,
+        selectedValues,
       }}
     >
-      <Paper radius="sm" sx={{ display: "flex", flexDirection: "column" }}>
+      <Paper radius="sm" sx={{ display: 'flex', flexDirection: 'column' }}>
         <TableToolbar {...toolbarProps} />
         {isLoading ? (
           <LoadingIndicator
@@ -120,12 +128,12 @@ export function Table<T>({
             loadingType={LoadingType!}
           />
         ) : (
-          <Box sx={{ flex: "1", paddingBottom: 16 }}>
+          <Box sx={{ flex: '1', paddingBottom: 16 }}>
             <MantineTable
               horizontalSpacing="sm"
               verticalSpacing="sm"
               className="table-body"
-              style={{ borderBottom: "1px" }}
+              style={{ borderBottom: '1px' }}
               ref={tableRef}
               highlightOnHover
             >

@@ -15,14 +15,15 @@ export function TableFooter() {
   return (
     <Group position="apart" px="xs" pb="md" className="table-footer">
       <Text>
-        {` Display ${
+        {/* {` Display ${
           table.getState().pagination.pageIndex *
             table.getRowModel().rows.length +
           1
         } to ${
           (table.getState().pagination.pageIndex + 1) *
           table.getRowModel().rows.length
-        } of ${table.getCoreRowModel().rows.length}`}
+        } of ${table.getCoreRowModel().rows.length}`} */}
+        {`Total ${table.getCoreRowModel().rows.length} Records`}
       </Text>
       <Group>
         <Pagination

@@ -1,4 +1,4 @@
-import { FetchTransaction } from "../../../types";
+import { FetchTransaction } from '../../../types';
 
 export const FilterTransactionByParties = (
   transactionData: FetchTransaction[],
@@ -7,7 +7,7 @@ export const FilterTransactionByParties = (
   if (!!!filterParties.length) return transactionData;
 
   const filteredData = transactionData.filter((transaction) =>
-    filterParties.includes(transaction.partyName)
+    filterParties.includes(transaction.partyId)
   );
   return filteredData;
 };

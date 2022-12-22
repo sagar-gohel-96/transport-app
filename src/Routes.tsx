@@ -9,12 +9,15 @@ import {
   Signup,
   PartyDetails,
   PartiesList,
-  AreasList,
   TransactionList,
   DateWiseReports,
   PartyWiseReports,
   CompanyProfile,
+  DateWiseReportswithHeader,
+  PartyWiseReportswithHeader,
+  AreasList,
 } from "./module";
+import { AreaDetails } from "./module/AreasList/AreaDetails";
 
 export const enum RoutesMapping {
   Dashboard = "dashboard",
@@ -22,12 +25,15 @@ export const enum RoutesMapping {
   CompaniesList = "companies",
   CompaniesProfile = "company-profile",
   AreasList = "areas",
-  Transaction = "transaction",
+  Transaction = "transactions",
   Reports = "reports",
   Profile = "profile",
   TransactionList = "transactions",
   DateWiseReports = "date-wise-reports",
   PartyWiseReports = "party-wise-reports",
+  DateWiseReportsWithHeader = "date-wise-reports-with-header",
+  PartyWiseReportsWithHeader = "party-wise-reports-with-header",
+  AreasDemo = "areas-demo",
 }
 
 export const AppRoutes = () => {
@@ -56,8 +62,27 @@ export const AppRoutes = () => {
         path={RoutesMapping.PartyWiseReports}
         element={<PartyWiseReports />}
       />
-      <Route path={"transaction/:id"} element={<Transaction />} />
+      <Route
+        path={`${RoutesMapping.DateWiseReportsWithHeader}`}
+        element={<DateWiseReportswithHeader />}
+      />
+      <Route
+        path={`${RoutesMapping.PartyWiseReportsWithHeader}`}
+        element={<PartyWiseReportswithHeader />}
+      />
+      <Route
+        path={`${RoutesMapping.Transaction}/:id`}
+        element={<Transaction />}
+      />
+      <Route
+        path={`${RoutesMapping.Transaction}/duplicate/:id`}
+        element={<Transaction />}
+      />
       <Route path={"parties/:id"} element={<PartyDetails />} />
+      <Route
+        path={`${RoutesMapping.AreasList}/:id`}
+        element={<AreaDetails />}
+      />
     </Routes>
   );
 };

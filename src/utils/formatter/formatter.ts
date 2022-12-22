@@ -1,5 +1,8 @@
 import lodash from 'lodash';
+import moment from 'moment';
 import { CURRENCIES, getCurrencyInfo } from '../currencies';
+import { format } from '../dateFormat';
+import converter from 'number-to-words';
 
 export function getCurrencySymbol(currency: string | { code: string } | null | undefined) {
   const code = lodash.isString(currency) ? currency : (currency && currency.code) || null;
@@ -108,4 +111,13 @@ export function formatEmail(email: string, name?: string | null) {
   if (!name) return email;
 
   return `${name} <${email}>`;
+}
+
+export function formatDate(date: number | string) {
+  date = moment.unix(date as number).format(format)
+  return date
+}
+
+export function formatNumberToWord(amount: number) {
+  return converter.toWords(amount)
 }

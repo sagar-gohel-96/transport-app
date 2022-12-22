@@ -1,26 +1,25 @@
 import {
   Box,
   Button,
-  Group,
+  Loader,
   Paper,
   PasswordInput,
   Stack,
   Text,
   TextInput,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import { Link, useNavigate } from "react-router-dom";
-import { BrandFacebook, BrandGoogle } from "tabler-icons-react";
-import { useSigninMutation } from "../../../api";
-import { useLocalStorage } from "../../../hooks";
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { useNavigate } from 'react-router-dom';
+import { useSigninMutation } from '../../../api';
+import { useLocalStorage } from '../../../hooks';
 
-import { useAppDispatch } from "../../../store";
-import { authAction } from "../../../store/auth-slice";
-import { config } from "../../../utils";
+import { useAppDispatch } from '../../../store';
+import { authAction } from '../../../store/auth-slice';
+import { config } from '../../../utils';
 
 export const Signin = () => {
-  const [signin] = useSigninMutation();
+  const [signin, { isLoading }] = useSigninMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -30,40 +29,44 @@ export const Signin = () => {
 
   const form = useForm({
     initialValues: {
-      email: "",
-      password: "",
+      name: '',
+      password: '',
     },
 
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    },
+    validate: {},
   });
 
   const handleSubmit = async (values: any) => {
     try {
       const SigninData: any = await signin(values);
+
       if (SigninData.data.success) {
         const userAuth = {
           user: SigninData.data.user,
           token: SigninData.data.token,
         };
 
+        const addLocalStorage = {
+          user: SigninData.data.user,
+          token: SigninData.data.token,
+        };
+
         dispatch(authAction.setUser(userAuth));
 
-        setUserData(JSON.stringify(userAuth));
+        setUserData(JSON.stringify(addLocalStorage));
 
         showNotification({
-          title: "Sign in",
+          title: 'Sign in',
           message: SigninData.data.message,
         });
-        navigate("/");
+        navigate('/');
       }
     } catch (error) {
-      console.error("error", error);
+      console.error('error', error);
 
       showNotification({
-        title: "Sign in",
-        message: "User Not Exist",
+        title: 'Sign in',
+        message: 'User Not Exist',
       });
     }
   };
@@ -71,11 +74,11 @@ export const Signin = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         flex: 1,
-        height: "100%",
+        height: '100%',
       }}
     >
       <Paper shadow="xs" p="md" withBorder>
@@ -101,21 +104,20 @@ export const Signin = () => {
               </Button>
             </Group> */}
             <TextInput
-              placeholder="Your Email"
-              label="Email"
-              type="email"
+              placeholder="User Name"
+              label="User Name"
               withAsterisk
-              {...form.getInputProps("email")}
+              {...form.getInputProps('name')}
             />
 
             <PasswordInput
               placeholder="*********"
               label="Password"
               withAsterisk
-              {...form.getInputProps("password")}
+              {...form.getInputProps('password')}
             />
             <Button color="primaryBlue" type="submit">
-              Submit
+              {isLoading ? <Loader size="sm" color="white" /> : 'Submit'}
             </Button>
             {/* <Text size="xs" align="center">
               Not a Member Signup? <Link to="/Signup">Sign up now</Link>

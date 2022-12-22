@@ -21,12 +21,11 @@ const options = {
       grid: {
         display: false,
       },
-
     }
   }
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const data = {
   labels,

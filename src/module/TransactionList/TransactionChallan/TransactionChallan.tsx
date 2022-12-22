@@ -1,31 +1,34 @@
-import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
-import moment from "moment";
-import { useMemo } from "react";
-import { Square, SquareCheck } from "tabler-icons-react";
+import { Document, Image, Page, Text, View } from '@react-pdf/renderer';
+import moment from 'moment';
+import { useMemo } from 'react';
+import { Square, SquareCheck } from 'tabler-icons-react';
 
 import {
   FetchCompanyData,
   FetchPartiesData,
   FetchTransaction,
   TransactionItem,
-} from "../../../types";
-import { format } from "../../../utils";
-import { Styles } from "./components/Styles";
+} from '../../../types';
+import { format } from '../../../utils';
+import { Formatter } from '../../../utils/formatter';
+import { Styles } from './components/Styles';
 
 interface TransactionChallanProps {
   data: FetchTransaction;
-  companies: FetchCompanyData[];
+  companies: FetchCompanyData;
   parties: FetchPartiesData[];
+  withHeader?: boolean;
 }
 
 export const TransactionChallan = ({
   data,
   companies,
   parties,
+  withHeader,
 }: TransactionChallanProps) => {
   const {
     transactions,
-    partyName,
+    partyId,
     invoiceNo,
     invoiceDate,
     totalAmount,
@@ -35,21 +38,21 @@ export const TransactionChallan = ({
   } = data;
 
   const TableHeader = [
-    "C. G. No.",
-    "Date",
-    "From",
-    "To",
-    "No of Arts",
-    "Freight",
-    "Hamali",
-    "Amount",
+    'C. G. No.',
+    'Date',
+    'From',
+    'To',
+    'No of Arts',
+    'Freight',
+    'Hamali',
+    'Amount',
   ];
 
   const transaformTransactionData: TransactionItem[] = transactions.map(
     (transaction) => {
       const {
-        _id,
-        date,
+        // _id,
+        // date,
         CGNo,
         amount,
         freight,
@@ -73,75 +76,81 @@ export const TransactionChallan = ({
   );
 
   const filterPartyData = useMemo(
-    () => parties.filter((val) => val.name === partyName),
-    [parties, partyName]
+    () => parties && parties.filter((val) => val._id === partyId),
+    [parties, partyId]
   );
 
   const partyData = filterPartyData[0] ?? {};
-  const companyData = companies.length > 0 ? companies[0] : null;
 
   return (
     <Document>
       <Page size="A4" style={Styles.page} orientation="portrait">
         <View style={Styles.section}>
-          <View style={Styles.headerSection}>
-            <View style={Styles.logoSection}>
-              <Image
-                cache={false}
-                src={companyData?.logoImage}
-                style={{ borderRadius: "30px" }}
-              />
+          {withHeader && (
+            <View style={Styles.headerSection}>
+              <View style={Styles.logoSection}>
+                {companies?.logoImage && (
+                  <Image
+                    cache={false}
+                    src={companies?.logoImage}
+                    style={{ borderRadius: '30px' }}
+                  />
+                )}
+              </View>
+              <View style={Styles.headerImageSection}>
+                {companies?.headerImage && (
+                  <Image src={companies?.headerImage} />
+                )}
+              </View>
             </View>
-            <View style={Styles.headerImageSection}>
-              <Image src={companyData?.headerImage} />
-            </View>
-          </View>
+          )}
+          {!withHeader && <View style={{ marginTop: '72px' }}></View>}
         </View>
         <View style={Styles.section}>
           <View style={Styles.transactionSection}>
             <View
               style={{
-                display: "flex",
-                flexDirection: "row",
+                display: 'flex',
+                flexDirection: 'row',
               }}
             >
               <View style={Styles.partyInfoSection}>
                 <View
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                 >
                   <View
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
+                      display: 'flex',
+                      flexDirection: 'row',
                     }}
                   >
-                    <Text style={{ fontWeight: "extrabold" }}>To, </Text>
-                    <Text>{partyName}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>To, </Text>
+                    <Text>{partyData.name}</Text>
                   </View>
                   <View
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "8px",
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '8px',
                     }}
                   >
                     <Text>Address, </Text>
                     <Text>{partyData.address}</Text>
                   </View>
                 </View>
-                <View style={{ display: "flex", flexDirection: "column" }}>
-                  <View style={{ display: "flex", flexDirection: "row" }}>
-                    <Text>GST No.: </Text>
+                <View style={{ display: 'flex', flexDirection: 'column' }}>
+                  <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 800 }}>GST No.: </Text>
                     <Text>{partyData.GSTIN}</Text>
                   </View>
                   <View
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "8px",
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '8px',
                     }}
                   >
                     <Text>Place of service: </Text>
@@ -150,18 +159,18 @@ export const TransactionChallan = ({
                 </View>
               </View>
               <View style={Styles.invoiceInfoSection}>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={{ display: 'flex', flexDirection: 'row' }}>
                   <Text>Invoice No: </Text>
                   <Text>{invoiceNo}</Text>
                 </View>
                 <View
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "8px",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginTop: '8px',
                   }}
                 >
-                  <Text>Invoice Date: </Text>
+                  <Text style={{ fontWeight: 'bold' }}>Invoice Date: </Text>
                   <Text>{moment.unix(invoiceDate).format(format)}</Text>
                 </View>
               </View>
@@ -205,8 +214,8 @@ export const TransactionChallan = ({
 
               <View style={Styles.remarkItem}>
                 <Text>Rs, </Text>
-                <Text style={{ textTransform: "uppercase" }}>
-                  Ruppes Thousand /five Hundred Only
+                <Text style={{ textTransform: 'uppercase' }}>
+                  {Formatter.formatNumberToWord(totalAmount)}
                 </Text>
               </View>
             </View>
@@ -215,14 +224,14 @@ export const TransactionChallan = ({
                 <Text>Total Amount : </Text>
                 <Text>{totalAmount}</Text>
               </View>
-              <View style={Styles.pricingItem}>
+              {/* <View style={Styles.pricingItem}>
                 <Text>GST Amount : </Text>
                 <Text>{GSTAmount}</Text>
-              </View>
-              <View style={Styles.pricingItem}>
+              </View> */}
+              {/* <View style={Styles.pricingItem}>
                 <Text>Net Amount : </Text>
                 <Text>{netAmount}</Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
@@ -231,11 +240,11 @@ export const TransactionChallan = ({
             <View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>GST No.: </Text>
-                <Text>{companyData?.GSTIN}</Text>
+                <Text>{companies?.GSTIN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>PAN No.: </Text>
-                <Text>{companyData?.PAN}</Text>
+                <Text>{companies?.PAN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>HSN/SAC No.:</Text>
@@ -244,7 +253,7 @@ export const TransactionChallan = ({
             </View>
             <View>
               <View style={Styles.taxOptionLable}>
-                <Text style={{ textTransform: "uppercase" }}>
+                <Text style={{ textTransform: 'uppercase' }}>
                   tax Payable bye
                 </Text>
               </View>
@@ -269,12 +278,12 @@ export const TransactionChallan = ({
             <View style={Styles.comapnySign}>
               <View
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
+                  display: 'flex',
+                  flexDirection: 'row',
                 }}
               >
                 <Text>For, </Text>
-                <Text>{companyData?.companyName}</Text>
+                <Text>{companies?.companyName}</Text>
               </View>
             </View>
           </View>

@@ -16,6 +16,7 @@ export interface AddPartyData {
   creditLimit: number;
   creditPeriod: number;
   creditInvoice: number;
+  companyId: string;
 }
 
 export interface FetchPartiesData {
@@ -29,13 +30,14 @@ export interface FetchPartiesData {
   district: string;
   state: string;
   contactPerson: string;
-  phoneNumber: "";
+  phoneNumber: '';
   email: string;
   GSTIN: string;
   PAN: string;
   creditLimit: number;
   creditPeriod: number;
   creditInvoice: number;
+  companyId: string;
 }
 
 export interface Responce {

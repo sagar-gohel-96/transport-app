@@ -31,6 +31,7 @@ export const TableBody = ({ form, index, areas }: TableBodyProps) => {
       `transactions.${index}.amount`,
       calculateTransactionAmount || 0
     );
+    formRef.current.setFieldValue(`transactions.${index}.date`, new Date());
   }, [transaction.freight, transaction.hamali, index]);
 
   return (
@@ -95,19 +96,20 @@ export const TableBody = ({ form, index, areas }: TableBodyProps) => {
           hideControls
           required
           placeholder="Amount"
+          readOnly
           {...form.getInputProps(`transactions.${index}.amount`)}
         />
       </td>
       <td>
-        {index === form.values.transactions.length - 1 ? (
-          <Box></Box>
-        ) : (
+        {form.values.transactions.length - 1 ? (
           <UnstyledButton
             type="button"
             onClick={() => form.removeListItem("transactions", index)}
           >
             <Trash color="red" />
           </UnstyledButton>
+        ) : (
+          <Box></Box>
         )}
       </td>
     </tr>

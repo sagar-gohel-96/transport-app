@@ -1,25 +1,32 @@
-import { ActionIcon, Group, Select, Text, UnstyledButton } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ColumnDef } from "@tanstack/react-table";
-import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Download, Edit, FileExport, Trash } from "tabler-icons-react";
-import { Table } from "../../../components/common";
-import { useCompanies, useParties, useTransaction } from "../../../hooks";
-import { FetchTransaction } from "../../../types";
-import { format, openExportCSV, openExportPDF } from "../../../utils";
-import { TransactionChallan } from "../../TransactionList";
-import { FilterTransactionByDates } from "../utils";
+import { ActionIcon, Group, Text, UnstyledButton } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { openConfirmModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ColumnDef } from '@tanstack/react-table';
+import moment from 'moment';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Download, Edit, FileSpreadsheet, Trash } from 'tabler-icons-react';
+import { PdfIcon } from '../../../assets/icons';
+import { Table } from '../../../components/common';
+import {
+  useAuth,
+  useCompanies,
+  useParties,
+  useTransaction,
+} from '../../../hooks';
+import { FetchTransaction } from '../../../types';
+import { format, openExportCSV, openExportPDF } from '../../../utils';
+import { TransactionChallan } from '../../TransactionList';
+import { FilterTransactionByDates } from '../utils';
 
 export const DateWiseReports = () => {
-  const { getTransactions, deleteTransaction } = useTransaction("");
-  const { getCompanies } = useCompanies("");
-  const { getParties } = useParties("");
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
+  const { user } = useAuth();
+  const { getTransactions, deleteTransaction } = useTransaction('');
+  const { getCompanies } = useCompanies(user?.companyId!);
+  const { getParties } = useParties('');
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
 
   const toDayDate = new Date();
   const currentMonthFirstDate = new Date(
@@ -45,12 +52,12 @@ export const DateWiseReports = () => {
       if (response.data.success) {
         getTransactions.refetch();
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       }
@@ -61,36 +68,36 @@ export const DateWiseReports = () => {
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
     () => [
       {
-        header: "#",
+        header: '#',
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice No",
-        accessorKey: "invoiceNo",
+        header: 'Invoice No',
+        accessorKey: 'invoiceNo',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice Date",
-        accessorKey: "invoiceDate",
+        header: 'Invoice Date',
+        accessorKey: 'invoiceDate',
         cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
-        header: "Party Name",
-        accessorKey: "partyName",
+        header: 'Party Name',
+        accessorKey: 'partyName',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Net Amount",
-        accessorKey: "netAmount",
+        header: 'Net Amount',
+        accessorKey: 'netAmount',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Action",
+        header: 'Action',
         cell: ({ row }) => (
           <div>
             <Group spacing={8}>
@@ -105,9 +112,9 @@ export const DateWiseReports = () => {
                   }
                   fileName="Transaction-Challan.pdf"
                   style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
+                    textDecoration: 'none',
+                    padding: '10px',
+                    color: '#4a4a4a',
                   }}
                 >
                   <Download />
@@ -121,7 +128,7 @@ export const DateWiseReports = () => {
               <UnstyledButton
                 onClick={() =>
                   openConfirmModal({
-                    title: "Delete your Tranaction ",
+                    title: 'Delete your Tranaction ',
                     centered: true,
                     children: (
                       <Text size="sm">
@@ -129,11 +136,11 @@ export const DateWiseReports = () => {
                       </Text>
                     ),
                     labels: {
-                      confirm: "Delete Transaction",
+                      confirm: 'Delete Transaction',
                       cancel: "No don't delete it",
                     },
-                    confirmProps: { color: "red" },
-                    onCancel: () => console.log("Cancel"),
+                    confirmProps: { color: 'red' },
+                    onCancel: () => console.log('Cancel'),
                     onConfirm: () => handleTransactionDelete(row.original._id),
                   })
                 }
@@ -157,17 +164,17 @@ export const DateWiseReports = () => {
   const handleAllPrint = (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
-      title: `Transaction-Report (${moment(pickFromDate).format(
+      title: `${getCompanies.data.companyName} (${moment(pickFromDate).format(
         format
       )} - ${moment(pickToDate).format(format)} )`,
       includeFields: [
-        "invoiceNo",
-        "invoiceDate",
-        "partyName",
-        "totalAmount",
-        "GSTAmount",
-        "netAmount",
-        "comments",
+        'invoiceNo',
+        'invoiceDate',
+        'partyName',
+        'totalAmount',
+        'GSTAmount',
+        'netAmount',
+        'comments',
       ],
     });
   };
@@ -175,20 +182,11 @@ export const DateWiseReports = () => {
   const handleJSONToCSV = (data: FetchTransaction[]) => {
     openExportCSV({
       items: data,
-      filename: `Transaction-Report (${moment(pickFromDate).format(
-        format
-      )} - ${moment(pickToDate).format(format)} )`,
-      excludeFields: ["_id", "__v", "transactions"],
+      filename: `${getCompanies.data.companyName} (${moment(
+        pickFromDate
+      ).format(format)} - ${moment(pickToDate).format(format)} )`,
+      excludeFields: ['_id', '__v', 'transactions'],
     });
-  };
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(FilteredData ? FilteredData : []);
-    }
-
-    if (exportOption === "csv") {
-      handleJSONToCSV(FilteredData ? FilteredData : []);
-    }
   };
 
   const tabletoolbarRightContent = (
@@ -208,18 +206,20 @@ export const DateWiseReports = () => {
         onChange={setPickToDate}
         inputFormat={format}
       />
-      <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(FilteredData ? FilteredData : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(FilteredData ? FilteredData : [])}
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );
@@ -231,7 +231,7 @@ export const DateWiseReports = () => {
       data={FilteredData ? FilteredData : []}
       pagination
       toolbarProps={{
-        title: "Date Wise Reports",
+        title: 'Date Wise Reports',
         showSearch: true,
         rightContent: tabletoolbarRightContent,
       }}

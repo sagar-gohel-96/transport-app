@@ -1,36 +1,48 @@
 import {
   ActionIcon,
   Button,
+  Checkbox,
   Group,
-  Select,
+  // Select,
   Text,
   UnstyledButton,
-} from "@mantine/core";
-import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { ColumnDef } from "@tanstack/react-table";
-import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Download, Edit, FileExport, Plus, Trash } from "tabler-icons-react";
-import { Table } from "../../components/common";
-import { useCompanies, useParties, useTransaction } from "../../hooks";
-import { FetchTransaction } from "../../types";
-import { format, openExportCSV, openExportPDF } from "../../utils";
-import { TransactionChallan } from "./TransactionChallan";
+} from '@mantine/core';
+import { openConfirmModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ColumnDef } from '@tanstack/react-table';
+import moment from 'moment';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Download,
+  Edit,
+  FileSpreadsheet,
+  Plus,
+  Trash,
+} from 'tabler-icons-react';
+import { PdfIcon } from '../../assets/icons/PdfIcon';
+import { Table } from '../../components/common';
+import { useAuth, useCompanies, useParties, useTransaction } from '../../hooks';
+import { RoutesMapping } from '../../Routes';
+import { FetchTransaction } from '../../types';
+import { format, openExportCSV, openExportPDF } from '../../utils';
+import { Formatter } from '../../utils/formatter';
+import { TransactionChallan } from './TransactionChallan';
 
 export const TransactionList = () => {
-  const { getTransactions, deleteTransaction } = useTransaction("");
-  const { getCompanies } = useCompanies("");
-  const { getParties } = useParties("");
+  const { getTransactions, deleteTransaction } = useTransaction('');
+  const { user } = useAuth();
+  const { getCompanies } = useCompanies(user?.companyId!);
+  const { getParties } = useParties('');
   const navigate = useNavigate();
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
-  const id = "00000000000000000000000";
+  const id = '00000000000000000000000';
 
   useEffect(() => {
+    getCompanies.refetch();
+    getParties.refetch();
     getTransactions.refetch();
-  }, [getTransactions]);
+  }, [getCompanies, getParties, getTransactions]);
 
   const handleTransactionDelete = useCallback(
     async (id: string) => {
@@ -38,12 +50,12 @@ export const TransactionList = () => {
       if (response.data.success) {
         getTransactions.refetch();
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Transaction",
+          title: 'Transaction',
           message: response.data.message,
         });
       }
@@ -54,36 +66,64 @@ export const TransactionList = () => {
   const columns = useMemo<ColumnDef<FetchTransaction>[]>(
     () => [
       {
-        header: "#",
+        id: 'select',
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+            indeterminate={table.getIsSomeRowsSelected()}
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onChange={row.getToggleSelectedHandler()}
+            indeterminate={row.getIsSomeSelected()}
+          />
+        ),
+      },
+      {
+        header: '#',
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice No",
-        accessorKey: "invoiceNo",
+        header: 'Invoice No',
+        accessorKey: 'invoiceNo',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Invoice Date",
-        accessorKey: "invoiceDate",
+        header: 'Invoice Date',
+        accessorKey: 'invoiceDate',
         cell: (info) => moment.unix(info.getValue() as number).format(format),
         footer: (props) => props.column.id,
       },
       {
-        header: "Party Name",
-        accessorKey: "partyName",
+        header: 'Party Name',
+        accessorKey: 'partyName',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Net Amount",
-        accessorKey: "netAmount",
-        cell: (info) => info.getValue(),
+        header: 'Net Amount',
+        accessorKey: 'netAmount',
+        cell: (info) => {
+          return (
+            <Text align="center">
+              {Formatter.formatCurrency(
+                parseInt(info.getValue() as string, 10),
+                'INR',
+                2
+              )}
+            </Text>
+          );
+        },
+
         footer: (props) => props.column.id,
       },
       {
-        header: "Action",
+        header: 'Action',
         cell: ({ row }) => (
           <Group spacing={8}>
             <UnstyledButton>
@@ -93,26 +133,40 @@ export const TransactionList = () => {
                     parties={getParties.data ?? []}
                     companies={getCompanies.data ?? []}
                     data={row.original ?? []}
+                    withHeader
                   />
                 }
                 fileName="Transaction-Challan.pdf"
                 style={{
-                  textDecoration: "none",
-                  color: "gray",
+                  textDecoration: 'none',
+                  color: 'gray',
                 }}
               >
                 <Download />
               </PDFDownloadLink>
             </UnstyledButton>
             <UnstyledButton
-              onClick={() => navigate(`/transaction/${row.original._id}`)}
+              onClick={() =>
+                navigate(
+                  `/${RoutesMapping.Transaction}/duplicate/${row.original._id}`
+                )
+              }
+            >
+              <Plus />
+            </UnstyledButton>
+            <UnstyledButton
+              onClick={() =>
+                navigate(
+                  `/${RoutesMapping.TransactionList}/${row.original._id}`
+                )
+              }
             >
               <Edit />
             </UnstyledButton>
             <UnstyledButton
               onClick={() =>
                 openConfirmModal({
-                  title: "Delete your Tranaction ",
+                  title: 'Delete your Tranaction ',
                   centered: true,
                   children: (
                     <Text size="sm">
@@ -120,11 +174,11 @@ export const TransactionList = () => {
                     </Text>
                   ),
                   labels: {
-                    confirm: "Delete Transaction",
+                    confirm: 'Delete Transaction',
                     cancel: "No don't delete it",
                   },
-                  confirmProps: { color: "red" },
-                  onCancel: () => console.log("Cancel"),
+                  confirmProps: { color: 'red' },
+                  onCancel: () => console.log('Cancel'),
                   onConfirm: () => handleTransactionDelete(row.original._id),
                 })
               }
@@ -138,61 +192,75 @@ export const TransactionList = () => {
     [getCompanies.data, getParties.data, handleTransactionDelete, navigate]
   );
 
-  const handleAllPrint = (data: FetchTransaction[]) => {
+  const tableItemData = (item: FetchTransaction[]): any => {
+    const tableRow = {
+      invoiceNo: 0,
+      invoiceDate: new Date(),
+      partyName: '',
+      totalAmount: 0,
+      comments: '',
+    };
+
+    item.forEach((i) => (tableRow.totalAmount += i.totalAmount));
+    return [...item, tableRow];
+  };
+
+  const handleAllPrint = async (data: FetchTransaction[]) => {
     openExportPDF({
       items: data,
-      title: "Transactions-Data",
+      title: getCompanies.data.companyName,
       includeFields: [
-        "invoiceNo",
-        "invoiceDate",
-        "partyName",
-        "totalAmount",
-        "GSTAmount",
-        "netAmount",
-        "comments",
+        'invoiceNo',
+        'invoiceDate',
+        'partyName',
+        'totalAmount',
+        'comments',
       ],
+      currencyFields: ['totalAmount', 'netAmount'],
+      dateFields: ['invoiceDate'],
+      headerImage:
+        getCompanies.data.headerImage && getCompanies.data.headerImage,
+      partyDetails: getParties.data ?? [],
     });
   };
 
   const handleJSONToCSV = (data: FetchTransaction) => {
     openExportCSV({
       items: data,
-      filename: "Transaction-Data",
-      excludeFields: ["_id", "__v", "transactions"],
+      filename: 'Transaction-Data',
+      excludeFields: ['_id', '__v', 'transactions'],
     });
-  };
-
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(getTransactions.data ? getTransactions.data : []);
-    }
-
-    if (exportOption === "csv") {
-      handleJSONToCSV(getTransactions.data ? getTransactions.data : []);
-    }
   };
 
   const tabletoolbarRightContent = (
     <Group>
       <Button
-        onClick={() => navigate(`/transaction/${id}`)}
+        onClick={() => navigate(`/${RoutesMapping.Transaction}/${id}`)}
         leftIcon={<Plus />}
         variant="outline"
       >
         Transaction
       </Button>
-      <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() =>
+          handleAllPrint(
+            tableItemData(getTransactions.data ? getTransactions.data : [])
+          )
+        }
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() =>
+          handleJSONToCSV(getTransactions.data ? getTransactions.data : [])
+        }
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );
@@ -203,7 +271,7 @@ export const TransactionList = () => {
       data={getTransactions.data ? getTransactions.data : []}
       pagination
       toolbarProps={{
-        title: "Transaction Details",
+        title: 'Transaction Details',
         showSearch: true,
         rightContent: tabletoolbarRightContent,
       }}

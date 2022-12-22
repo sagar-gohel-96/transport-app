@@ -87,6 +87,7 @@ export const TransactionCardView = ({
               placeholder="Date"
               withAsterisk
               inputFormat={format}
+              defaultValue={new Date()}
               {...form.getInputProps(`transactions.${index}.date`)}
             />
             <Autocomplete
@@ -129,6 +130,7 @@ export const TransactionCardView = ({
               required
               placeholder="Amount"
               label="Amount"
+              readOnly
               {...form.getInputProps(`transactions.${index}.amount`)}
             />
           </SimpleGrid>

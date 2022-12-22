@@ -3,27 +3,28 @@ import {
   Button,
   // Checkbox,
   Group,
-  Select,
+  // Select,
   Text,
   UnstyledButton,
-} from "@mantine/core";
-import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
-import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Edit, FileExport, Plus, Trash } from "tabler-icons-react";
-import { Table } from "../../components/common";
-import { useParties } from "../../hooks";
-import { FetchPartiesData } from "../../types";
-import { openExportCSV, openExportPDF } from "../../utils";
+} from '@mantine/core';
+import { openConfirmModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
+import { ColumnDef } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Edit, FileSpreadsheet, Plus, Trash } from 'tabler-icons-react';
+import { PdfIcon } from '../../assets/icons';
+import { Table } from '../../components/common';
+import { useParties } from '../../hooks';
+import { FetchPartiesData } from '../../types';
+import { openExportCSV, openExportPDF } from '../../utils';
 
 export const PartiesList = () => {
   const param = useParams();
   const { getParties, deleteParty } = useParties(param.id!);
   const navigate = useNavigate();
-  const [exportOption, setExportOption] = useState<string | null>("pdf");
-  const id = "00000000000000000000000";
+  // const [exportOption, setExportOption] = useState<string | null>("pdf");
+  const id = '00000000000000000000000';
 
   const handlePartyDelete = useCallback(
     async (id: string) => {
@@ -31,12 +32,12 @@ export const PartiesList = () => {
       if (response.data.success) {
         getParties.refetch();
         showNotification({
-          title: "Party",
+          title: 'Party',
           message: response.data.message,
         });
       } else {
         showNotification({
-          title: "Party",
+          title: 'Party',
           message: response.data.message,
         });
       }
@@ -64,37 +65,31 @@ export const PartiesList = () => {
       //   ),
       // },
       {
-        header: "#",
+        header: '#',
         // accessorKey: "partyCode",
         cell: (info) => parseInt(info.row.id) + 1,
         footer: (props) => props.column.id,
       },
       {
-        header: "Parties Name",
-        accessorKey: "name",
+        header: 'Parties Name',
+        accessorKey: 'name',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Conatct Person",
-        accessorKey: "contactPerson",
+        header: 'Address',
+        accessorKey: 'address',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Address",
-        accessorKey: "address",
+        header: 'Contact Numebr',
+        accessorKey: 'phoneNumber',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
-        header: "Contact Numebr",
-        accessorKey: "phoneNumber",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        header: "Action",
+        header: 'Action',
         cell: ({ row }) => (
           <Group spacing={4}>
             <UnstyledButton
@@ -105,7 +100,7 @@ export const PartiesList = () => {
             <UnstyledButton
               onClick={() =>
                 openConfirmModal({
-                  title: "Delete your Tranaction ",
+                  title: 'Delete your Tranaction ',
                   centered: true,
                   children: (
                     <Text size="sm">
@@ -113,11 +108,11 @@ export const PartiesList = () => {
                     </Text>
                   ),
                   labels: {
-                    confirm: "Delete Transaction",
+                    confirm: 'Delete Transaction',
                     cancel: "No don't delete it",
                   },
-                  confirmProps: { color: "red" },
-                  onCancel: () => console.log("Cancel"),
+                  confirmProps: { color: 'red' },
+                  onCancel: () => console.log('Cancel'),
                   onConfirm: () => handlePartyDelete(row.original._id),
                 })
               }
@@ -134,20 +129,20 @@ export const PartiesList = () => {
   const handleAllPrint = (data: FetchPartiesData[]) => {
     openExportPDF({
       items: data,
-      title: "Parties-Data",
+      title: 'Parties-Data',
       includeFields: [
-        "name",
-        "category",
-        "address",
-        "city",
-        "pincode",
-        "district",
-        "state",
-        "contactPerson",
-        "phoneNumber",
-        "email",
-        "GSTIN",
-        "PAN",
+        'name',
+        'category',
+        'address',
+        'city',
+        'pincode',
+        'district',
+        'state',
+        'contactPerson',
+        'phoneNumber',
+        'email',
+        'GSTIN',
+        'PAN',
       ],
     });
   };
@@ -155,19 +150,9 @@ export const PartiesList = () => {
   const handleJSONToCSV = (data: FetchPartiesData) => {
     openExportCSV({
       items: data,
-      filename: "Parties-Data",
-      excludeFields: ["_id", "__v"],
+      filename: 'Parties-Data',
+      excludeFields: ['_id', '__v'],
     });
-  };
-
-  const handleExport = () => {
-    if (exportOption === "pdf") {
-      handleAllPrint(getParties.data ? getParties.data : []);
-    }
-
-    if (exportOption === "csv") {
-      handleJSONToCSV(getParties.data ? getParties.data : []);
-    }
   };
 
   const tabletoolbarRightContent = (
@@ -180,18 +165,19 @@ export const PartiesList = () => {
         Party
       </Button>
 
-      <Select
-        data={[
-          { value: "pdf", label: "PDF" },
-          { value: "csv", label: "CSV" },
-        ]}
-        value={exportOption}
-        placeholder="Export"
-        sx={{ maxWidth: "100px" }}
-        onChange={setExportOption}
-      />
-      <ActionIcon variant="outline" size="lg" onClick={handleExport}>
-        <FileExport />
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleAllPrint(getParties.data ? getParties.data : [])}
+      >
+        <PdfIcon height={20} stroke="2" />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        size="lg"
+        onClick={() => handleJSONToCSV(getParties.data ? getParties.data : [])}
+      >
+        <FileSpreadsheet />
       </ActionIcon>
     </Group>
   );
@@ -202,7 +188,7 @@ export const PartiesList = () => {
       data={getParties.data ? getParties.data : []}
       pagination
       toolbarProps={{
-        title: "Party Details",
+        title: 'Party Details',
         showSearch: true,
         rightContent: tabletoolbarRightContent,
       }}

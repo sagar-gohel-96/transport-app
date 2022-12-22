@@ -1,26 +1,15 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../store";
-import { authAction } from "../store/auth-slice";
-import { config } from "../utils";
-import { useLocalStorage } from "./useLocalStorage";
+import { useAppSelector } from '../store';
 
 export const useAuth = () => {
-  const { getLocalStorageItem: userLocalStorage } =
-    useLocalStorage(config.userLocalStorageKey as string);
-  const { user: userData, initialized } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
+  const {
+    user: userData,
+    token: userToken,
+    initialized,
+  } = useAppSelector((state) => state.auth);
 
-  let user = userData?.user;
-  let token = userData?.token;
+  let user = userData;
+  let token = userToken;
   const isInitialised = initialized;
-
-  useEffect(() => {
-    if (userLocalStorage) {
-      dispatch(
-        authAction.setUser(JSON.parse(userLocalStorage as string))
-      );
-    }
-  }, [dispatch, userLocalStorage]);
 
   return {
     isInitialised,

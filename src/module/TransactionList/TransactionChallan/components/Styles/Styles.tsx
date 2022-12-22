@@ -117,7 +117,11 @@ export const Styles = StyleSheet.create({
     marginTop: "4px",
   },
 
-  pricingSection: { display: "flex", flexDirection: "column" },
+  pricingSection: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
 
   pricingItem: {
     display: "flex",

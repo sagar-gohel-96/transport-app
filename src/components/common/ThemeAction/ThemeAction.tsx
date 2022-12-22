@@ -2,39 +2,29 @@ import {
   ActionIcon,
   Group,
   ThemeIcon,
+  UnstyledButton,
   useMantineColorScheme,
-} from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons';
+} from "@mantine/core";
+import { IconSun, IconMoonStars } from "@tabler/icons";
 
 export const ThemeAction = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
     <Group position="center" my="xl">
-      <ActionIcon
+      <UnstyledButton
         onClick={() => toggleColorScheme()}
-        size="lg"
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          color:
-            theme.colorScheme === 'dark'
-              ? theme.colors.yellow[4]
-              : theme.colors.blue[6],
-        })}
       >
-        {colorScheme === 'dark' ? (
-          <ThemeIcon variant="outline" size="xl" color="gray">
+        {colorScheme === "dark" ? (
+          <ThemeIcon variant="light" size="xl" color="blue" radius="xl">
             <IconSun size={22} />
           </ThemeIcon>
         ) : (
-          <ThemeIcon variant="outline" size="xl" color="dark">
+          <ThemeIcon variant="light" size="xl" color="blue" radius="xl">
             <IconMoonStars size={22} />
           </ThemeIcon>
         )}
-      </ActionIcon>
+      </UnstyledButton>
     </Group>
   );
 };

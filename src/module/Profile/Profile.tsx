@@ -1,14 +1,14 @@
-import { Button } from "@mantine/core";
-import { showNotification, updateNotification } from "@mantine/notifications";
-import { useNavigate } from "react-router-dom";
-import { Check } from "tabler-icons-react";
-import { useUpdateUserMutation } from "../../api";
-import { useAuth, useLocalStorage } from "../../hooks";
-import { useAppDispatch } from "../../store";
-import { authAction } from "../../store/auth-slice";
-import { UserResponse } from "../../types/userType";
-import { config } from "../../utils";
-import { UserBasicInfo, UserContactInfo } from "./components";
+import { Button } from '@mantine/core';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { useNavigate } from 'react-router-dom';
+import { Check } from 'tabler-icons-react';
+import { useUpdateUserMutation } from '../../api';
+import { useAuth, useLocalStorage } from '../../hooks';
+import { useAppDispatch } from '../../store';
+import { authAction } from '../../store/auth-slice';
+import { UserResponse } from '../../types/userType';
+import { config } from '../../utils';
+import { UserBasicInfo, UserContactInfo } from './components';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -18,13 +18,13 @@ export const Profile = () => {
     config.userLocalStorageKey as string
   );
 
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const onLogout = () => {
     if (user) {
-      setUser("");
-      dispatch(authAction.setUser(null));
-      navigate("/");
+      setUser('');
+      dispatch(authAction.setUser({ user: null, token: null }));
+      navigate('/');
     }
   };
 
@@ -33,19 +33,19 @@ export const Profile = () => {
 
     if (updateData.data.success) {
       showNotification({
-        id: "load-data",
+        id: 'load-data',
         loading: true,
-        title: "User",
-        message: "User Updating...",
+        title: 'User',
+        message: 'User Updating...',
         autoClose: false,
         disallowClose: true,
       });
 
       setTimeout(() => {
         updateNotification({
-          id: "load-data",
-          color: "teal",
-          title: "Profile",
+          id: 'load-data',
+          color: 'teal',
+          title: 'Profile',
           message: updateData.data.message,
 
           icon: <Check size={16} />,
@@ -55,22 +55,23 @@ export const Profile = () => {
 
       const data = { ...user, ...updateData.data.data };
 
-      dispatch(
-        authAction.setUser({
-          user: data,
-        })
-      );
+      const addLocalStorage = {
+        user: updateData.data.data,
+        token: token,
+      };
 
-      setUser(data);
+      dispatch(authAction.setUser({ user: data, token: token }));
+
+      setUser(JSON.stringify(addLocalStorage));
     }
   };
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
       }}
     >
       {user && <UserBasicInfo user={user} upadteUser={upadteUser} />}
