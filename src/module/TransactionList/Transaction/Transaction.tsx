@@ -18,7 +18,7 @@ import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Check, CirclePlus, Plus } from 'tabler-icons-react';
 import { LoadingIndicator } from '../../../components/common';
-import { useAreas, useParties, useTransaction } from '../../../hooks';
+import { useAreas, useAuth, useParties, useTransaction } from '../../../hooks';
 import {
   FetchAreaData,
   FetchPartiesData,
@@ -36,6 +36,7 @@ export const Transaction = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getParties } = useParties('');
+  const { user } = useAuth();
   const {
     addTransaction,
     addTransactionLoading,
@@ -56,6 +57,7 @@ export const Transaction = () => {
     GSTAmount: 0,
     netAmount: 0,
     comments: '',
+    companyId: '',
     transactions: [
       {
         CGNo: 0,
@@ -113,6 +115,7 @@ export const Transaction = () => {
       netAmount,
       comments,
       transactions,
+      companyId,
     } = data;
 
     const transformTransaction = transactions.map((transaction) => {
@@ -127,6 +130,7 @@ export const Transaction = () => {
       GSTAmount,
       netAmount,
       comments,
+      companyId,
       transactions: transformTransaction,
     };
   };
@@ -242,7 +246,7 @@ export const Transaction = () => {
   }, [TransactionData, isDuplicate, isUpdate]);
 
   const handleSubmit = async (values: TransactionData) => {
-    const { _id, invoiceDate, transactions, ...rest } = values;
+    const { _id, invoiceDate, transactions, companyId, ...rest } = values;
 
     const getInvoiceDate = moment(new Date(invoiceDate)).unix();
     const transactionTransform: TransactionItemPayload[] = transactions.map(
@@ -260,6 +264,7 @@ export const Transaction = () => {
           _id,
           invoiceDate: getInvoiceDate,
           transactions: transactionTransform,
+          companyId: user?.companyId,
           ...rest,
         });
         if (updateData.data.success) {
@@ -285,6 +290,7 @@ export const Transaction = () => {
         const addData: any = await addTransaction({
           invoiceDate: getInvoiceDate,
           transactions: transactionTransform,
+          companyId: user?.companyId,
           ...rest,
         });
         if (addData.data.success) {

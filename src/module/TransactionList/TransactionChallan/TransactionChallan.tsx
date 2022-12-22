@@ -15,7 +15,7 @@ import { Styles } from './components/Styles';
 
 interface TransactionChallanProps {
   data: FetchTransaction;
-  companies: FetchCompanyData[];
+  companies: FetchCompanyData;
   parties: FetchPartiesData[];
   withHeader?: boolean;
 }
@@ -81,7 +81,6 @@ export const TransactionChallan = ({
   );
 
   const partyData = filterPartyData[0] ?? {};
-  const companyData = companies.length > 0 ? companies[0] : null;
 
   return (
     <Document>
@@ -90,17 +89,17 @@ export const TransactionChallan = ({
           {withHeader && (
             <View style={Styles.headerSection}>
               <View style={Styles.logoSection}>
-                {companyData?.logoImage && (
+                {companies?.logoImage && (
                   <Image
                     cache={false}
-                    src={companyData?.logoImage}
+                    src={companies?.logoImage}
                     style={{ borderRadius: '30px' }}
                   />
                 )}
               </View>
               <View style={Styles.headerImageSection}>
-                {companyData?.headerImage && (
-                  <Image src={companyData?.headerImage} />
+                {companies?.headerImage && (
+                  <Image src={companies?.headerImage} />
                 )}
               </View>
             </View>
@@ -241,11 +240,11 @@ export const TransactionChallan = ({
             <View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>GST No.: </Text>
-                <Text>{companyData?.GSTIN}</Text>
+                <Text>{companies?.GSTIN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>PAN No.: </Text>
-                <Text>{companyData?.PAN}</Text>
+                <Text>{companies?.PAN}</Text>
               </View>
               <View style={Styles.companyBillingInfoItem}>
                 <Text>HSN/SAC No.:</Text>
@@ -284,7 +283,7 @@ export const TransactionChallan = ({
                 }}
               >
                 <Text>For, </Text>
-                <Text>{companyData?.companyName}</Text>
+                <Text>{companies?.companyName}</Text>
               </View>
             </View>
           </View>

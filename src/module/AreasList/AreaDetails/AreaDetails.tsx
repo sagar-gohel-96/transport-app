@@ -1,18 +1,18 @@
-import { Stack, Text } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { showNotification, updateNotification } from "@mantine/notifications";
-import { useEffect, useMemo, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Check } from "tabler-icons-react";
-import { useAreas } from "../../../hooks";
-import { AreaPayload, FetchAreaData } from "../../../types";
-import { AreaForm } from "./AreaForm";
+import { Stack, Text } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { useEffect, useMemo, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Check } from 'tabler-icons-react';
+import { useAreas } from '../../../hooks';
+import { AreaPayload, FetchAreaData } from '../../../types';
+import { AreaForm } from './AreaForm';
 
 const setAreaData = (data: FetchAreaData): FetchAreaData => {
   return {
-    _id: data?._id ?? "",
-    city: data?.city ?? "",
-    areaName: data?.areaName ?? "",
+    _id: data?._id ?? '',
+    city: data?.city ?? '',
+    areaName: data?.areaName ?? '',
   };
 };
 
@@ -27,8 +27,8 @@ export const AreaDetails = () => {
 
   const form = useForm<AreaPayload>({
     initialValues: {
-      areaName: "",
-      city: "",
+      areaName: '',
+      city: '',
     },
 
     validate: {
@@ -46,7 +46,7 @@ export const AreaDetails = () => {
     if (!data) {
       return;
     }
-    console.log("isUpdate", isUpdate);
+    console.log('isUpdate', isUpdate);
     if (!!isUpdate) {
       formRef.current.setValues(setAreaData(AreasData));
     }
@@ -62,18 +62,18 @@ export const AreaDetails = () => {
         });
         if (updateData.data.success) {
           showNotification({
-            id: "load-data",
+            id: 'load-data',
             loading: isLoading,
-            title: "Area",
-            message: "Area Updating...",
+            title: 'Area',
+            message: 'Area Updating...',
             autoClose: false,
             disallowClose: true,
           });
 
           updateNotification({
-            id: "load-data",
-            color: "teal",
-            title: "Area",
+            id: 'load-data',
+            color: 'teal',
+            title: 'Area',
             message: updateData.data.message,
             icon: <Check size={16} />,
             autoClose: 2000,
@@ -85,15 +85,15 @@ export const AreaDetails = () => {
         });
         if (addData.data.success) {
           showNotification({
-            title: "Area",
+            title: 'Area',
             message: addData.data.message,
           });
         }
       }
     } catch (err) {
-      console.log("Error");
+      console.log('Error');
     } finally {
-      navigate("/areas");
+      navigate('/areas');
       refetch();
     }
   };

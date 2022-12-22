@@ -27,6 +27,7 @@ import { useAuth, useCompanies, useParties, useTransaction } from '../../hooks';
 import { RoutesMapping } from '../../Routes';
 import { FetchTransaction } from '../../types';
 import { format, openExportCSV, openExportPDF } from '../../utils';
+import { Formatter } from '../../utils/formatter';
 import { TransactionChallan } from './TransactionChallan';
 
 export const TransactionList = () => {
@@ -38,8 +39,10 @@ export const TransactionList = () => {
   const id = '00000000000000000000000';
 
   useEffect(() => {
+    getCompanies.refetch();
+    getParties.refetch();
     getTransactions.refetch();
-  }, [getTransactions]);
+  }, [getCompanies, getParties, getTransactions]);
 
   const handleTransactionDelete = useCallback(
     async (id: string) => {
@@ -93,7 +96,13 @@ export const TransactionList = () => {
       {
         header: 'Invoice Date',
         accessorKey: 'invoiceDate',
-        cell: (info) => moment.unix(info.getValue() as number).format(format),
+        cell: (info) => {
+          return (
+            <Text align="right">
+              {moment.unix(info.getValue() as number).format(format)}
+            </Text>
+          );
+        },
         footer: (props) => props.column.id,
       },
       {
@@ -105,7 +114,12 @@ export const TransactionList = () => {
       {
         header: 'Net Amount',
         accessorKey: 'netAmount',
-        cell: (info) => info.getValue(),
+        cell: (info) =>
+          Formatter.formatCurrency(
+            parseInt(info.getValue() as string, 10),
+            'INR',
+            2
+          ),
         footer: (props) => props.column.id,
       },
       {

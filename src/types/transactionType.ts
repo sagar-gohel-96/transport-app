@@ -10,7 +10,7 @@ export interface TransactionItem {
   amount: number;
 }
 
-type Transaction = Omit<TransactionItem, "date">;
+type Transaction = Omit<TransactionItem, 'date'>;
 
 export interface TransactionItemPayload extends Transaction {
   date: number;
@@ -25,6 +25,7 @@ export interface TransactionData {
   netAmount: number;
   comments: string;
   transactions: TransactionItem[];
+  companyId: string;
 }
 
 export interface TransactionPayload {
@@ -36,6 +37,7 @@ export interface TransactionPayload {
   netAmount: number;
   comments: string;
   transactions: TransactionItemPayload[];
+  companyId: string;
 }
 
 export interface FetchTransaction {
@@ -50,4 +52,5 @@ export interface FetchTransaction {
   createdAt: Date;
   updatedAt: Date;
   transactions: TransactionItemPayload[];
+  companyId: string;
 }

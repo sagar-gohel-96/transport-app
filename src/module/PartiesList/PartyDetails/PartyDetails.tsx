@@ -3,7 +3,7 @@ import { useForm } from '@mantine/form';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, User } from 'tabler-icons-react';
+import { Check } from 'tabler-icons-react';
 import { useAuth, useParties } from '../../../hooks';
 import { AddPartyData, FetchPartiesData } from '../../../types';
 import { PartyForm } from './PartyForm';
@@ -89,7 +89,11 @@ export const PartyDetails = () => {
     const _id = values._id;
     try {
       if (values?._id) {
-        const updateData: any = await updateParty({ _id, ...values });
+        const updateData: any = await updateParty({
+          _id,
+          ...values,
+          companyId: user?.companyId,
+        });
         if (updateData.data.success) {
           showNotification({
             id: 'load-data',

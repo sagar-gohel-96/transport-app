@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
-import { AddPartyData } from "../types";
-import { config } from "../utils";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../store';
+import { AddPartyData } from '../types';
+import { config } from '../utils';
 
 export const partiesApi = createApi({
-  reducerPath: "partiesApi",
+  reducerPath: 'partiesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: config.apiBaseUrl,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token
+      const token = (getState() as RootState).auth.token;
       if (token) {
-        headers.set('authorization', token)
+        headers.set('authorization', token);
       }
-  
-      return headers
+
+      return headers;
     },
   }),
   endpoints: (builder) => ({
@@ -24,18 +24,18 @@ export const partiesApi = createApi({
       query: (body) => {
         return {
           url: `add-party/`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
     }),
     updateParty: builder.mutation<
       void,
-      Pick<AddPartyData, "_id"> & Partial<AddPartyData>
+      Pick<AddPartyData, '_id'> & Partial<AddPartyData>
     >({
       query: ({ _id, ...patch }) => ({
         url: `update-party/${_id}`,
-        method: "PUT",
+        method: 'PUT',
         body: patch,
       }),
       // invalidatesTags: (result, error, { _id }) => [{ type: "Post", _id }],
@@ -43,7 +43,7 @@ export const partiesApi = createApi({
     deleteParty: builder.mutation({
       query: (id) => ({
         url: `/delete-party/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
   }),

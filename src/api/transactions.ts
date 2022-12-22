@@ -1,11 +1,19 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { TransactionPayload } from "../types";
-import { config } from "../utils";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../store';
+import { TransactionPayload } from '../types';
+import { config } from '../utils';
 
 export const transactionApi = createApi({
-  reducerPath: "transactionApi",
+  reducerPath: 'transactionApi',
   baseQuery: fetchBaseQuery({
     baseUrl: config.apiBaseUrl,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token) {
+        headers.set('authorization', token);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     getTransactions: builder.query<any, string>({
@@ -19,19 +27,19 @@ export const transactionApi = createApi({
       query: (body) => {
         return {
           url: `add-transaction/`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
     }),
     updateTransaction: builder.mutation<
       void,
-      Pick<TransactionPayload, "_id"> & Partial<TransactionPayload>
+      Pick<TransactionPayload, '_id'> & Partial<TransactionPayload>
     >({
       query: ({ _id, ...patch }) => {
         return {
           url: `update-transactions/${_id}`,
-          method: "PUT",
+          method: 'PUT',
           body: patch,
         };
       },
@@ -40,7 +48,7 @@ export const transactionApi = createApi({
     deleteTransaction: builder.mutation({
       query: (id) => ({
         url: `/delete-transactions/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
   }),

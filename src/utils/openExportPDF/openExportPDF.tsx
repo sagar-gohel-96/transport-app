@@ -51,11 +51,11 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
     partyDetails,
   } = props;
 
-  const storageRef = ref(storage, headerImage);
-  const blob = await getBlob(storageRef);
+  // const storageRef = ref(storage, headerImage);
+  // const blob = await getBlob(storageRef);
 
-  const url = URL.createObjectURL(blob);
-  console.log('url', blob, url);
+  // const url = URL.createObjectURL(blob);
+  // console.log('url', blob, url);
 
   const partyData = partyDetails && [
     partyDetails![0].name,
@@ -131,9 +131,9 @@ export async function openExportPDF<T>(props: ExportPDFProps<T>) {
   const docDefinition = {
     content: [
       {
-        // image: require('../../assets/images/headerImage.jpg'),
+        image: require('../../assets/images/headerImage.jpg'),
         // image: headerImage && require(headerImage),
-        image: url,
+        // image: url,
         width: 510,
         height: 100,
       },
