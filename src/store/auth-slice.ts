@@ -23,10 +23,13 @@ export const authSlice = createSlice({
         ...action.payload,
       };
     },
-    setUser: (state, action: PayloadAction<AuthState>) => {
+    setUser: (
+      state,
+      action: PayloadAction<Pick<AuthState, 'user' | 'token'>>
+    ) => {
       return {
         ...state,
-        initialized: action.payload.initialized,
+        initialized: true,
         user: action.payload.user,
         token: action.payload.token,
       };

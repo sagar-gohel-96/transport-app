@@ -48,9 +48,7 @@ export const Header = ({
   const onLogout = () => {
     if (user) {
       setUser('');
-      dispatch(
-        authAction.setUser({ initialized: true, user: null, token: null })
-      );
+      dispatch(authAction.setUser({ user: null, token: null }));
       navigate('/');
     }
   };

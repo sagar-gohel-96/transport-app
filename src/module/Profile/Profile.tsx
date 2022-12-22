@@ -23,9 +23,7 @@ export const Profile = () => {
   const onLogout = () => {
     if (user) {
       setUser('');
-      dispatch(
-        authAction.setUser({ initialized: true, user: null, token: null })
-      );
+      dispatch(authAction.setUser({ user: null, token: null }));
       navigate('/');
     }
   };
@@ -62,9 +60,7 @@ export const Profile = () => {
         token: token,
       };
 
-      dispatch(
-        authAction.setUser({ initialized: true, user: data, token: token })
-      );
+      dispatch(authAction.setUser({ user: data, token: token }));
 
       setUser(JSON.stringify(addLocalStorage));
     }

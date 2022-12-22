@@ -73,7 +73,7 @@ function App() {
               {!isInitialised && (
                 <LoadingIndicator isLoading loadingType="overlay" />
               )}
-              {!user && !isInitialised && (
+              {!user && isInitialised && (
                 <Box sx={{ position: 'relative', width: '100%' }}>
                   <Box
                     sx={{

@@ -42,7 +42,6 @@ export const Signin = () => {
 
       if (SigninData.data.success) {
         const userAuth = {
-          initialized: true,
           user: SigninData.data.user,
           token: SigninData.data.token,
         };
